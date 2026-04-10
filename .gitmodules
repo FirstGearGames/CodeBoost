@@ -1,0 +1,3 @@
+[submodule "submodules/CodeAnalysis"]
+	path = submodules/CodeAnalysis
+	url = https://github.com/FirstGearGames/CodeAnalysis

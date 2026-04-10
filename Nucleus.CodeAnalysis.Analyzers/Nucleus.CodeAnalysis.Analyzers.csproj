@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<PackageId>Nucleus.CodeAnalysis.Analyzers</PackageId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+		<PackageReference Include="Roslyn.Diagnostics.Analyzers" Version="3.3.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);RS0016</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\CodeAnalysis\**\*.cs" Link="CodeAnalysis\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\Nucleus.CodeAnalysis\**\*.cs" Link="Nucleus.CobuilddeAnalysis\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+	
+	<PropertyGroup>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);CS8618</NoWarn>
+		<NoWarn>$(NoWarn);CS8625</NoWarn>
+		<NoWarn>$(NoWarn);CS0067</NoWarn>
+		<NoWarn>$(NoWarn);RS0016</NoWarn>
+		<NoWarn>$(NoWarn);RS0037</NoWarn>
+	</PropertyGroup>
+
+
+</Project>

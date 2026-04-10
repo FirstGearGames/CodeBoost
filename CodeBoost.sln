@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBoost", "CodeBoost\CodeBoost.csproj", "{77558398-E058-4E36-A405-2126DEDC1AB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeBoost.CodeAnalysis.Analyzers", "CodeBoost.CodeAnalysis.Analyzers\CodeBoost.CodeAnalysis.Analyzers.csproj", "{17EB5B3D-A93A-402E-953A-1F416694C991}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77558398-E058-4E36-A405-2126DEDC1AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77558398-E058-4E36-A405-2126DEDC1AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77558398-E058-4E36-A405-2126DEDC1AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77558398-E058-4E36-A405-2126DEDC1AB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17EB5B3D-A93A-402E-953A-1F416694C991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17EB5B3D-A93A-402E-953A-1F416694C991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17EB5B3D-A93A-402E-953A-1F416694C991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17EB5B3D-A93A-402E-953A-1F416694C991}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
