@@ -17,7 +17,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// When not null this will be called when action is taken.
         /// </summary>
         /// <param name = "key"> Optional key to associate with callback. </param>
-        public delegate void PressedDelegate(string key);
+        public delegate void PressedHandler(string key);
 
         /// <summary>
         /// Optional key to include within the callback.
@@ -27,7 +27,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// <summary>
         /// Delegate to invoke when pressed.
         /// </summary>
-        private PressedDelegate _delegate;
+        private PressedHandler _delegate;
 
         /// <summary>
         /// Initializes this for use.
@@ -35,7 +35,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// <param name = "text"> Text to display on the button. </param>
         /// <param name = "callback"> Callback when OnPressed is called. </param>
         /// <param name = "key"> Optional key to include within the callback. </param>
-        public void Initialize(string text, PressedDelegate callback, string key = "")
+        public void Initialize(string text, PressedHandler callback, string key = "")
         {
             Text = text;
             Key = key;

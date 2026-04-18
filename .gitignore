@@ -6,3 +6,6 @@
 # This matches any bin or obj folder and all their contents/subfolders
 **/bin/
 **/obj/
+
+# Local commit notes
+Docs/commit-info.txt

@@ -16,7 +16,7 @@ namespace CodeBoost.Unity.Types.Canvases
         public class ResizeData : IPoolResettable
         {
             public byte Remaining;
-            public ResizeDelegate Delegate;
+            public ResizeHandler Delegate;
 
             public ResizeData()
             {
@@ -36,7 +36,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// Delegate for resizing RectTransforms.
         /// </summary>
         /// <param name = "complete"> True if the resize iterations are complete. Typically show your visuals when true. </param>
-        public delegate void ResizeDelegate(bool complete);
+        public delegate void ResizeHandler(bool complete);
         /// <summary>
         /// Elements to resize.
         /// </summary>
@@ -82,7 +82,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// Note: this work-around may not be required for newer Unity versions.
         /// </summary>
         /// <param name = "del"> Delegate to invoke when resizing completes. </param>
-        public static void Resize(ResizeDelegate del)
+        public static void Resize(ResizeHandler del)
         {
             // Check to make a singleton instance.
             if (_instance is null)
@@ -95,7 +95,7 @@ namespace CodeBoost.Unity.Types.Canvases
             _instance.Resize_Internal(del);
         }
 
-        private void Resize_Internal(ResizeDelegate del)
+        private void Resize_Internal(ResizeHandler del)
         {
             ResizeData rd = ResettableObjectPool<ResizeData>.Rent();
             rd.Delegate = del;
