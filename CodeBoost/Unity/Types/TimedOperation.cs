@@ -23,7 +23,7 @@ namespace CodeBoost.Unity.Types
         }
 
         /// <summary>
-        /// How much time must past between each operation.
+        /// The amount of time that must pass between each operation.
         /// </summary>
         private readonly float _interval;
         /// <summary>
@@ -31,18 +31,18 @@ namespace CodeBoost.Unity.Types
         /// </summary>
         private readonly bool _scaledTime;
         /// <summary>
-        /// Last times specific key operations were performed.
+        /// The last times specific key operations were performed.
         /// </summary>
         private readonly Dictionary<string, float> _operationTimes = new();
         /// <summary>
-        /// Last time a global operation was performed.
+        /// The last time a global operation was performed.
         /// </summary>
         private float _lastGlobalTime;
 
         /// <summary>
-        /// Returns if can perform operation at the configured interval.
+        /// Returns whether the operation can be performed at the configured interval.
         /// </summary>
-        /// <returns> </returns>
+        /// <returns> True if the operation can be performed; otherwise, false. </returns>
         public bool TryUseOperation()
         {
             float time = _scaledTime ? Time.time : Time.unscaledTime;
@@ -59,10 +59,10 @@ namespace CodeBoost.Unity.Types
         }
 
         /// <summary>
-        /// Returns if can perform operation at the configured interval for the specified key.
+        /// Returns whether the operation can be performed at the configured interval for the specified key.
         /// </summary>
         /// <param name = "key"> </param>
-        /// <returns> </returns>
+        /// <returns> True if the operation can be performed for the specified key; otherwise, false. </returns>
         public bool TryUseOperation(string key)
         {
             float time = _scaledTime ? Time.time : Time.unscaledTime;

@@ -8,12 +8,12 @@ namespace CodeBoost.Performance;
 public static class ResettableT0T1SortedListPool<T0, T1> where T0 : IPoolResettable where T1 : IPoolResettable, new()
 {
     /// <summary>
-    /// Retrieves an instance of Dictionary.
+    /// Retrieves an instance of SortedList from the pool.
     /// </summary>
     public static SortedList<T0, T1> Rent() => SortedListPool<T0, T1>.Rent();
 
     /// <summary>
-    /// Stores an instance of Dictionary and sets the original reference to null.
+    /// Stores an instance of SortedList and sets the original reference to null.
     /// </summary>
     public static void ReturnAndNullifyReference(ref SortedList<T0, T1>? value, PoolReturnType collectionReturnType)
     {
@@ -23,7 +23,7 @@ public static class ResettableT0T1SortedListPool<T0, T1> where T0 : IPoolResetta
     }
 
     /// <summary>
-    /// Stores an instance of Dictionary.
+    /// Stores an instance of SortedList in the pool.
     /// </summary>
     public static void Return(SortedList<T0, T1>? value, PoolReturnType collectionReturnType)
     {

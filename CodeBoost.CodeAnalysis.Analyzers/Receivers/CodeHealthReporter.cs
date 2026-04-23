@@ -15,11 +15,11 @@ namespace CodeBoost.CodeAnalysis.Analyzers.Receivers;
 public class CodeHealthReporter
 {
     /// <summary>
-    /// Full names of NamedTypes checked to be networked.
+    /// The full names of NamedTypes checked to be networked.
     /// </summary>
     private readonly HashSet<string> _typesCheckedFullName = new();
     /// <summary>
-    /// Current CachedDiagnostics.
+    /// The current CachedDiagnostics.
     /// </summary>
     private readonly List<Diagnostic> _cachedDiagnostics = [];
     private readonly string _poolResettableFullName;
@@ -89,8 +89,9 @@ public class CodeHealthReporter
     }
 
     /// <summary>
-    /// Returns if there are any CachedDiagnostics followed by purging existing entries.
+    /// Returns whether there are any CachedDiagnostics and purges existing entries.
     /// </summary>
+    /// <returns>True if there were cached diagnostics that have been returned and purged; otherwise false.</returns>
     public bool TryPurgeCachedDiagnostics(out List<Diagnostic>? cachedDiagnostics)
     {
         if (_cachedDiagnostics.Count == 0)
@@ -140,7 +141,7 @@ public class CodeHealthReporter
     }
 
     /// <summary>
-    /// Adds a named type to networked types if it meets findingFlags conditions.
+    /// Adds a named type to the networked types if it meets the findingFlags conditions.
     /// </summary>
     private void AddNamedType(SemanticModel semanticModel, INamedTypeSymbol namedTypeSymbol, FindingFlags findingFlags)
     {
@@ -163,9 +164,9 @@ public class CodeHealthReporter
     }
 
     /// <summary>
-    /// Inspects members for IPoolResettable attributes.
+    /// Inspects the members of the named type for IPoolResettable attributes.
     /// </summary>
-    /// <returns>True if completed without errors.</returns>
+    /// <returns>True if the inspection completed without errors; otherwise false.</returns>
     private bool InspectForPoolResettable(SemanticModel semanticModel, INamedTypeSymbol namedTypeSymbol)
     {
         // The Type does not utilize IPoolResettable; no further checks are needed.

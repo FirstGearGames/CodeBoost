@@ -9,7 +9,7 @@ namespace CodeBoost.Unity.Types.Canvases
     public class ButtonData : IPoolResettable
     {
         /// <summary>
-        /// Text to place on the button.
+        /// The text to place on the button.
         /// </summary>
         public string Text { get; protected set; } = string.Empty;
 
@@ -20,12 +20,12 @@ namespace CodeBoost.Unity.Types.Canvases
         public delegate void PressedHandler(string key);
 
         /// <summary>
-        /// Optional key to include within the callback.
+        /// The optional key to include within the callback.
         /// </summary>
         public string Key { get; protected set; } = string.Empty;
 
         /// <summary>
-        /// Delegate to invoke when pressed.
+        /// The delegate to invoke when pressed.
         /// </summary>
         private PressedHandler _delegate;
 
@@ -43,7 +43,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Called whewn the button for this data is pressed.
+        /// Called when the button for this data is pressed.
         /// </summary>
         public virtual void OnPressed()
         {

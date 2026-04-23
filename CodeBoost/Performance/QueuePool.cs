@@ -11,11 +11,11 @@ namespace CodeBoost.Performance;
 public static class QueuePool<T0>
 {
     /// <summary>
-    /// Stack for TheadLocal Queue.
+    /// The stack for the ThreadLocal Queue.
     /// </summary>
     private static readonly ThreadLocal<ThreadLocalStackWrapper<Queue<T0>>> Wrapper;
     /// <summary>
-    /// Stack for global Queue.
+    /// The stack for the global Queue.
     /// </summary>
     private static readonly Stack<Queue<T0>> GlobalStack = [];
     /// <summary>
@@ -39,7 +39,7 @@ public static class QueuePool<T0>
     }
 
     /// <summary>
-    /// Rents a Queue.
+    /// Rents a Queue from the pool.
     /// </summary>
     /// <returns>A cleared Queue collection.</returns>
     public static Queue<T0> Rent()
@@ -59,8 +59,8 @@ public static class QueuePool<T0>
     }
 
     /// <summary>
-    /// Returns a Queue and sets the provided reference to null;
-    /// This Method will not execute if the value is null.
+    /// Returns a Queue to the pool and sets the provided reference to null.
+    /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref Queue<T0>? value)
@@ -71,7 +71,7 @@ public static class QueuePool<T0>
     }
 
     /// <summary>
-    /// Returns a Queue.
+    /// Returns a Queue to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(Queue<T0>? value)
@@ -97,7 +97,7 @@ public static class QueuePool<T0>
     }
 
     /// <summary>
-    /// Flushes the ThreadLocal Queue Stack into the global Stack.
+    /// Flushes the ThreadLocal Queue stack into the global stack.
     /// </summary>
     private static void Flush(Stack<Queue<T0>> localStack)
     {

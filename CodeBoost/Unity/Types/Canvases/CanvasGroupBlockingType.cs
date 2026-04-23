@@ -6,7 +6,7 @@
 namespace CodeBoost.Unity.Types.Canvases
 {
     /// <summary>
-    /// Ways a CanvasGroup can have its blocking properties modified.
+    /// Describes the ways a CanvasGroup can have its blocking properties modified.
     /// </summary>
     public enum CanvasGroupBlockingType
     {

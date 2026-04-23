@@ -8,13 +8,13 @@ namespace CodeBoost.Performance;
 public static class ResettableListPool<T0> where T0 : IPoolResettable, new()
 {
     /// <summary>
-    /// Retrieves an instance of T.
+    /// Retrieves an instance of List from the pool.
     /// </summary>
     public static List<T0> Rent() => ListPool<T0>.Rent();
 
     /// <summary>
-    /// Stores an instance of T0 and sets the original reference to default.
-    /// Method will not execute if value is null.
+    /// Stores an instance of List and sets the original reference to default.
+    /// The method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref List<T0> value, PoolReturnType collectionReturnType)
@@ -25,7 +25,7 @@ public static class ResettableListPool<T0> where T0 : IPoolResettable, new()
     }
 
     /// <summary>
-    /// Stores an instance of T.
+    /// Stores an instance of List in the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(List<T0>? value, PoolReturnType collectionReturnType)

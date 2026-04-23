@@ -11,7 +11,7 @@ namespace CodeBoost.Unity.Extensions
     public static class LayoutGroupExtensions
     {
         /// <summary>
-        /// Returns how many entries can fit into a GridLayoutGroup
+        /// Returns how many entries can fit into a GridLayoutGroup.
         /// </summary>
         public static int EntriesPerWidth(this GridLayoutGroup lg)
         {

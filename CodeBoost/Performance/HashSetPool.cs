@@ -11,11 +11,11 @@ namespace CodeBoost.Performance;
 public static class HashSetPool<T0>
 {
     /// <summary>
-    /// Stack for TheadLocal HashSet.
+    /// The stack for the ThreadLocal HashSet.
     /// </summary>
     private static readonly ThreadLocal<ThreadLocalStackWrapper<HashSet<T0>>> Wrapper;
     /// <summary>
-    /// Stack for global HashSet.
+    /// The stack for the global HashSet.
     /// </summary>
     private static readonly Stack<HashSet<T0>> GlobalStack = [];
     /// <summary>
@@ -39,7 +39,7 @@ public static class HashSetPool<T0>
     }
 
     /// <summary>
-    /// Rents a HashSet.
+    /// Rents a HashSet from the pool.
     /// </summary>
     /// <returns>A cleared HashSet collection.</returns>
     public static HashSet<T0> Rent()
@@ -59,8 +59,8 @@ public static class HashSetPool<T0>
     }
 
     /// <summary>
-    /// Returns a HashSet and sets the provided reference to null;
-    /// This Method will not execute if the value is null.
+    /// Returns a HashSet to the pool and sets the provided reference to null.
+    /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref HashSet<T0>? value)
@@ -71,7 +71,7 @@ public static class HashSetPool<T0>
     }
 
     /// <summary>
-    /// Returns a HashSet.
+    /// Returns a HashSet to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(HashSet<T0>? value)
@@ -97,7 +97,7 @@ public static class HashSetPool<T0>
     }
 
     /// <summary>
-    /// Flushes the ThreadLocal HashSet Stack into the global Stack.
+    /// Flushes the ThreadLocal HashSet stack into the global stack.
     /// </summary>
     private static void Flush(Stack<HashSet<T0>> localStack)
     {

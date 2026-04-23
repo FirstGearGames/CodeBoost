@@ -11,11 +11,11 @@ namespace CodeBoost.Performance;
 public static class DictionaryPool<T0, T1>
 {
     /// <summary>
-    /// Stack for TheadLocal Dictionary.
+    /// The stack for the ThreadLocal Dictionary.
     /// </summary>
     private static readonly ThreadLocal<ThreadLocalStackWrapper<Dictionary<T0, T1>>> Wrapper;
     /// <summary>
-    /// Stack for global Dictionary.
+    /// The stack for the global Dictionary.
     /// </summary>
     private static readonly Stack<Dictionary<T0, T1>> GlobalStack = [];
     /// <summary>
@@ -39,7 +39,7 @@ public static class DictionaryPool<T0, T1>
     }
 
     /// <summary>
-    /// Rents a Dictionary.
+    /// Rents a Dictionary from the pool.
     /// </summary>
     /// <returns>A cleared Dictionary collection.</returns>
     public static Dictionary<T0, T1> Rent()
@@ -59,8 +59,8 @@ public static class DictionaryPool<T0, T1>
     }
 
     /// <summary>
-    /// Returns a Dictionary and sets the provided reference to null;
-    /// This Method will not execute if the value is null.
+    /// Returns a Dictionary to the pool and sets the provided reference to null.
+    /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref Dictionary<T0, T1> value)
@@ -71,7 +71,7 @@ public static class DictionaryPool<T0, T1>
     }
 
     /// <summary>
-    /// Returns a Dictionary.
+    /// Returns a Dictionary to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(Dictionary<T0, T1> value)
@@ -97,7 +97,7 @@ public static class DictionaryPool<T0, T1>
     }
 
     /// <summary>
-    /// Flushes the ThreadLocal Dictionary Stack into the global Stack.
+    /// Flushes the ThreadLocal Dictionary stack into the global stack.
     /// </summary>
     private static void Flush(Stack<Dictionary<T0, T1>> localStack)
     {

@@ -9,25 +9,24 @@ using UnityEngine.UI;
 namespace CodeBoost.Unity.Types
 {
     /// <summary>
-    /// Forces a scroolbar to a value over multiple frames.
-    /// Often scrollbars will not stay at the right value when a recttransform is redrawn; this solves that problem.
+    /// Forces a scrollbar to a value over multiple frames. Often scrollbars will not stay at the right value when a RectTransform is redrawn; this solves that problem.
     /// </summary>
     public class ScrollbarValueSetter
     {
         /// <summary>
-        /// Scrollbar to fix.
+        /// The scrollbar to fix.
         /// </summary>
         private Scrollbar _scrollBar;
         /// <summary>
-        /// Value to set scrollbar at.
+        /// The value to set the scrollbar at.
         /// </summary>
         private float _value;
         /// <summary>
-        /// Frame when value was updated.
+        /// The frame when the value was updated.
         /// </summary>
         private int _updatedFrame = -1;
         /// <summary>
-        /// Number of frames to wait before fixing.
+        /// The number of frames to wait before fixing.
         /// </summary>
         private readonly int _fixFrames;
 
@@ -38,7 +37,7 @@ namespace CodeBoost.Unity.Types
         }
 
         /// <summary>
-        /// Sets value of the scrollbar.
+        /// Sets the value of the scrollbar.
         /// </summary>
         /// <param name = "value"> </param>
         public void SetValue(float value)
@@ -49,7 +48,7 @@ namespace CodeBoost.Unity.Types
         }
 
         /// <summary>
-        /// Checks to fix scrollbar value. Should be called every frame.
+        /// Checks to fix the scrollbar value. Should be called every frame.
         /// </summary>
         public void LateUpdate()
         {

@@ -13,12 +13,12 @@ namespace CodeBoost.Extensions
         /* GetInteractableLayer methods is an implementation from this
          * link: https://forum.unity.com/threads/is-there-a-way-to-get-the-layer-collision-matrix.260744/#post-3483886 */
         /// <summary>
-        /// Lookup of interactable layers for each layer.
+        /// The lookup of interactable layers for each layer.
         /// </summary>
         private static Dictionary<int, int> _interactablesLayers;
 
         /// <summary>
-        /// Tries to initializes InteractableLayers.
+        /// Tries to initialize the InteractableLayers.
         /// </summary>
         private static void TryInitializeInteractableLayers()
         {
@@ -43,7 +43,7 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Returns interactable layers value for layer.
+        /// Returns the interactable layers value for the layer.
         /// </summary>
         public static int GetInteractableLayersValue(int layer)
         {
@@ -52,17 +52,17 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Returns interactable layers LayerMask for a GameObject.
+        /// Returns the interactable layers LayerMask for a GameObject.
         /// </summary>
         public static LayerMask GetInteractableLayersMask(int layer) => GetInteractableLayersValue(layer);
 
         /// <summary>
-        /// Returns interactable layers value for a GameObject.
+        /// Returns the interactable layers value for a GameObject.
         /// </summary>
         public static int GetInteractableLayersValue(GameObject go) => GetInteractableLayersValue(go.layer);
 
         /// <summary>
-        /// Returns interactable layers LayerMask for a GameObject.
+        /// Returns the interactable layers LayerMask for a GameObject.
         /// </summary>
         public static LayerMask GetInteractableLayersMask(GameObject go) => GetInteractableLayersValue(go.layer);
 
@@ -70,7 +70,7 @@ namespace CodeBoost.Extensions
         /// Converts a layer mask to a layer number.
         /// </summary>
         /// <param name = "mask"> </param>
-        /// <returns> </returns>
+        /// <returns>Returns the layer number corresponding to the specified mask.</returns>
         public static int LayerMaskToLayerNumber(LayerMask mask)
         {
             return LayerValueToLayerNumber(mask.value);
@@ -80,7 +80,7 @@ namespace CodeBoost.Extensions
         /// Converts a layer value int to a layer int.
         /// </summary>
         /// <param name = "bitmask"> </param>
-        /// <returns> </returns>
+        /// <returns>Returns the layer number corresponding to the specified bitmask.</returns>
         public static int LayerValueToLayerNumber(int bitmask)
         {
             int result = bitmask > 0 ? 0 : 31;
@@ -94,11 +94,11 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Returns if a LayerMask contains a specified layer.
+        /// Returns whether a LayerMask contains a specified layer.
         /// </summary>
         /// <param name = "layerMask"> LayerMask to check for layer in. </param>
         /// <param name = "layer"> Layer to check within LayerMask. </param>
-        /// <returns> </returns>
+        /// <returns>Returns true if the LayerMask contains the specified layer; otherwise, false.</returns>
         public static bool ContainsLayer(LayerMask layerMask, int layer)
         {
             return layerMask == (layerMask | (1 << layer));

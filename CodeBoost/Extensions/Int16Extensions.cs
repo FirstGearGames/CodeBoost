@@ -6,7 +6,7 @@
 public static class Int16Extensions
 {
     /// <summary>
-    /// Returns if a flags whole value has part within it.
+    /// Returns whether the whole flags value contains the specified part.
     /// </summary>
     public static bool FastContains(this short whole, short part) => (whole & part) == part;
 }

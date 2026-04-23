@@ -8,9 +8,9 @@ namespace CodeBoost.Extensions;
 public static class EnumerableExtensions
 {
     /// <summary>
-    /// Cast each item in the collection ToString and returns all values.
+    /// Casts each item in the collection to a string and returns all values joined by the delimiter.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns>The concatenated string of all items separated by the delimiter, or an empty string if the collection is null.</returns>
     public static string ToString<T0>(this IEnumerable<T0> thisValue, string delimiter = ", ")
     {
         if (thisValue is null)
@@ -33,7 +33,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Calls Disposes on elements within a collection.
+    /// Calls Dispose on each element within the collection.
     /// </summary>
     public static void Dispose<T0>(this IEnumerable<T0> thisValue) where T0 : IDisposable
     {

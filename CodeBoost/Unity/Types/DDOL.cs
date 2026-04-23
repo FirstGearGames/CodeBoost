@@ -9,12 +9,12 @@ namespace CodeBoost.Unity.Types
     public class DDOL : MonoBehaviour
     {
         /// <summary>
-        /// Created instance of DDOL.
+        /// The created instance of the DDOL.
         /// </summary>
         private static DDOL _instance;
 
         /// <summary>
-        /// Returns the current DDOL or creates one if not yet created.
+        /// Returns the current DDOL, or creates one if not yet created.
         /// </summary>
         public static DDOL GetDDOL()
         {

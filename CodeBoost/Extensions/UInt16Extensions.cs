@@ -8,7 +8,7 @@ namespace CodeBoost.Extensions;
 public static class UInt16Extensions
 {
     /// <summary>
-    /// Returns if a flags whole value has part within it.
+    /// Returns whether the whole flags value contains the specified part.
     /// </summary>
     public static bool FastContains(this ushort whole, ushort part) => (whole & part) == part;
 }

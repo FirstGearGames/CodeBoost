@@ -7,16 +7,16 @@ namespace CodeBoost.Types;
 public struct Vector2Int
 {
     /// <summary>
-    /// X value.
+    /// The X value.
     /// </summary>
     public int X;
     /// <summary>
-    /// Y value.
+    /// The Y value.
     /// </summary>
     public int Y;
 
     /// <summary>
-    /// Creates a new Vector2Int using values.
+    /// Creates a new Vector2Int using the specified values.
     /// </summary>
     public Vector2Int(int x = 0, int y = 0)
     {
@@ -25,7 +25,7 @@ public struct Vector2Int
     }
 
     /// <summary>
-    /// Creates a new Vector2Int using value.
+    /// Creates a new Vector2Int using the specified value.
     /// </summary>
     public Vector2Int(Vector2Int vector2Int)
     {
@@ -34,7 +34,7 @@ public struct Vector2Int
     }
 
     /// <summary>
-    /// Creates a new Vector2Int using value.
+    /// Creates a new Vector2Int using the specified value.
     /// </summary>
     public Vector2Int(Vector2 vector2, MidpointRounding rounding)
     {

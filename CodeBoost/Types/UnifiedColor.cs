@@ -10,35 +10,35 @@ namespace CodeBoost.Types;
 public struct UnifiedColor
 {
     /// <summary>
-    /// R value for the color as a byte, 0-255.
+    /// The R value for the color as a byte, 0-255.
     /// </summary>
     public byte R;
     /// <summary>
-    /// G value for the color as a byte, 0-255.
+    /// The G value for the color as a byte, 0-255.
     /// </summary>
     public byte G;
     /// <summary>
-    /// B value for the color as a byte, 0-255.
+    /// The B value for the color as a byte, 0-255.
     /// </summary>
     public byte B;
     /// <summary>
-    /// A value for the color as a byte, 0-255.
+    /// The A value for the color as a byte, 0-255.
     /// </summary>
     public byte A;
     /// <summary>
-    /// R value for the color as a single, 0-1f.
+    /// The R value for the color as a single, 0-1f.
     /// </summary>
     public float Rf => R / 255.0f;
     /// <summary>
-    /// G value for the color as a single, 0-1f.
+    /// The G value for the color as a single, 0-1f.
     /// </summary>
     public float Gf => G / 255.0f;
     /// <summary>
-    /// B value for the color as a single, 0-1f.
+    /// The B value for the color as a single, 0-1f.
     /// </summary>
     public float Bf => B / 255.0f;
     /// <summary>
-    /// A value for the color as a single, 0-1f.
+    /// The A value for the color as a single, 0-1f.
     /// </summary>
     public float Af => A / 255.0f;
 
@@ -69,6 +69,6 @@ public struct UnifiedColor
     /// <summary>
     /// Returns a Color using the current values.
     /// </summary>
-    /// <returns></returns>
+    /// <returns> A Color constructed from the current A, R, G, and B values. </returns>
     public Color GetColor() => Color.FromArgb(A, R, G, B);
 }

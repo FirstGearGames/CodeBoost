@@ -8,7 +8,7 @@ namespace CodeBoost.Types;
 public static class Weighted
 {
     /// <summary>
-    /// Random values by weight.
+    /// Returns random values selected by weight.
     /// </summary>
     /// <param name = "source"> values to pick from. </param>
     /// <param name = "count"> Number of entries to get. </param>
@@ -17,7 +17,7 @@ public static class Weighted
     public static void GetValues<T0>(List<T0> source, uint count, ref Dictionary<T0, uint> results, bool allowRepeatingEntries = false) where T0 : IWeighted => GetValues(source, new UIntRange(count, count), ref results, allowRepeatingEntries);
 
     /// <summary>
-    /// Random values by weight.
+    /// Returns random values selected by weight.
     /// </summary>
     /// <param name = "source"> values to pick from. </param>
     /// <param name = "countRange"> Number of entries to get. </param>

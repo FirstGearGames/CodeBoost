@@ -4,7 +4,7 @@ using CodeBoost.Logging;
 namespace CodeBoost.Mathematics;
 
 /// <summary>
-/// Various utility classes relating to Float.
+/// Contains various utility methods relating to floating point numbers.
 /// </summary>
 public static partial class MathCb
 {
@@ -41,7 +41,7 @@ public static partial class MathCb
     }
         
     /// <summary>
-    /// Pads an index a specified value. Preferred over typical padding so that pad values used with skins can be easily found in the code.
+    /// Pads an index by a specified value. This is preferred over typical padding so that pad values used with skins can be easily found in the code.
     /// </summary>
     public static string Pad(this ulong value, int padding)
     {
@@ -57,7 +57,7 @@ public static partial class MathCb
     /// <param name = "value"> Value to clamp. </param>
     /// <param name = "minimum"> Minimum value. </param>
     /// <param name = "maximum"> Maximum value. </param>
-    /// <returns> </returns>
+    /// <returns>The value clamped within the specified range.</returns>
     public static ulong Clamp(ulong value, ulong minimum, ulong maximum)
     {
         if (value < minimum)

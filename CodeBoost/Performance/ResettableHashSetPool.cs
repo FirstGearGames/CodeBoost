@@ -8,7 +8,7 @@ namespace CodeBoost.Performance;
 public static class ResettableHashSetPool<T0> where T0 : IPoolResettable, new()
 {
     /// <summary>
-    /// Retrieves an instance of HashSet.
+    /// Retrieves an instance of HashSet from the pool.
     /// </summary>
     public static HashSet<T0> Rent() => HashSetPool<T0>.Rent();
 
@@ -23,7 +23,7 @@ public static class ResettableHashSetPool<T0> where T0 : IPoolResettable, new()
     }
 
     /// <summary>
-    /// Stores an instance of HashSet.
+    /// Stores an instance of HashSet in the pool.
     /// </summary>
     public static void Return(HashSet<T0>? value, PoolReturnType collectionReturnType)
     {

@@ -8,7 +8,7 @@ namespace CodeBoost.Performance;
 public static class ResettableQueuePool<T0> where T0 : IPoolResettable, new()
 {
     /// <summary>
-    /// Retrieves an instance of Queue.
+    /// Retrieves an instance of Queue from the pool.
     /// </summary>
     public static Queue<T0> Rent() => QueuePool<T0>.Rent();
 
@@ -23,7 +23,7 @@ public static class ResettableQueuePool<T0> where T0 : IPoolResettable, new()
     }
 
     /// <summary>
-    /// Stores an instance of Queue.
+    /// Stores an instance of Queue in the pool.
     /// </summary>
     public static void Return(Queue<T0>? value, PoolReturnType collectionReturnType)
     {

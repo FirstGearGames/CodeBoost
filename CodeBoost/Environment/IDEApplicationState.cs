@@ -6,25 +6,25 @@ namespace CodeBoost.Environment;
 public class IdeApplicationState : IApplicationState
 {
     /// <summary>
-    /// Called when the application focus state changes.
+    /// Invoked when the application focus state changes.
     /// </summary>
-    /// <remarks>Event never invokes for this type.</remarks>
+    /// <remarks>This event never invokes for this type.</remarks>
     public event IApplicationState.FocusChangeEventHandler FocusChanged;
 
     /// <summary>
-    /// Returns the value of System.Environment.HasShutdownStarted. 
+    /// Returns the value of System.Environment.HasShutdownStarted.
     /// </summary>
-    /// <returns>System.Environment.HasShutdownStarted.</returns>
+    /// <returns>The value of System.Environment.HasShutdownStarted.</returns>
     public bool IsQuitting() => System.Environment.HasShutdownStarted;
 
     /// <summary>
-    /// Returns if IsQuitting is false.
+    /// Returns whether IsQuitting is false.
     /// </summary>
-    /// <returns>True if IsQuitting is false.</returns>
+    /// <returns>True if IsQuitting is false; otherwise false.</returns>
     public bool IsPlaying() => !IsQuitting();
 
     /// <summary>
-    /// Exits System.Environment.
+    /// Exits the process via System.Environment.Exit.
     /// </summary>
     public void Quit()
     {
@@ -34,13 +34,13 @@ public class IdeApplicationState : IApplicationState
     /// <summary>
     /// Unconditionally returns true.
     /// </summary>
-    /// <returns>True.</returns>
+    /// <returns>Always true.</returns>
     public bool IsEditor() => true;
 
     /// <summary>
-    /// Returns if the DEBUG preprocessor is active.
+    /// Returns whether the DEBUG preprocessor symbol is active.
     /// </summary>
-    /// <returns>Active state of Preprocessor DEBUG.</returns>
+    /// <returns>True if the DEBUG preprocessor symbol is active; otherwise false.</returns>
     public bool IsDevelopment()
     {
         #if DEBUG
@@ -53,12 +53,12 @@ public class IdeApplicationState : IApplicationState
     /// <summary>
     /// Unconditionally returns false.
     /// </summary>
-    /// <returns>False.</returns>
+    /// <returns>Always false.</returns>
     public bool IsGuiBuild() => false;
 
     /// <summary>
     /// Unconditionally returns false.
     /// </summary>
-    /// <returns>False.</returns>
+    /// <returns>Always false.</returns>
     public bool IsHeadlessBuild() => false;
 }

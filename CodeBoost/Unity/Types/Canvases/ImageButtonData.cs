@@ -10,7 +10,7 @@ namespace CodeBoost.Unity.Types.Canvases
     public class ImageButtonData : ButtonData
     {
         /// <summary>
-        /// Image to display.
+        /// The image to display.
         /// </summary>
         public Sprite DisplayImage { get; protected set; }
 

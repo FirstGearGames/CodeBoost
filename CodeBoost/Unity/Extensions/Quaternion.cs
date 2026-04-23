@@ -14,12 +14,12 @@ namespace CodeBoost.Unity.Extensions
         public static UnityEngine.Quaternion ToUnity(this Quaternion value) => new(value.X, value.Y, value.Z, value.W);
 
         /// <summary>
-        /// Returns how fast an object must rotate over duration to reach goal.
+        /// Returns how fast an object must rotate over the duration to reach the goal.
         /// </summary>
         /// <param name = "goal"> Quaternion to measure distance against. </param>
         /// <param name = "duration"> How long it should take to move to goal. </param>
         /// <param name = "interval"> A multiplier applied towards interval. Typically this is used for ticks passed. </param>
-        /// <returns> </returns>
+        /// <returns>Returns the rate at which the object must rotate to reach the goal.</returns>
         public static float GetRate(this UnityEngine.Quaternion a, UnityEngine.Quaternion goal, float duration, out float angle, uint interval = 1, float tolerance = 0f)
         {
             angle = a.Angle(goal, true);
@@ -27,7 +27,7 @@ namespace CodeBoost.Unity.Extensions
         }
 
         /// <summary>
-        /// Subtracts b quaternion from a.
+        /// Subtracts quaternion b from quaternion a.
         /// </summary>
         public static UnityEngine.Quaternion Subtract(this UnityEngine.Quaternion a, UnityEngine.Quaternion b) => UnityEngine.Quaternion.Inverse(b) * a;
 
@@ -37,10 +37,10 @@ namespace CodeBoost.Unity.Extensions
         public static UnityEngine.Quaternion Add(this UnityEngine.Quaternion a, UnityEngine.Quaternion b) => a * b;
 
         /// <summary>
-        /// Returns if two quaternions match.
+        /// Returns whether two quaternions match.
         /// </summary>
         /// <param name = "precise"> True to use a custom implementation with no error tolerance. False to use Unity's implementation which may return a match even when not true due to error tolerance. </param>
-        /// <returns> </returns>
+        /// <returns>Returns true if the two quaternions match; otherwise, false.</returns>
         public static bool Matches(this UnityEngine.Quaternion a, UnityEngine.Quaternion b, bool precise = false)
         {
             if (precise)
@@ -49,10 +49,10 @@ namespace CodeBoost.Unity.Extensions
         }
 
         /// <summary>
-        /// Returns the angle between two quaterions.
+        /// Returns the angle between two quaternions.
         /// </summary>
         /// <param name = "precise"> True to use a custom implementation with no error tolerance. False to use Unity's implementation which may return 0f due to error tolerance, even while there is a difference. </param>
-        /// <returns> </returns>
+        /// <returns>Returns the angle between the two quaternions.</returns>
         public static float Angle(this UnityEngine.Quaternion a, UnityEngine.Quaternion b, bool precise = false)
         {
             if (precise)

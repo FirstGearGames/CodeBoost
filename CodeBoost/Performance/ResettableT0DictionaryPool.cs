@@ -8,7 +8,7 @@ namespace CodeBoost.Performance;
 public static class ResettableT0DictionaryPool<T0, T1> where T0 : IPoolResettable, new()
 {
     /// <summary>
-    /// Retrieves an instance of Dictionary.
+    /// Retrieves an instance of Dictionary from the pool.
     /// </summary>
     public static Dictionary<T0, T1> Rent() => DictionaryPool<T0, T1>.Rent();
 
@@ -23,7 +23,7 @@ public static class ResettableT0DictionaryPool<T0, T1> where T0 : IPoolResettabl
     }
 
     /// <summary>
-    /// Stores an instance of Dictionary.
+    /// Stores an instance of Dictionary in the pool.
     /// </summary>
     public static void Return(Dictionary<T0, T1>? value, PoolReturnType collectionReturnType)
     {

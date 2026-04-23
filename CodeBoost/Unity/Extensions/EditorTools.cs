@@ -19,7 +19,7 @@ namespace CodeBoost.Extensions
     public static class EditorGuiLayoutTools
     {
         /// <summary>
-        /// Adds a helpbox field.
+        /// Adds a help box field.
         /// </summary>
         public static void AddHelpBox(string text, MessageType messageType = MessageType.Info)
         {
@@ -76,7 +76,7 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Disables GUI if playing.
+        /// Disables the GUI if the application is playing.
         /// </summary>
         public static void DisableGUIIfPlaying()
         {
@@ -85,7 +85,7 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Enables GUI if playing.
+        /// Enables the GUI if the application is playing.
         /// </summary>
         public static void EnableGUIIfPlaying()
         {
@@ -94,10 +94,10 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Returns if a layout field should be disabled.
+        /// Returns whether a layout field should be disabled.
         /// </summary>
         /// <param name = "enableType"> </param>
-        /// <returns> </returns>
+        /// <returns>Returns true if the layout field should be disabled; otherwise, false.</returns>
         private static bool IsDisableLayoutType(EditorLayoutEnableType enableType)
         {
             return enableType == EditorLayoutEnableType.Disabled || (enableType == EditorLayoutEnableType.DisabledWhilePlaying && Application.isPlaying);
@@ -107,7 +107,7 @@ namespace CodeBoost.Extensions
     public static class PropertyDrawerToolExtensions
     {
         /// <summary>
-        /// Returns GetPropertyHeight value based on drawerTool properties.
+        /// Returns the GetPropertyHeight value based on the drawerTool properties.
         /// </summary>
         public static float GetPropertyHeight(this PropertyDrawerTool drawerTool)
         {
@@ -119,7 +119,7 @@ namespace CodeBoost.Extensions
     }
 
     /// <summary>
-    /// Various utility classes relating to Float.
+    /// Provides various utility classes relating to Float.
     /// </summary>
     public class PropertyDrawerTool
     {
@@ -137,29 +137,29 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Starting position as indicated by the OnGUI method.
+        /// The starting position as indicated by the OnGUI method.
         /// </summary>
         /// <remarks> This value may be modified by user code. </remarks>
         public Rect Position;
         /// <summary>
-        /// Preferred spacing between each draw.
+        /// The preferred spacing between each draw.
         /// </summary>
         public float LineSpacingMultiplier;
         /// <summary>
-        /// Number of entries drawn by this object.
+        /// The number of entries drawn by this object.
         /// </summary>
         public int PropertiesDrawn;
         /// <summary>
-        /// Additional position Y of next draw.
+        /// The additional position Y of the next draw.
         /// </summary>
         private float _additionalPositionY;
         /// <summary>
-        /// Indent level during initialization.
+        /// The indent level during initialization.
         /// </summary>
         private readonly int _startingIndent;
 
         /// <summary>
-        /// Sets EditorGUI.Indent to the level it were when initializing this class.
+        /// Sets EditorGUI.Indent to the level it was when initializing this class.
         /// </summary>
         public void SetIndentToStarting() => EditorGUI.indentLevel = _startingIndent;
 
@@ -262,7 +262,7 @@ namespace CodeBoost.Extensions
         /// <summary>
         /// Gets the next Rect to draw at.
         /// </summary>
-        /// <returns> </returns>
+        /// <returns>Returns the next Rect to draw at.</returns>
         public Rect GetRect(floaT lineSpacingMultiplierOverride = null)
         {
             float multiplier = lineSpacingMultiplierOverride ?? LineSpacingMultiplier;

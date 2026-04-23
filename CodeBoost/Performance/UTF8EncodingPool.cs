@@ -10,14 +10,14 @@ namespace CodeBoost.Performance;
 public static class Utf8EncodingPool
 {
     /// <summary>
-    /// Stack to use.
+    /// The stack of pooled instances.
     /// </summary>
     private static readonly Stack<UTF8Encoding> Stack = new();
 
     /// <summary>
-    /// Returns a value from the stack or creates an instance when the stack is empty.
+    /// Returns a value from the stack or creates a new instance when the stack is empty.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns>A UTF8Encoding instance from the pool, or a newly constructed one if the pool is empty.</returns>
     public static UTF8Encoding Rent()
     {
         if (!Stack.TryPop(out UTF8Encoding result))
@@ -27,8 +27,8 @@ public static class Utf8EncodingPool
     }
 
     /// <summary>
-    /// Stores an instance of T0 and sets the original reference to default.
-    /// Method will not execute if value is null.
+    /// Stores an instance of UTF8Encoding and sets the original reference to default.
+    /// The method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref UTF8Encoding value)

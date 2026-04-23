@@ -8,16 +8,16 @@ namespace CodeBoost.Extensions
     public static class NewInput
     {
         /// <summary>
-        /// Current Keyboard.
+        /// The current Keyboard.
         /// </summary>
         public static Keyboard Keyboard => Keyboard.current;
         /// <summary>
-        /// Current Mouse.
+        /// The current Mouse.
         /// </summary>
         public static Mouse Mouse => Mouse.current;
 
         /// <summary>
-        /// Returns if a button is held on any map.
+        /// Returns whether a button is held on any map.
         /// </summary>
         public static bool GetButtonHeld(Key key)
         {
@@ -25,7 +25,7 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Returns if a button is pressed on any map.
+        /// Returns whether a button is pressed on any map.
         /// </summary>
         public static bool GetButtonPressed(Key key)
         {
@@ -33,7 +33,7 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Returns if a button is released on any map.
+        /// Returns whether a button is released on any map.
         /// </summary>
         public static bool GetButtonReleased(Key key)
         {

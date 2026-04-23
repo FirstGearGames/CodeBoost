@@ -13,12 +13,12 @@ namespace CodeBoost.Unity.Types.Canvases
     public static class CanvasTracker
     {
         /// <summary>
-        /// Canvases which should block input.
+        /// The canvases which should block input.
         /// </summary>
         public static IReadOnlyList<object> InputBlockingCanvases => _inputBlockingCanvases;
         private static readonly List<object> _inputBlockingCanvases = new();
         /// <summary>
-        /// Canvases which are currently open, in the order they were opened.
+        /// The canvases which are currently open, in the order they were opened.
         /// </summary>
         public static IReadOnlyList<object> OpenCanvases => _openCanvases;
         private static readonly List<object> _openCanvases = new();
@@ -28,19 +28,19 @@ namespace CodeBoost.Unity.Types.Canvases
         public static bool IsInputBlockingCanvasOpen => _inputBlockingCanvases.Count > 0;
 
         /// <summary>
-        /// Returns true if is the last canvas opened or if no canvases are set as opened.
+        /// Returns true if the canvas is the last canvas opened or if no canvases are set as opened.
         /// </summary>
         public static bool IsLastOpenCanvas(object canvas) => IsEmptyCollectionOrLastEntry(canvas, _openCanvases);
 
         /// <summary>
-        /// Returns true if is the last canvas blocking input or if no input blocking canvases are set as opened.
+        /// Returns true if the canvas is the last canvas blocking input or if no input blocking canvases are set as opened.
         /// </summary>
         public static bool IsLastInputBlockingCanvas(object canvas) => IsEmptyCollectionOrLastEntry(canvas, _inputBlockingCanvases);
 
         /// <summary>
-        /// Returns true if canvas is the last object in collection or collection is empty.
+        /// Returns true if the canvas is the last object in the collection or the collection is empty.
         /// </summary>
-        /// <returns> </returns>
+        /// <returns> True if the canvas is the last entry or the collection is empty; otherwise, false. </returns>
         private static bool IsEmptyCollectionOrLastEntry(object canvas, List<object> collection)
         {
             int count = collection.Count;
@@ -60,9 +60,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Removes null references of canvases.
-        /// This can be used as clean-up if you were unable to remove a canvas properly.
-        /// Using this method regularly could be expensive if there are hundreds of open canvases.
+        /// Removes null references of canvases. This can be used as clean-up if you were unable to remove a canvas properly. Using this method regularly could be expensive if there are hundreds of open canvases.
         /// </summary>
         public static void RemoveNullReferences()
         {
@@ -83,7 +81,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Returns true if canvas is an open canvas.
+        /// Returns true if the canvas is an open canvas.
         /// </summary>
         public static bool IsOpenCanvas(object canvas)
         {
@@ -91,7 +89,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Returns if the canvas is an input blocking canvas.
+        /// Returns true if the canvas is an input blocking canvas.
         /// </summary>
         public static bool IsInputBlockingCanvas(object canvas)
         {

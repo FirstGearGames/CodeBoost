@@ -12,6 +12,7 @@ namespace CodeBoost.Extensions
         /// Calls stop on the specified particle systems.
         /// </summary>
         /// <param name = "systems"> </param>
+        /// <returns>Returns the time required for the particle systems to play out.</returns>
         public static float StopParticleSystem(ParticleSystem[] systems, bool stopLoopingOnly)
         {
             return StopParticleSystem(systems, stopLoopingOnly, ParticleSystemStopBehavior.StopEmitting);
@@ -21,6 +22,7 @@ namespace CodeBoost.Extensions
         /// Calls stop on the specified particle systems while returning the time required to play out.
         /// </summary>
         /// <param name = "systems"> </param>
+        /// <returns>Returns the time required for the particle systems to play out.</returns>
         public static float StopParticleSystem(ParticleSystem[] systems, ParticleSystemStopBehavior stopBehavior = ParticleSystemStopBehavior.StopEmitting)
         {
             return StopParticleSystem(systems, false, stopBehavior);
@@ -30,6 +32,7 @@ namespace CodeBoost.Extensions
         /// Calls stop on the specified particle systems while returning the time required to play out.
         /// </summary>
         /// <param name = "systems"> </param>
+        /// <returns>Returns the time required for the particle systems to play out.</returns>
         public static float StopParticleSystem(ParticleSystem[] systems, bool stopLoopingOnly, ParticleSystemStopBehavior stopBehavior = ParticleSystemStopBehavior.StopEmitting)
         {
             if (systems is null)
@@ -43,18 +46,20 @@ namespace CodeBoost.Extensions
         }
 
         /// <summary>
-        /// Calls stop on the specified particle systems.
+        /// Calls stop on the specified particle system.
         /// </summary>
         /// <param name = "systems"> </param>
+        /// <returns>Returns the time required for the particle system to play out.</returns>
         public static float StopParticleSystem(ParticleSystem system, bool stopLoopingOnly, bool stopChildren = false)
         {
             return StopParticleSystem(system, stopLoopingOnly, ParticleSystemStopBehavior.StopEmitting, stopChildren);
         }
 
         /// <summary>
-        /// Calls stop on the specified particle systems while returning the time required to play out.
+        /// Calls stop on the specified particle system while returning the time required to play out.
         /// </summary>
         /// <param name = "systems"> </param>
+        /// <returns>Returns the time required for the particle system to play out.</returns>
         public static float StopParticleSystem(ParticleSystem system, ParticleSystemStopBehavior stopBehavior = ParticleSystemStopBehavior.StopEmitting, bool stopChildren = false)
         {
             return StopParticleSystem(system, false, stopBehavior, stopChildren);
@@ -94,7 +99,7 @@ namespace CodeBoost.Extensions
         /// Returns the longest time required for all systems to stop.
         /// </summary>
         /// <param name = "systems"> </param>
-        /// <returns> </returns>
+        /// <returns>Returns the longest time required for all systems to stop.</returns>
         public static float ReturnLongestCycle(ParticleSystem[] systems)
         {
             float longestPlayTime = 0f;

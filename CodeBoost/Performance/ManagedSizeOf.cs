@@ -10,7 +10,7 @@ namespace CodeBoost.Performance;
 public static class ManagedSizeOf<T0> where T0 : struct
 {
     /// <summary>
-    /// Cached size value.
+    /// The cached size value for the type.
     /// </summary>
     // ReSharper disable once StaticMemberInGenericType
     public static int Value { get; private set; }

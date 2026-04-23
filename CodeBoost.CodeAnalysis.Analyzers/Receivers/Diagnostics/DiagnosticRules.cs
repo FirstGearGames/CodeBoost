@@ -5,7 +5,7 @@ namespace CodeBoost.CodeAnalysis.Analyzers.Receivers.Diagnostics;
 public static class DiagnosticRules
 {
     /// <summary>
-    /// 0: Message.
+    /// The descriptor for a CodeHealthReporter warning. The message format placeholder {0} is the message.
     /// </summary>
     public static readonly DiagnosticDescriptor CodeHealthReporterWarning = new(
         id: "CODEHEALTHREPORTER00",
@@ -16,7 +16,7 @@ public static class DiagnosticRules
         isEnabledByDefault: true);    
 
     /// <summary>
-    /// 0: Message.
+    /// The descriptor for a CodeHealthReporter error. The message format placeholder {0} is the message.
     /// </summary>
     public static readonly DiagnosticDescriptor CodeHealthReporterError = new(
         id: "CODEHEALTHREPORTER01",

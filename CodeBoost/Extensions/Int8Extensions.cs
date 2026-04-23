@@ -6,7 +6,7 @@
 public static class Int8Extensions
 {
     /// <summary>
-    /// Returns if a flags whole value has part within it.
+    /// Returns whether the whole flags value contains the specified part.
     /// </summary>
     public static bool FastContains(this sbyte whole, sbyte part) => (whole & part) == part;
 }

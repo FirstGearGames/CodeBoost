@@ -11,7 +11,7 @@ namespace CodeBoost.Unity.Types.Canvases
     public class ResizableContainer : FloatingContainer
     {
         /// <summary>
-        /// Minimum and maximum range for widwth and height of the RectTransform.
+        /// The minimum and maximum range for the width and height of the RectTransform.
         /// </summary>
         [Tooltip("Minimum and maximum range for width and height of the RectTransform.")]
         // [Foldout("Sizing")]
@@ -22,8 +22,7 @@ namespace CodeBoost.Unity.Types.Canvases
         };
 
         /// <summary>
-        /// Sets a size, and resizes if needed.
-        /// Other transform values must be set separately using inherited methods.
+        /// Sets a size, and resizes if needed. Other transform values must be set separately using inherited methods.
         /// </summary>
         /// <param name = "size"> New size to use. </param>
         /// <param name = "ignoreSizeLimits"> True to ignore serialized Size limits. </param>

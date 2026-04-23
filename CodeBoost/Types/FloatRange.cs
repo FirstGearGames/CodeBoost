@@ -13,22 +13,22 @@ public struct FloatRange
     }
 
     /// <summary>
-    /// Minimum range.
+    /// The minimum value of the range.
     /// </summary>
     public float Minimum;
     /// <summary>
-    /// Maximum range.
+    /// The maximum value of the range.
     /// </summary>
     public float Maximum;
 
     /// <summary>
     /// Returns a random value between Minimum and Maximum.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns> A random value greater than or equal to Minimum and less than or equal to Maximum. </returns>
     public float RandomInclusive() => (float)MathCb.RandomInclusive(Minimum, Maximum);
 
     /// <summary>
-    /// Interpolates between minimum and maximum using a percentage.
+    /// Interpolates between Minimum and Maximum using a percentage.
     /// </summary>
     public float Lerp(float percentage) => (float)MathCb.Lerp(Minimum, Maximum, percentage);
 }

@@ -6,12 +6,12 @@ namespace CodeBoost.Extensions;
 public static partial class StringExtensions
 {
     /// <summary>
-    /// Value representing when an index is not found or specified.
+    /// The value representing when an index is not found or specified.
     /// </summary>
     public const int UnsetIndex = -1;
         
     /// <summary>
-    /// Converts a member string text to PascalCase
+    /// Converts a member string text to PascalCase.
     /// </summary>
     /// <remarks>Leading non-alpha characters are removed and the first alpha character is capitalized.</remarks>
     public static string MemberToPascalCase(this string value)
@@ -104,8 +104,8 @@ public static partial class StringExtensions
     /// <summary>
     /// Converts a string into a byte array.
     /// </summary>
-    /// <returns>Number of bytes written to buffer.</returns>
-    /// <remarks>Buffer is instantiated as a new array if it is not large enough.</remarks>
+    /// <returns>The number of bytes written to the buffer.</returns>
+    /// <remarks>The buffer is instantiated as a new array if it is not large enough.</remarks>
     public static byte[] ToBytesNonAllocated(this string value, out int bytesWritten)
     {
         int valueLength = value.Length;
@@ -124,7 +124,7 @@ public static partial class StringExtensions
     }
         
     /// <summary>
-    /// Returns index of the first letter or number in a string.
+    /// Returns the index of the first letter or number in the string.
     /// </summary>
     public static int GetFirstLetterOrDigitIndex(this string value)
     {

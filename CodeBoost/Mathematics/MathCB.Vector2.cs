@@ -5,7 +5,7 @@ namespace CodeBoost.Mathematics;
 public static partial class MathCb
 {
     /// <summary>
-    /// Returns the normalized position of value between a and b.
+    /// Returns the normalized position of a value between a and b.
     /// </summary>
     public static float InverseLerp(Vector2 a, Vector2 b, Vector2 value)
     {
@@ -19,9 +19,9 @@ public static partial class MathCb
     }
 
     /// <summary>
-    /// Lerp between three Vector2 values.
+    /// Interpolates between three Vector2 values.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns>The interpolated Vector2 value.</returns>
     public static Vector2 Lerp3(Vector2 a, Vector2 b, Vector2 c, float percentage)
     {
         Vector2 r0 = Vector2.Lerp(a, b, percentage);

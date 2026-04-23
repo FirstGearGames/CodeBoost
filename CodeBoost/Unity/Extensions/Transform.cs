@@ -11,7 +11,7 @@ namespace CodeBoost.Unity.Extensions
     public static class TransformExtensions
     {
         /// <summary>
-        /// Returns the sizeDelta halfed.
+        /// Returns the sizeDelta halved.
         /// </summary>
         /// <param name = "considerScale"> True to multiple values by UnityRectTransform scale. </param>
         public static Vector2 HalfSizeDelta(this RectTransform rectTransform, bool useScale = false)
@@ -29,7 +29,7 @@ namespace CodeBoost.Unity.Extensions
         }
 
         /// <summary>
-        /// Returns a position for the UnityRectTransform ensuring it's fully on the screen.
+        /// Returns a position for the UnityRectTransform, ensuring it is fully on the screen.
         /// </summary>
         /// <param name = "desiredPosition"> Preferred position for the UnityRectTransform. </param>
         /// <param name = "padding"> How much padding the Transform must be from the screen edges. </param>
@@ -60,7 +60,7 @@ namespace CodeBoost.Unity.Extensions
         }
 
         /// <summary>
-        /// Sets a parent for src while maintaining position, rotation, and scale of src.
+        /// Sets a parent for src while maintaining the position, rotation, and scale of src.
         /// </summary>
         /// <param name = "parent"> Transform to become a child of. </param>
         public static void SetParentAndKeepTransform(this Transform src, Transform parent)
@@ -103,7 +103,7 @@ namespace CodeBoost.Unity.Extensions
         }
 
         /// <summary>
-        /// Destroys all children of a type under the specified Transform.
+        /// Destroys all children of the specified type under the specified Transform.
         /// </summary>
         public static void DestroyChildren<T0>(this Transform t, bool destroyImmediately = false) where T0 : MonoBehaviour
         {
@@ -118,7 +118,7 @@ namespace CodeBoost.Unity.Extensions
         }
 
         /// <summary>
-        /// Gets components in children and optionally parent.
+        /// Gets the components in children and optionally the parent.
         /// </summary>
         /// <typeparam name = "T"> </typeparam>
         /// <param name = "results"> </param>

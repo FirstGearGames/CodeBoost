@@ -11,22 +11,22 @@ namespace CodeBoost.Logging;
 public static class LoggingService
 {
     /// <summary>
-    /// Called when Logger is set.
+    /// Called when the logger is set.
     /// </summary>
     public static event LoggerSetEventHandler? LoggerSet;
 
     public delegate void LoggerSetEventHandler(ILogger logger);
 
     /// <summary>
-    /// ILogger to use.
+    /// The ILogger to use.
     /// </summary>
     public static ILogger? Logger;
     /// <summary>
-    /// Cached value of logging level for performance.
+    /// The cached value of the logging level for performance.
     /// </summary>
     private static byte _loggerLevelAsUnderlyingType;
     /// <summary>
-    /// Message when trying to access Logger when there is not an instance created.
+    /// The message used when trying to access the logger when there is no instance created.
     /// </summary>
     private static readonly string LoggerIsNullMessage = $"[{nameof(LoggingService)}] is null. Use [{nameof(LoggingService)}] to set a service.";
 
@@ -74,7 +74,7 @@ public static class LoggingService
     }
 
     /// <summary>
-    /// Logs a message as warning.
+    /// Logs a message as a warning.
     /// </summary>
     public static void LogWarning(string message)
     {
@@ -92,7 +92,7 @@ public static class LoggingService
     }
 
     /// <summary>
-    /// Logs a message as error.
+    /// Logs a message as an error.
     /// </summary>
     public static void LogError(string message)
     {
@@ -110,9 +110,9 @@ public static class LoggingService
     }
 
     /// <summary>
-    /// Gets logger level for the current environment.
+    /// Gets the logger level for the current environment.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The logger level for the current environment.</returns>
     private static LoggerLevel GetLoggerLevel()
     {
         IApplicationState? applicationState = ApplicationStateService.ApplicationState;
@@ -136,9 +136,9 @@ public static class LoggingService
     }
 
     /// <summary>
-    /// Gets logger level as the underlying type.
+    /// Gets the logger level as the underlying type.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The logger level cast to the underlying byte type.</returns>
     private static byte GetLoggerLevelAsUnderlyingType() => (byte)GetLoggerLevel();
 
     /// <summary>

@@ -9,7 +9,7 @@ namespace CodeBoost.Extensions;
 public static class UInt8Extensions
 {
     /// <summary>
-    /// Converts bytes to a string.
+    /// Converts the bytes to a UTF-8 encoded string.
     /// </summary>
     public static string ToEncodedString(this byte[] bytes, int offset, int count)
     {
@@ -23,7 +23,7 @@ public static class UInt8Extensions
     }
 
     /// <summary>
-    /// Returns if a flags whole value has part within it.
+    /// Returns whether the whole flags value contains the specified part.
     /// </summary>
     public static bool FastContains(this byte whole, byte part) => (whole & part) == part;
 

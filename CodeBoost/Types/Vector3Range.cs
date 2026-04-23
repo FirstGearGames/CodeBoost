@@ -8,20 +8,20 @@ namespace CodeBoost.Types;
 public struct Vector3Range
 {
     /// <summary>
-    /// X range.
+    /// The X range.
     /// </summary>
     public FloatRange X;
     /// <summary>
-    /// Y range.
+    /// The Y range.
     /// </summary>
     public FloatRange Y;
     /// <summary>
-    /// Z range.
+    /// The Z range.
     /// </summary>
     public FloatRange Z;
 
     /// <summary>
-    /// Creates ranges using minimum and maximum values for each axis.
+    /// Creates ranges using the minimum and maximum values for each axis.
     /// </summary>
     public Vector3Range(SystemVector3 minimum, SystemVector3 maximum)
     {
@@ -31,7 +31,7 @@ public struct Vector3Range
     }
 
     /// <summary>
-    /// Creates ranges using minimum and maximum values.
+    /// Creates ranges using the specified minimum and maximum values.
     /// </summary>
     public Vector3Range(float minimum, float maximum)
     {
@@ -43,7 +43,7 @@ public struct Vector3Range
     /// <summary>
     /// Returns a random value between Minimum and Maximum.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns> A random Vector3 with each component in the inclusive range of its axis. </returns>
     public SystemVector3 RandomInclusive()
     {
         float x = (float)MathCb.RandomInclusive(X.Minimum, X.Maximum);

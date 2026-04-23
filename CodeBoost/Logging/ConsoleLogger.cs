@@ -11,28 +11,28 @@ public class ConsoleLogger : ILogger
     /// <summary>
     /// Returns the settings to use for this logger.
     /// </summary>
-    /// <returns>Settings to use for logger.</returns>
+    /// <returns>The settings to use for the logger.</returns>
     public LoggerSetting GetLoggerSetting() => LoggerSetting.LoggerServiceSetting;
 
     /// <summary>
-    /// Disables always including stacktrace in development environments.
+    /// Disables always including the stacktrace in development environments.
     /// </summary>
-    /// <returns>True to disable always including stacktrace in development environments.</returns>
-    /// <remarks>Even with unconditional inclusions disabled stacktrace will still be included for higher level log calls.</remarks>
+    /// <returns>True to disable always including the stacktrace in development environments.</returns>
+    /// <remarks>Even with unconditional inclusions disabled, the stacktrace will still be included for higher level log calls.</remarks>
     public bool DisableUnconditionalDevelopmentStacktrace() => true;
-        
+
     /// <summary>
     /// Logs a message as information.
     /// </summary>
     public void LogInformation(string message) => Console.WriteLine($"Information :: {Logger.AddStackTraceIfDevelopment(message)}");
 
     /// <summary>
-    /// Logs a message as warning.
+    /// Logs a message as a warning.
     /// </summary>
     public void LogWarning(string message) => Console.WriteLine($"Warning :: {Logger.AddStackTraceIfDevelopment(message)}");
 
     /// <summary>
-    /// Logs a message as error.
+    /// Logs a message as an error.
     /// </summary>
     public void LogError(string message) => Console.WriteLine($"Error :: {Logger.AddStackTrace(message)}");
 }

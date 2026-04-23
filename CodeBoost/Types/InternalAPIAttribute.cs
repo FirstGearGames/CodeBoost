@@ -3,7 +3,7 @@ using System;
 namespace CodeBoost.Types;
 
 /// <summary>
-/// Indicates feature is exposed for convenience but is primarily for internal use, and that usage may change without warning.
+/// Indicates the feature is exposed for convenience but is primarily for internal use, and that usage may change without warning.
 /// </summary>
 [AttributeUsage(AttributeTargets.All)]
 public sealed class InternalApiAttribute : Attribute

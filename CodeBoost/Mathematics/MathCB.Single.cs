@@ -3,12 +3,12 @@
 namespace CodeBoost.Mathematics;
 
 /// <summary>
-/// Various utility classes relating to Float.
+/// Contains various utility methods relating to floating point numbers.
 /// </summary>
 public static partial class MathCb
 {
     /// <summary>
-    /// True if all values are within tolerance of each other.
+    /// Returns true if all values are within tolerance of each other.
     /// </summary>
     /// <remarks>True is returned if values are null or empty.</remarks>
     public static bool AreValuesMatching(float[] values)
@@ -43,7 +43,7 @@ public static partial class MathCb
     /// <param name = "value"> Value to clamp. </param>
     /// <param name = "minimum"> Minimum value. </param>
     /// <param name = "maximum"> Maximum value. </param>
-    /// <returns> </returns>
+    /// <returns>The value clamped within the specified range.</returns>
     public static float Clamp(float value, float minimum, float maximum)
     {
         if (value < minimum)
@@ -56,22 +56,22 @@ public static partial class MathCb
         
         
     /// <summary>
-    /// Converts a Single to an Int32.
+    /// Converts a single to an Int32.
     /// </summary>
     /// <param name="value">Value to convert.</param>
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>
-    public static int SingleToInt32Unsafe(double value, float accuracy) 
+    public static int SingleToInt32Unsafe(double value, float accuracy)
     {
         int wholeValue = (int)Clamp((int)(value * (1f / accuracy)), int.MinValue, int.MaxValue);
         return wholeValue;
     }
-        
+
     /// <summary>
-    /// Converts a Single to a UInt32.
+    /// Converts a single to a UInt32.
     /// </summary>
     /// <param name="value">Value to convert.</param>
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>
-    public static uint SingleToUInt32Unsafe(double value, float accuracy) 
+    public static uint SingleToUInt32Unsafe(double value, float accuracy)
     {
         int wholeValue = (int)Clamp((int)(value * (1f / accuracy)), int.MinValue, int.MaxValue);
 

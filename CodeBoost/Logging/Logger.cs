@@ -10,7 +10,7 @@ using System;
 namespace CodeBoost.Logging;
 
 /// <summary>
-/// A static Logger which uses the currently registered ILogger.
+/// A static logger which uses the currently registered ILogger.
 /// </summary>
 public static class Logger<TOuter, TInner0>
 {
@@ -20,7 +20,7 @@ public static class Logger<TOuter, TInner0>
 }
 
 /// <summary>
-/// A static Logger which uses the currently registered ILogger.
+/// A static logger which uses the currently registered ILogger.
 /// </summary>
 public static class Logger<T0>
 {
@@ -30,15 +30,15 @@ public static class Logger<T0>
 }
 
 /// <summary>
-/// A static Logger which uses the currently registered ILogger.
+/// A static logger which uses the currently registered ILogger.
 /// </summary>
 public static class Logger
 {
     /// <summary>
-    /// Disables always including stacktrace in development environments.
+    /// Disables always including the stacktrace in development environments.
     /// </summary>
-    /// <returns>True to disable always including stacktrace in development environments.</returns>
-    /// <remarks>Even with unconditional inclusions disabled stacktrace will still be included for higher level log calls.</remarks>
+    /// <returns>True to disable always including the stacktrace in development environments.</returns>
+    /// <remarks>Even with unconditional inclusions disabled, the stacktrace will still be included for higher level log calls.</remarks>
     public static bool DisableUnconditionalDevelopmentStacktrace() => LoggingService.DisableUnconditionalDevelopmentStacktrace();
 
     public static void LogInformation(string message, [CallerMemberName] string methodName = "") => LoggingService.LogInformation($"{Logger.GetLogMessagePrefix(methodName)}{message}");
@@ -53,7 +53,7 @@ public static class Logger
     /// </summary>
     /// <param name="outerType">Type which contains the method logging the message.</param>
     /// <param name="methodName">Name of the method logging the message.</param>
-    /// <returns></returns>
+    /// <returns>The prefix string used to annotate the log message.</returns>
     public static string GetLogMessagePrefix(Type outerType, Type innerType, string methodName) => $"[{outerType.Name}<{innerType.Name}>::{methodName}]: ";
 
     /// <summary>
@@ -61,18 +61,18 @@ public static class Logger
     /// </summary>
     /// <param name="outerType">Type which contains the method logging the message.</param>
     /// <param name="methodName">Name of the method logging the message.</param>
-    /// <returns></returns>
+    /// <returns>The prefix string used to annotate the log message.</returns>
     public static string GetLogMessagePrefix(Type outerType, string methodName) => $"[{outerType.Name}::{methodName}]: ";
 
     /// <summary>
     /// Returns the prefix to use for a method under an invoking type.
     /// </summary>
     /// <param name="methodName">Name of the method logging the message.</param>
-    /// <returns></returns>
+    /// <returns>The prefix string used to annotate the log message.</returns>
     public static string GetLogMessagePrefix(string methodName) => $"[{methodName}]: ";
 
     /// <summary>
-    /// Adds a StackTrace onto message if application is a development build.
+    /// Adds a stacktrace onto the message if the application is a development build.
     /// </summary>
     public static string AddStackTraceIfDevelopment(string message)
     {
@@ -86,7 +86,7 @@ public static class Logger
     }
 
     /// <summary>
-    /// Adds a StackTrace to a message.
+    /// Adds a stacktrace to a message.
     /// </summary>
     public static string AddStackTrace(string message) => $"{message}: {new StackTrace(fNeedFileInfo: true)}";
 }

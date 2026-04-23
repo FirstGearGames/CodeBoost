@@ -12,7 +12,7 @@ namespace CodeBoost.Unity.Types.Canvases
     public class FloatingImage : FloatingContainer
     {
         /// <summary>
-        /// Renderer to apply sprite on.
+        /// The renderer to apply the sprite on.
         /// </summary>
         [Tooltip("Renderer to apply sprite on.")]
         [TabGroup("Components")]
@@ -20,7 +20,7 @@ namespace CodeBoost.Unity.Types.Canvases
         protected Image Renderer;
 
         /// <summary>
-        /// Sets which sprite to use.
+        /// Sets the sprite to use.
         /// </summary>
         /// <param name = "sprite"> Sprite to use. </param>
         /// <param name = "sizeOverride"> When has value the renderer will be set to this size. Otherwise, the size of the sprite will be used. This value assumes the sprite anchors are set to center. </param>

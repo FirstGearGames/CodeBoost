@@ -12,11 +12,11 @@ namespace CodeBoost.Performance;
 public static class RingBufferPool<T0>
 {
     /// <summary>
-    /// Stack for TheadLocal RingBuffer.
+    /// The stack for the ThreadLocal RingBuffer.
     /// </summary>
     private static readonly ThreadLocal<ThreadLocalStackWrapper<RingBuffer<T0>>> Wrapper;
     /// <summary>
-    /// Stack for global RingBuffer.
+    /// The stack for the global RingBuffer.
     /// </summary>
     private static readonly Stack<RingBuffer<T0>> GlobalStack = [];
     /// <summary>
@@ -40,7 +40,7 @@ public static class RingBufferPool<T0>
     }
 
     /// <summary>
-    /// Rents a RingBuffer.
+    /// Rents a RingBuffer from the pool.
     /// </summary>
     /// <returns>A cleared RingBuffer collection.</returns>
     public static RingBuffer<T0> Rent()
@@ -60,8 +60,8 @@ public static class RingBufferPool<T0>
     }
 
     /// <summary>
-    /// Returns a RingBuffer and sets the provided reference to null;
-    /// This Method will not execute if the value is null.
+    /// Returns a RingBuffer to the pool and sets the provided reference to null.
+    /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref RingBuffer<T0>? value)
@@ -72,7 +72,7 @@ public static class RingBufferPool<T0>
     }
 
     /// <summary>
-    /// Returns a RingBuffer.
+    /// Returns a RingBuffer to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(RingBuffer<T0>? value)
@@ -98,7 +98,7 @@ public static class RingBufferPool<T0>
     }
 
     /// <summary>
-    /// Flushes the ThreadLocal RingBuffer Stack into the global Stack.
+    /// Flushes the ThreadLocal RingBuffer stack into the global stack.
     /// </summary>
     private static void Flush(Stack<RingBuffer<T0>> localStack)
     {

@@ -11,7 +11,7 @@ namespace CodeBoost.Unity.Types.Canvases
     public class CanvasGroupFader : MonoBehaviour
     {
         /// <summary>
-        /// Current fade state or goal for this class.
+        /// Represents the current fade state or goal for this class.
         /// </summary>
         public enum FadeGoalType
         {
@@ -21,7 +21,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Current goal for the fader.
+        /// The current goal for the fader.
         /// </summary>
         public FadeGoalType FadeGoal { get; private set; } = FadeGoalType.Unset;
         /// <summary>
@@ -29,12 +29,12 @@ namespace CodeBoost.Unity.Types.Canvases
         /// </summary>
         public bool IsHiding => FadeGoal == FadeGoalType.Hidden;
         /// <summary>
-        /// True if visible. Will be true long as the CanvasGroup has alpha. Also see IsHiding.
+        /// True if visible. Will be true as long as the CanvasGroup has alpha. Also see IsHiding.
         /// </summary>
         public bool IsVisible => CanvasGroup.alpha > 0f;
 
         /// <summary>
-        /// CanvasGroup to fade in and out.
+        /// The CanvasGroup to fade in and out.
         /// </summary>
         [Tooltip("CanvasGroup to fade in and out.")]
         [SerializeField]
@@ -48,13 +48,13 @@ namespace CodeBoost.Unity.Types.Canvases
         [TabGroup("Effects")]
         protected bool UpdateCanvasBlocking = true;
         /// <summary>
-        /// How long it should take to fade in the CanvasGroup.
+        /// The duration it should take to fade in the CanvasGroup.
         /// </summary>
         [SerializeField]
         [TabGroup("Effects")]
         protected float FadeInDuration = 0.1f;
         /// <summary>
-        /// How long it should take to fade out the CanvasGroup.
+        /// The duration it should take to fade out the CanvasGroup.
         /// </summary>
         [SerializeField]
         [TabGroup("Effects")]
@@ -84,7 +84,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Shows CanvasGroup immediately.
+        /// Shows the CanvasGroup immediately.
         /// </summary>
         public virtual void ShowImmediately()
         {
@@ -94,7 +94,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Hides CanvasGroup immediately.
+        /// Hides the CanvasGroup immediately.
         /// </summary>
         public virtual void HideImmediately()
         {
@@ -104,7 +104,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Shows CanvasGroup with a fade.
+        /// Shows the CanvasGroup with a fade.
         /// </summary>
         public virtual void Show()
         {
@@ -125,7 +125,7 @@ namespace CodeBoost.Unity.Types.Canvases
         protected virtual void OnShow() { }
 
         /// <summary>
-        /// Hides CanvasGroup with a fade.
+        /// Hides the CanvasGroup with a fade.
         /// </summary>
         public virtual void Hide()
         {
@@ -148,7 +148,7 @@ namespace CodeBoost.Unity.Types.Canvases
         protected virtual void OnHide() { }
 
         /// <summary>
-        /// Sets showing and begins fading if required.
+        /// Sets the fade goal and begins fading if required.
         /// </summary>
         /// <param name = "fadeIn"> </param>
         private void SetFadeGoal(bool fadeIn)
@@ -159,7 +159,6 @@ namespace CodeBoost.Unity.Types.Canvases
         /// <summary>
         /// Fades in or out over time.
         /// </summary>
-        /// <returns> </returns>
         private void Fade()
         {
             // Should not be possible.
@@ -222,7 +221,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Changes the CanvasGroups interactable and bloacking state.
+        /// Changes the CanvasGroup's interactable and blocking state.
         /// </summary>
         protected virtual void SetCanvasGroupBlockingType(CanvasGroupBlockingType blockingType)
         {

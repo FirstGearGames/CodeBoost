@@ -7,14 +7,14 @@ namespace CodeBoost.Extensions;
 public static class ListExtensions
 {
     /// <summary>
-    /// Randomizer used for shuffling.
+    /// The randomizer used for shuffling.
     /// </summary>
     private static readonly Random Random = new();
 
     /// <summary>
-    /// Adds an element to a collection if it does not exist already.
+    /// Adds an element to the collection if it does not already exist.
     /// </summary>
-    /// <returns> True if an item was added.</returns>
+    /// <returns>True if the item was added; otherwise, false.</returns>
     public static bool AddUnique<T0>(this List<T0> list, T0 value)
     {
         bool contains = list.Contains(value);
@@ -27,7 +27,7 @@ public static class ListExtensions
     /// <summary>
     /// Removes the first entry from the collection and returns it.
     /// </summary>
-    /// <returns>First entry in the collection. Default if the collection is null or empty.</returns>
+    /// <returns>The first entry in the collection, or default if the collection is null or empty.</returns>
     public static T0? RemoveAndReturnFirst<T0>(this List<T0> list)
     {
         if (list is null || list.Count == 0)
@@ -42,7 +42,7 @@ public static class ListExtensions
     /// <summary>
     /// Removes the last entry from the collection and returns it.
     /// </summary>
-    /// <returns>Last entry in the collection. Default if the collection is null or empty.</returns>
+    /// <returns>The last entry in the collection, or default if the collection is null or empty.</returns>
     public static T0 GetAndRemoveLastValue<T0>(this List<T0> list)
     {
         #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -62,7 +62,7 @@ public static class ListExtensions
     }
       
     /// <summary>
-    /// Shuffles a collection.
+    /// Shuffles the collection.
     /// </summary>
     public static void Shuffle<T0>(this List<T0> lst)
     {
@@ -75,7 +75,7 @@ public static class ListExtensions
     }
 
     /// <summary>
-    /// Adds an orderable item to a collection.
+    /// Adds an orderable item to the collection in ascending order.
     /// </summary>
     public static void AddOrderedAscending<T0>(this List<T0> collection, T0 item) where T0 : IOrderable
     {

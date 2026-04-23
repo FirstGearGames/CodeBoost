@@ -6,7 +6,7 @@ namespace CodeBoost.Extensions;
 public static class ArraySegmentExtensions
 {
     /// <summary>
-    /// If not null pools the Array using ArrayPool.Shared. 
+    /// Returns the underlying array to <see cref="ArrayPool{T}.Shared"/> if it is not null.
     /// </summary>
     public static void PoolArrayIntoShared(this ArraySegment<byte> arraySegment)
     {
@@ -19,7 +19,7 @@ public static class ArraySegmentExtensions
     /// </summary>
     /// <param name="segment">Value to enumerate.</param>
     /// <typeparam name="T0">Type for the ArraySegment.</typeparam>
-    /// <returns>An enumerator which uses offset and count of an ArraySegment.</returns>
+    /// <returns>An enumerator which uses the offset and count of the ArraySegment.</returns>
     public static ArraySegmentEnumerator<T0> GetEnumerator<T0>(this ArraySegment<T0> segment) => new(segment);
 
     /// <summary>
@@ -29,15 +29,15 @@ public static class ArraySegmentExtensions
     public struct ArraySegmentEnumerator<T0>
     {
         /// <summary>
-        /// Array of the ArraySegment.
+        /// The array of the ArraySegment.
         /// </summary>
         private readonly T0[]? _array;
         /// <summary>
-        /// End of the array according to the ArraySegment.Count and ArraySegment.Offset.
+        /// The end of the array according to the ArraySegment.Count and ArraySegment.Offset.
         /// </summary>
         private readonly int _end;
         /// <summary>
-        /// Current index being enumerated.
+        /// The current index being enumerated.
         /// </summary>
         private int _index;
 
@@ -60,7 +60,7 @@ public static class ArraySegmentExtensions
         /// <summary>
         /// Iterates to the next entry.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if there is another entry to enumerate; otherwise, false.</returns>
         public bool MoveNext()
         {
             _index++;

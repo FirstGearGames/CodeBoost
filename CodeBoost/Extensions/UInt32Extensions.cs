@@ -26,7 +26,7 @@ public static class UInt32Extensions
     }
         
     /// <summary>
-    /// Returns if a flags whole value has part within it.
+    /// Returns whether the whole flags value contains the specified part.
     /// </summary>
     public static bool FastContains(this uint whole, uint part) => (whole & part) == part;
         

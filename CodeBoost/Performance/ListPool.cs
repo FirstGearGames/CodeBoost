@@ -11,11 +11,11 @@ namespace CodeBoost.Performance;
 public static class ListPool<T0>
 {
     /// <summary>
-    /// Stack for TheadLocal List.
+    /// The stack for the ThreadLocal List.
     /// </summary>
     private static readonly ThreadLocal<ThreadLocalStackWrapper<List<T0>>> Wrapper;
     /// <summary>
-    /// Stack for global List.
+    /// The stack for the global List.
     /// </summary>
     private static readonly Stack<List<T0>> GlobalStack = [];
     /// <summary>
@@ -39,7 +39,7 @@ public static class ListPool<T0>
     }
 
     /// <summary>
-    /// Rents a List.
+    /// Rents a List from the pool.
     /// </summary>
     /// <returns>A cleared List collection.</returns>
     public static List<T0> Rent()
@@ -59,8 +59,8 @@ public static class ListPool<T0>
     }
 
     /// <summary>
-    /// Returns a List and sets the provided reference to null;
-    /// This Method will not execute if the value is null.
+    /// Returns a List to the pool and sets the provided reference to null.
+    /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref List<T0>? value)
@@ -71,7 +71,7 @@ public static class ListPool<T0>
     }
 
     /// <summary>
-    /// Returns a List.
+    /// Returns a List to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(List<T0>? value)
@@ -97,7 +97,7 @@ public static class ListPool<T0>
     }
 
     /// <summary>
-    /// Flushes the ThreadLocal List Stack into the global Stack.
+    /// Flushes the ThreadLocal List stack into the global stack.
     /// </summary>
     private static void Flush(Stack<List<T0>> localStack)
     {

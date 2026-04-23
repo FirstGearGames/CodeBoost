@@ -13,24 +13,24 @@ public struct UIntRange
     }
 
     /// <summary>
-    /// Minimum range.
+    /// The minimum value of the range.
     /// </summary>
     public uint Minimum;
     /// <summary>
-    /// Maximum range.
+    /// The maximum value of the range.
     /// </summary>
     public uint Maximum;
 
     /// <summary>
     /// Returns an exclusive random value between Minimum and Maximum.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns> A random value greater than or equal to Minimum and less than Maximum. </returns>
     public uint RandomExclusive() => (uint)MathCb.RandomExclusive(Minimum, Maximum);
 
     /// <summary>
     /// Returns an inclusive random value between Minimum and Maximum.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns> A random value greater than or equal to Minimum and less than or equal to Maximum. </returns>
     public uint RandomInclusive() => (uint)MathCb.RandomInclusive(Minimum, Maximum);
 
     /// <summary>
@@ -39,7 +39,7 @@ public struct UIntRange
     public uint Clamp(uint value) => (uint)MathCb.Clamp(value, Minimum, Maximum);
 
     /// <summary>
-    /// True if value is within range of Minimum and Maximum.
+    /// Returns true if the value is within the range of Minimum and Maximum.
     /// </summary>
     public bool InRange(uint value) => value >= Minimum && value <= Maximum;
 }

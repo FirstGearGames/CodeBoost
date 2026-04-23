@@ -5,12 +5,12 @@ namespace CodeBoost.Mathematics;
 public enum RoundingType
 {
     /// <summary>
-    /// To the nearest even number.
+    /// Rounds to the nearest even number.
     /// </summary>
     /// <remarks>When the floating value is 0.5 the number will be rounded down.</remarks>
     ToEven = 0,
     /// <summary>
-    /// To the nearest even number, rounding up if the floating value is 0.5.
+    /// Rounds to the nearest even number, rounding up if the floating value is 0.5.
     /// </summary>
     AwayFromZero = 1,
     /// <summary>

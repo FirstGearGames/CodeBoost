@@ -9,11 +9,11 @@ namespace CodeBoost.Types;
 public readonly struct RentedArray<T0> : IDisposable
 {
     /// <summary>
-    /// Rented array.
+    /// The rented array.
     /// </summary>
     public readonly T0[] Array { get; }
     /// <summary>
-    /// ArrayPool which the array was rented from.
+    /// The ArrayPool which the array was rented from.
     /// </summary>
     private readonly ArrayPool<T0> _pool;
 

@@ -22,7 +22,7 @@ public static class Int32Extensions
     }
 
     /// <summary>
-    /// Returns if a flags whole value has part within it.
+    /// Returns whether the whole flags value contains the specified part.
     /// </summary>
     public static bool FastContains(this int whole, int part) => (whole & part) == part;
 }

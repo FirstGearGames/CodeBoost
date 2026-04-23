@@ -12,11 +12,11 @@ namespace CodeBoost.Performance;
 public static class BoostedQueuePool<T0>
 {
     /// <summary>
-    /// Stack for TheadLocal BoostedQueue.
+    /// The stack for the ThreadLocal BoostedQueue.
     /// </summary>
     private static readonly ThreadLocal<ThreadLocalStackWrapper<BoostedQueue<T0>>> Wrapper;
     /// <summary>
-    /// Stack for global BoostedQueue.
+    /// The stack for the global BoostedQueue.
     /// </summary>
     private static readonly Stack<BoostedQueue<T0>> GlobalStack = [];
     /// <summary>
@@ -40,7 +40,7 @@ public static class BoostedQueuePool<T0>
     }
 
     /// <summary>
-    /// Rents a BoostedQueue.
+    /// Rents a BoostedQueue from the pool.
     /// </summary>
     /// <returns>A cleared BoostedQueue collection.</returns>
     public static BoostedQueue<T0> Rent()
@@ -60,8 +60,8 @@ public static class BoostedQueuePool<T0>
     }
 
     /// <summary>
-    /// Returns a BoostedQueue and sets the provided reference to null;
-    /// This Method will not execute if the value is null.
+    /// Returns a BoostedQueue to the pool and sets the provided reference to null.
+    /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref BoostedQueue<T0>? value)
@@ -72,7 +72,7 @@ public static class BoostedQueuePool<T0>
     }
 
     /// <summary>
-    /// Returns a BoostedQueue.
+    /// Returns a BoostedQueue to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(BoostedQueue<T0>? value)
@@ -98,7 +98,7 @@ public static class BoostedQueuePool<T0>
     }
 
     /// <summary>
-    /// Flushes the ThreadLocal BoostedQueue Stack into the global Stack.
+    /// Flushes the ThreadLocal BoostedQueue stack into the global stack.
     /// </summary>
     private static void Flush(Stack<BoostedQueue<T0>> localStack)
     {

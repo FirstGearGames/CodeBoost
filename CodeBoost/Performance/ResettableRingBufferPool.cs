@@ -8,7 +8,7 @@ namespace CodeBoost.Performance;
 public static class ResettableRingBufferPool<T0> where T0 : IPoolResettable, new()
 {
     /// <summary>
-    /// Retrieves an instance of RingBuffer.
+    /// Retrieves an instance of RingBuffer from the pool.
     /// </summary>
     public static RingBuffer<T0> Rent() => RingBufferPool<T0>.Rent();
 
@@ -24,7 +24,7 @@ public static class ResettableRingBufferPool<T0> where T0 : IPoolResettable, new
     }
 
     /// <summary>
-    /// Stores an instance of RingBuffer.
+    /// Stores an instance of RingBuffer in the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(RingBuffer<T0>? value, PoolReturnType collectionReturnType)

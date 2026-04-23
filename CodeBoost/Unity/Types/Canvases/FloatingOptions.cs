@@ -11,12 +11,12 @@ namespace CodeBoost.Unity.Types.Canvases
     public class FloatingOptions : CanvasGroupFader
     {
         /// <summary>
-        /// Current buttons.
+        /// The current buttons.
         /// </summary>
         protected List<ButtonData> Buttons = new();
 
         /// <summary>
-        /// Adds buttons.
+        /// Adds the buttons.
         /// </summary>
         /// <param name = "clearExisting"> True to clear existing buttons first. </param>
         /// <param name = "buttonDatas"> Buttons to add. </param>

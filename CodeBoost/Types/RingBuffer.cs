@@ -13,29 +13,29 @@ namespace CodeBoost.Types;
 public class RingBuffer<T0> : IEnumerable<T0>
 {
     /// <summary>
-    /// Custom enumerator to prevent garbage collection.
+    /// A custom enumerator used to prevent garbage collection.
     /// </summary>
     public struct Enumerator : IEnumerator<T0>
     {
         /// <summary>
-        /// Current entry in the enumerator.
+        /// The current entry in the enumerator.
         /// </summary>
         public T0 Current { get; private set; }
 
         /// <summary>
-        /// RollingCollection to use.
+        /// The rolling collection to use.
         /// </summary>
         private RingBuffer<T0> _enumeratedRingBuffer;
         /// <summary>
-        /// Collection to iterate.
+        /// The collection to iterate.
         /// </summary>
         private T0[] _collection;
         /// <summary>
-        /// Number of entries read during the enumeration.
+        /// The number of entries read during the enumeration.
         /// </summary>
         private int _entriesEnumerated;
         /// <summary>
-        /// Start index of enumerations.
+        /// The start index of enumerations.
         /// </summary>
         private int _startIndex;
         /// <summary>
@@ -43,7 +43,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
         /// </summary>
         private bool Enumerating => _enumeratedRingBuffer is not null;
         /// <summary>
-        /// Count of the collection during initialization.
+        /// The count of the collection during initialization.
         /// </summary>
         private int _initializeCollectionCount;
 
@@ -93,7 +93,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
         }
 
         /// <summary>
-        /// Resets read count.
+        /// Resets the read count.
         /// </summary>
         public void Reset()
         {
@@ -109,19 +109,19 @@ public class RingBuffer<T0> : IEnumerable<T0>
     }
 
     /// <summary>
-    /// Current write index of the collection.
+    /// The current write index of the collection.
     /// </summary>
     public int WriteIndex { get; private set; }
     /// <summary>
-    /// Number of entries currently written.
+    /// The number of entries currently written.
     /// </summary>
     public int Count => _written;
     /// <summary>
-    /// Maximum size of the collection.
+    /// The maximum size of the collection.
     /// </summary>
     public int Capacity;
     /// <summary>
-    /// Collection being used.
+    /// The collection being used.
     /// </summary>
     public T0[] Collection = [];
     /// <summary>
@@ -130,16 +130,16 @@ public class RingBuffer<T0> : IEnumerable<T0>
     public bool Initialized { get; private set; }
 
     /// <summary>
-    /// Number of entries written. This will never go beyond the capacity but will be less until capacity is filled.
+    /// The number of entries written. This will never go beyond the capacity but will be less until the capacity is filled.
     /// </summary>
     private int _written;
     /// <summary>
-    /// Enumerator for the collection.
+    /// The enumerator for the collection.
     /// </summary>
     private Enumerator _enumerator;
 
     /// <summary>
-    /// Default capacity when none is psecified.
+    /// The default capacity when none is specified.
     /// </summary>
     public const int DefaultCapacity = 60;
 
@@ -221,7 +221,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
 
     /// <summary>
     /// Inserts an entry into the collection.
-    /// This is can be an expensive operation on larger buffers.
+    /// This can be an expensive operation on larger buffers.
     /// </summary>
     /// <param name = "simulatedIndex"> Simulated index to return. A value of 0 would return the first simulated index in the collection. </param>
     /// <param name = "data"> Data to insert. </param>
@@ -282,7 +282,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
     /// <summary>
     /// Returns the first entry and removes it from the buffer.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns> The first entry in the buffer, or the default value if the buffer is empty. </returns>
     public T0 Dequeue()
     {
         if (_written == 0)
@@ -296,9 +296,9 @@ public class RingBuffer<T0> : IEnumerable<T0>
     }
 
     /// <summary>
-    /// Returns if able to dequeue an entry and removes it from the buffer if so.
+    /// Returns whether an entry was dequeued and removes it from the buffer if so.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns> True if an entry was dequeued; otherwise, false. </returns>
     public bool TryDequeue(out T0 result)
     {
         if (_written == 0)
@@ -317,15 +317,15 @@ public class RingBuffer<T0> : IEnumerable<T0>
 
     /// <summary>
     /// Adds an entry to the collection, returning a replaced entry.
-    /// This method internally redirects to add.
+    /// This method internally redirects to Add.
     /// </summary>
     public T0 Enqueue(T0 data) => Add(data);
 
     /// <summary>
-    /// Returns value in actual index as it relates to simulated index.
+    /// Returns the value at the actual index as it relates to the simulated index.
     /// </summary>
     /// <param name = "simulatedIndex"> Simulated index to return. A value of 0 would return the first simulated index in the collection. </param>
-    /// <returns> </returns>
+    /// <returns> The value stored at the simulated index. </returns>
     public T0 this[int simulatedIndex]
     {
         get
@@ -432,9 +432,9 @@ public class RingBuffer<T0> : IEnumerable<T0>
     }
 
     /// <summary>
-    /// Returns Enumerator for the collection.
+    /// Returns an enumerator for the collection.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns> An enumerator for the collection. </returns>
     public Enumerator GetEnumerator()
     {
         Initialize();

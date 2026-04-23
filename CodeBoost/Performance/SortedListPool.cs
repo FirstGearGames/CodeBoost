@@ -11,11 +11,11 @@ namespace CodeBoost.Performance;
 public static class SortedListPool<T0, T1>
 {
     /// <summary>
-    /// Stack for TheadLocal SortedList.
+    /// The stack for the ThreadLocal SortedList.
     /// </summary>
     private static readonly ThreadLocal<ThreadLocalStackWrapper<SortedList<T0, T1>>> Wrapper;
     /// <summary>
-    /// Stack for global SortedList.
+    /// The stack for the global SortedList.
     /// </summary>
     private static readonly Stack<SortedList<T0, T1>> GlobalStack = [];
     /// <summary>
@@ -39,7 +39,7 @@ public static class SortedListPool<T0, T1>
     }
 
     /// <summary>
-    /// Rents a SortedList.
+    /// Rents a SortedList from the pool.
     /// </summary>
     /// <returns>A cleared SortedList collection.</returns>
     public static SortedList<T0, T1> Rent()
@@ -59,8 +59,8 @@ public static class SortedListPool<T0, T1>
     }
 
     /// <summary>
-    /// Returns a SortedList and sets the provided reference to null;
-    /// This Method will not execute if the value is null.
+    /// Returns a SortedList to the pool and sets the provided reference to null.
+    /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref SortedList<T0, T1>? value)
@@ -71,7 +71,7 @@ public static class SortedListPool<T0, T1>
     }
 
     /// <summary>
-    /// Returns a SortedList.
+    /// Returns a SortedList to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(SortedList<T0, T1>? value)
@@ -97,7 +97,7 @@ public static class SortedListPool<T0, T1>
     }
 
     /// <summary>
-    /// Flushes the ThreadLocal SortedList Stack into the global Stack.
+    /// Flushes the ThreadLocal SortedList stack into the global stack.
     /// </summary>
     private static void Flush(Stack<SortedList<T0, T1>> localStack)
     {

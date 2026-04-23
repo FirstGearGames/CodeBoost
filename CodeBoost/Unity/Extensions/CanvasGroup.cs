@@ -19,7 +19,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Sets a CanvasGroup blocking type and alpha.
+        /// Sets the blocking type and alpha of a CanvasGroup.
         /// </summary>
         /// <param name = "blockingType"> How to handle interactions. </param>
         /// <param name = "alpha"> Alpha for CanvasGroup. </param>
@@ -30,7 +30,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Sets a canvasGroup active with specified alpha.
+        /// Sets a CanvasGroup active with the specified alpha.
         /// </summary>
         public static void SetActive(this UnityCanvasGroup group, float alpha)
         {
@@ -39,7 +39,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Sets a canvasGroup inactive with specified alpha.
+        /// Sets a CanvasGroup inactive with the specified alpha.
         /// </summary>
         public static void SetInactive(this UnityCanvasGroup group, float alpha)
         {
@@ -48,7 +48,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Sets a group active state by changing alpha and interaction toggles.
+        /// Sets the active state of a group by changing the alpha and interaction toggles.
         /// </summary>
         public static void SetActive(this UnityCanvasGroup group, bool active, bool setAlpha)
         {
@@ -68,7 +68,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Sets a group active state by changing alpha and interaction toggles with a custom alpha.
+        /// Sets the active state of a group by changing the alpha and interaction toggles with a custom alpha.
         /// </summary>
         public static void SetActive(this UnityCanvasGroup group, bool active, float alpha)
         {

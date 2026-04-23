@@ -22,9 +22,9 @@ public static class EnumExtensions
     }
 
     /// <summary>
-    /// Gets the lowest and highest values for an enum of underlying type.
+    /// Gets the lowest and highest values for an enum of the underlying type.
     /// </summary>
-    /// <remarks>True if was able to retrieve the values.</remarks>
+    /// <remarks>Returns true if the values were able to be retrieved.</remarks>
     public static bool TryGetMinimumAndMaximumSignedValues<T0>(out long minimumValue, out long maximumValue) where T0 : Enum
     {
         if (!TryValidateUnderlyingType<T0>(typeof(long)))
@@ -64,9 +64,9 @@ public static class EnumExtensions
     }
 
     /// <summary>
-    /// Gets the lowest and highest values for an enum of underlying type.
+    /// Gets the lowest and highest values for an enum of the underlying type.
     /// </summary>
-    /// <remarks>True if was able to retrieve the values.</remarks>
+    /// <remarks>Returns true if the values were able to be retrieved.</remarks>
     public static bool TryGetMinimumAndMaximumUnsignedValues<T0>(out ulong minimumValue, out ulong maximumValue) where T0 : Enum
     {
         if (!TryValidateUnderlyingType<T0>(typeof(long)))
@@ -140,7 +140,7 @@ public static class EnumExtensions
     /// <summary>
     /// Returns if the value contains any of the provided flags without safety checks.
     /// </summary>
-    /// <remarks>Type comparison is not checked.</remarks>
+    /// <remarks>The type comparison is not checked.</remarks>
     public static int GetValuesCount<T0>() where T0 : Enum => Enum.GetValues(typeof(T0)).Length;
 
     /// <summary>
@@ -168,7 +168,7 @@ public static class EnumExtensions
     /// <summary>
     /// Returns if the value contains any of the provided flags without safety checks.
     /// </summary>
-    /// <remarks>Type comparison is not checked.</remarks>
+    /// <remarks>The type comparison is not checked.</remarks>
     public static bool HasAnyFlagAllocated<T0>(this T0 thisValue, T0 flagsToCheck) where T0 : Enum
     {
         ulong thisValueAsUint64 = Convert.ToUInt64(thisValue);
@@ -180,7 +180,7 @@ public static class EnumExtensions
     /// <summary>
     /// Returns if the value contains any of the provided flags without safety checks.
     /// </summary>
-    /// <remarks>Type comparison is not checked.</remarks>
+    /// <remarks>The type comparison is not checked.</remarks>
     public static bool HasAnyFlagUnsafe<T0>(this T0 thisValue, T0 flagsToCheck) where T0 : Enum
     {
         if (!thisValue.ToUInt64Unsafe(out ulong valueAsUInt64))

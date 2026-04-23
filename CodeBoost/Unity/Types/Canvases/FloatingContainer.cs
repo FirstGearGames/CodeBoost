@@ -12,7 +12,7 @@ namespace CodeBoost.Unity.Types.Canvases
     public class FloatingContainer : CanvasGroupFader
     {
         /// <summary>
-        /// RectTransform to move.
+        /// The RectTransform to move.
         /// </summary>
         [Tooltip("RectTransform to move.")]
         [SerializeField]
@@ -26,7 +26,7 @@ namespace CodeBoost.Unity.Types.Canvases
         [TabGroup("Sizing")]
         protected bool UseEdgeAvoidance = true;
         /// <summary>
-        /// How much to avoid screen edges when being moved.
+        /// The amount to avoid screen edges by when being moved.
         /// </summary>
         [Tooltip("How much to avoid screen edges when being moved.")]
         [SerializeField]
@@ -35,24 +35,24 @@ namespace CodeBoost.Unity.Types.Canvases
         protected Vector2 EdgeAvoidance;
 
         /// <summary>
-        /// Desired position.
+        /// The desired position.
         /// </summary>
         private Vector3 _positionGoal;
         /// <summary>
-        /// Desired rotation.
+        /// The desired rotation.
         /// </summary>
         private Quaternion _rotationGoal;
         /// <summary>
-        /// Desired scale.
+        /// The desired scale.
         /// </summary>
         private Vector3 _scaleGoal = Vector3.one;
         /// <summary>
-        /// How much edge avoidance to use.
+        /// The amount of edge avoidance to use.
         /// </summary>
         private Vector2? _edgeAvoidance;
 
         /// <summary>
-        /// Attaches a gameObject as a child of this object and sets transform valus to default.
+        /// Attaches a GameObject as a child of this object and sets its transform values to default.
         /// </summary>
         /// <param name = "go"> GameObject to attach. </param>
         public void AttachGameObject(GameObject go)
@@ -121,7 +121,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Updates the rectTransform pivot.
+        /// Updates the RectTransform pivot.
         /// </summary>
         /// <param name = "pivot"> New pivot. </param>
         /// <param name = "move"> True to move the RectTransform after updating. </param>
@@ -196,7 +196,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Updates how much edge avoidance to use. When null serialized values are used.
+        /// Updates how much edge avoidance to use. When null, the serialized values are used.
         /// </summary>
         /// <param name = "edgeAvoidanceOverride"> How far to keep the RectTransform from the edge. If null serialized avoidance will be used. </param>
         /// <param name = "move"> True to move the RectTransform after updating. </param>
@@ -208,7 +208,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Moves to configured goals.
+        /// Moves to the configured goals.
         /// </summary>
         protected virtual void Move()
         {

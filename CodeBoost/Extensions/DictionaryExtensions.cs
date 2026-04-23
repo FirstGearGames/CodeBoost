@@ -6,7 +6,7 @@ namespace CodeBoost.Extensions;
 public static class DictionaryExtensions
 {
     /// <summary>
-    /// Returns values as a list.
+    /// Returns the values of the dictionary as a list.
     /// </summary>
     /// <remarks>The returned list is taken from a collection pool.</remarks>
     public static List<TValue> ValuesToList<TKey, TValue>(this IDictionary<TKey, TValue> dict)
@@ -28,7 +28,7 @@ public static class DictionaryExtensions
     }
 
     /// <summary>
-    /// Returns keys as a list.
+    /// Returns the keys of the dictionary as a list.
     /// </summary>
     /// <remarks>The returned list is taken from a collection pool.</remarks>
     public static List<TValue> KeysToList<TKey, TValue>(this IDictionary<TKey, TValue> dict)

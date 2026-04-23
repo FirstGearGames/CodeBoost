@@ -11,11 +11,11 @@ namespace CodeBoost.Performance;
 public static class ObjectPool<T0> where T0 : new()
 {
     /// <summary>
-    /// Stack for TheadLocal Object.
+    /// The stack for the ThreadLocal object.
     /// </summary>
     private static readonly ThreadLocal<ThreadLocalStackWrapper<T0>> Wrapper;
     /// <summary>
-    /// Stack for global Object.
+    /// The stack for the global object.
     /// </summary>
     private static readonly Stack<T0> GlobalStack = [];
     /// <summary>
@@ -39,7 +39,7 @@ public static class ObjectPool<T0> where T0 : new()
     }
 
     /// <summary>
-    /// Rents a generic object.
+    /// Rents a generic object from the pool.
     /// </summary>
     /// <returns>A new or pooled instance of T0.</returns>
     public static T0 Rent()
@@ -59,8 +59,8 @@ public static class ObjectPool<T0> where T0 : new()
     }
 
     /// <summary>
-    /// Returns a generic object and sets the provided reference to null;
-    /// This Method will not execute if the value is null.
+    /// Returns a generic object to the pool and sets the provided reference to null.
+    /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref T0? value)
@@ -71,7 +71,7 @@ public static class ObjectPool<T0> where T0 : new()
     }
 
     /// <summary>
-    /// Returns a generic object.
+    /// Returns a generic object to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(T0? value)
@@ -98,7 +98,7 @@ public static class ObjectPool<T0> where T0 : new()
     }
 
     /// <summary>
-    /// Flushes the ThreadLocal Object Stack into the global Stack.
+    /// Flushes the ThreadLocal object stack into the global stack.
     /// </summary>
     private static void Flush(Stack<T0> localStack)
     {

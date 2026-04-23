@@ -4,7 +4,7 @@ using CodeBoost.Logging;
 namespace CodeBoost.Mathematics;
 
 /// <summary>
-/// Various utility classes relating to Float.
+/// Contains various utility methods relating to floating point numbers.
 /// </summary>
 public static partial class MathCb
 {

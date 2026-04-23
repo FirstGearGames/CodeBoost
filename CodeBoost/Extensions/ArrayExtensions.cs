@@ -8,12 +8,12 @@ namespace CodeBoost.Extensions;
 public static class ArrayExtensions
 {
     /// <summary>
-    /// Randomizer used for shuffling.
+    /// The randomizer used for shuffling.
     /// </summary>
     private static readonly Random Random = new();
-        
+
     /// <summary>
-    /// Shuffles a collection.
+    /// Shuffles the collection.
     /// </summary>
     public static void Shuffle<T0>(this T0[] array)
     {

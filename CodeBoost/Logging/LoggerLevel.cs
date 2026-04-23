@@ -1,20 +1,20 @@
 namespace CodeBoost.Logging;
 
 /// <summary>
-/// What type of messages to log.
+/// Specifies what type of messages to log.
 /// </summary>
 public enum LoggerLevel : byte
 {
     /// <summary>
-    /// Log error and higher.
+    /// Logs errors and higher.
     /// </summary>
     Error = 1,
     /// <summary>
-    /// Log warning and higher.
+    /// Logs warnings and higher.
     /// </summary>
     Warning = 2,
     /// <summary>
-    /// Log information and higher.
+    /// Logs information and higher.
     /// </summary>
     Information = 3,
     /// <summary>

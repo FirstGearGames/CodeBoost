@@ -1,31 +1,31 @@
 namespace CodeBoost.Logging;
 
 /// <summary>
-/// What type of messages to log.
+/// Specifies what type of messages to log.
 /// </summary>
 public class LoggerSetting
 {
     /// <summary>
-    /// Logging level for editor.
+    /// The logging level for the editor.
     /// </summary>
     // Do not make readonly so that the field may be serialized.
     // ReSharper disable once FieldCanBeMadeReadOnly.Global
     public LoggerLevel Editor = LoggerLevel.Information;
     /// <summary>
-    /// Logging level for development builds.
+    /// The logging level for development builds.
     /// </summary>
     // Do not make readonly so that the field may be serialized.
     // ReSharper disable once FieldCanBeMadeReadOnly.Global
     public LoggerLevel DevelopmentBuilds = LoggerLevel.Warning;
     /// <summary>
-    /// Logging level for release builds.
+    /// The logging level for release builds.
     /// </summary>
     // Do not make readonly so that the field may be serialized.
     // ReSharper disable once FieldCanBeMadeReadOnly.Global
     public LoggerLevel ReleaseBuilds = LoggerLevel.Error;
-        
+
     /// <summary>
-    /// Default settings to use.
+    /// The default settings to use.
     /// </summary>
     public static readonly LoggerSetting LoggerServiceSetting = new()
     {

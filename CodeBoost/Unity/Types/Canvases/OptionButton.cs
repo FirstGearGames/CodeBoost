@@ -10,12 +10,12 @@ namespace CodeBoost.Unity.Types.Canvases
     public class OptionMenuButton : MonoBehaviour
     {
         /// <summary>
-        /// ButtonData for this button.
+        /// The ButtonData for this button.
         /// </summary>
         public ButtonData ButtonData { get; protected set; }
 
         /// <summary>
-        /// Text component to show button text.
+        /// The text component to show the button text.
         /// </summary>
         [Tooltip("Text component to show button text.")]
         private TextMeshProUGUI _text;

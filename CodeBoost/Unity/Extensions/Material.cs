@@ -12,7 +12,7 @@ namespace CodeBoost.Extensions
         /// Returns the color or tint color property for a material.
         /// </summary>
         /// <param name = "material"> </param>
-        /// <returns> </returns>
+        /// <returns>Returns the color or tint color property for the material.</returns>
         public static Color GetColor(this Material material)
         {
             if (material.HasProperty("_Color"))

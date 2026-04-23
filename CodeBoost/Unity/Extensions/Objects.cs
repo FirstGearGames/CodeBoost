@@ -12,10 +12,10 @@ namespace CodeBoost.Unity.Extensions
     public static class GameObjectExtensions
     {
         /// <summary>
-        /// Returns if an object has been destroyed from memory.
+        /// Returns whether an object has been destroyed from memory.
         /// </summary>
         /// <param name = "gameObject"> </param>
-        /// <returns> </returns>
+        /// <returns>Returns true if the object has been destroyed; otherwise, false.</returns>
         public static bool IsDestroyed(this GameObject gameObject)
         {
             // UnityEngine overloads the == operator for the GameObject type
@@ -26,11 +26,11 @@ namespace CodeBoost.Unity.Extensions
         }
 
         /// <summary>
-        /// Finds all objects in the scene of type. This method is very expensive.
+        /// Finds all objects in the scene of the specified type. This method is very expensive.
         /// </summary>
         /// <typeparam name = "T"> </typeparam>
         /// <param name = "requireSceneLoaded"> True if the scene must be fully loaded before trying to seek objects. </param>
-        /// <returns> </returns>
+        /// <returns>Returns a list containing all objects of the specified type found in the scene.</returns>
         public static List<T0> FindAllObjectsOfType<T0>(bool activeSceneOnly = true, bool requireSceneLoaded = false, bool includeDDOL = true, bool includeInactive = true)
         {
             List<T0> results = new();

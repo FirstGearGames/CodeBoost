@@ -7,24 +7,24 @@ namespace CodeBoost.Types;
 public struct Vector4Int
 {
     /// <summary>
-    /// X value.
+    /// The X value.
     /// </summary>
     public int X;
     /// <summary>
-    /// Y value.
+    /// The Y value.
     /// </summary>
     public int Y;
     /// <summary>
-    /// Z value.
+    /// The Z value.
     /// </summary>
     public int Z;
     /// <summary>
-    /// W value.
+    /// The W value.
     /// </summary>
     public int W;
 
     /// <summary>
-    /// Creates a new Vector2Int using values.
+    /// Creates a new Vector4Int using the specified values.
     /// </summary>
     public Vector4Int(int x = 0, int y = 0, int z = 0, int w = 0)
     {
@@ -35,7 +35,7 @@ public struct Vector4Int
     }
 
     /// <summary>
-    /// Creates a new Vector2Int using value.
+    /// Creates a new Vector4Int using the specified value.
     /// </summary>
     public Vector4Int(Vector4Int vector4Int)
     {
@@ -46,7 +46,7 @@ public struct Vector4Int
     }
 
     /// <summary>
-    /// Creates a new Vector2Int using value.
+    /// Creates a new Vector4Int using the specified value.
     /// </summary>
     public Vector4Int(Vector4 vector4, MidpointRounding rounding)
     {

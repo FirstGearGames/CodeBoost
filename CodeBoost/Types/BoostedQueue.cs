@@ -14,31 +14,31 @@ namespace CodeBoost.Types;
 public class BoostedQueue<T0>
 {
     /// <summary>
-    /// Maximum size of the collection.
+    /// The maximum size of the collection.
     /// </summary>
     public int Capacity => _collection.Length;
     /// <summary>
-    /// Number of elements in the queue.
+    /// The number of elements in the queue.
     /// </summary>
     public int Count => _written;
     /// <summary>
-    /// Collection containing data.
+    /// The collection containing the data.
     /// </summary>
     private T0[] _collection = new T0[4];
     /// <summary>
-    /// Current write index of the collection.
+    /// The current write index of the collection.
     /// </summary>
     public int WriteIndex { get; private set; }
     /// <summary>
-    /// Buffer for resizing.
+    /// The buffer used for resizing.
     /// </summary>
     private readonly T0[] _resizeBuffer = [];
     /// <summary>
-    /// Read position of the next Dequeue.
+    /// The read position of the next dequeue.
     /// </summary>
     private int _read;
     /// <summary>
-    /// Length of the queue.
+    /// The length of the queue.
     /// </summary>
     private int _written;
 
@@ -118,7 +118,7 @@ public class BoostedQueue<T0>
     /// <summary>
     /// Peeks the next queue entry.
     /// </summary>
-    /// <returns> </returns>
+    /// <returns> The next entry in the queue. </returns>
     public T0 Peek()
     {
         if (_written == 0)
@@ -190,10 +190,10 @@ public class BoostedQueue<T0>
     }
 
     /// <summary>
-    /// Returns value in actual index as it relates to simulated index.
+    /// Returns the value at the actual index as it relates to the simulated index.
     /// </summary>
     /// <param name = "simulatedIndex"> Simulated index to return. A value of 0 would return the first simulated index in the collection. </param>
-    /// <returns> </returns>
+    /// <returns> The value stored at the simulated index. </returns>
     public T0 this[int simulatedIndex]
     {
         get

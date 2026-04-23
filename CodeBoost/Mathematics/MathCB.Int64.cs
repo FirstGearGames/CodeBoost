@@ -3,7 +3,7 @@
 namespace CodeBoost.Mathematics;
 
 /// <summary>
-/// Various utility classes relating to Float.
+/// Contains various utility methods relating to floating point numbers.
 /// </summary>
 public static partial class MathCb
 {
@@ -21,7 +21,7 @@ public static partial class MathCb
     }
         
     /// <summary>
-    /// Pads an index a specified value. Preferred over typical padding so that pad values used with skins can be easily found in the code.
+    /// Pads an index by a specified value. This is preferred over typical padding so that pad values used with skins can be easily found in the code.
     /// </summary>
     public static string Pad(this long value, int padding)
     {
@@ -37,7 +37,7 @@ public static partial class MathCb
     /// <param name = "value"> Value to clamp. </param>
     /// <param name = "minimum"> Minimum value. </param>
     /// <param name = "maximum"> Maximum value. </param>
-    /// <returns> </returns>
+    /// <returns>The value clamped within the specified range.</returns>
     public static long Clamp(long value, long minimum, long maximum)
     {
         if (value < minimum)
@@ -81,7 +81,7 @@ public static partial class MathCb
     }
         
     /// <summary>
-    /// Converts an Int64 to a Single.
+    /// Converts an Int64 to a single.
     /// </summary>
     /// <param name="value">Value to convert.</param>
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>

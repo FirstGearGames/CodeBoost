@@ -3,7 +3,7 @@ using CodeBoost.Extensions;
 namespace CodeBoost.Environment;
 
 /// <summary>
-/// A static ApplicationState which uses the currently registered IApplicationState.
+/// Provides a static ApplicationState which uses the currently registered IApplicationState.
 /// </summary>
 public static class ApplicationState
 {
@@ -28,49 +28,54 @@ public static class ApplicationState
         
 
     /// <summary>
-    /// Called when the application focus state changes.
+    /// Invoked when the application focus state changes.
     /// </summary>
     public static event IApplicationState.FocusChangeEventHandler FocusChanged;
 
     /// <summary>
-    /// Callback for when the 
+    /// Callback invoked when the underlying IApplicationState reports a focus change.
     /// </summary>
     /// <param name="isFocused"></param>
     private static void ApplicationState_OnFocusChanged(bool isFocused) => FocusChanged?.Invoke(isFocused);
         
     /// <summary>
-    /// True if the application is quitting.
+    /// Returns whether the application is quitting.
     /// </summary>
+    /// <returns>True if the application is quitting; otherwise false.</returns>
     public static bool IsQuitting() => ApplicationStateService.IsQuitting();
 
     /// <summary>
-    /// True if the application is playing.
+    /// Returns whether the application is playing.
     /// </summary>
+    /// <returns>True if the application is playing; otherwise false.</returns>
     public static bool IsPlaying() =>  ApplicationStateService.IsPlaying();
 
     /// <summary>
-    /// Quits the application for editor or builds.
+    /// Quits the application for the editor or a build.
     /// </summary>
     public static void Quit() => ApplicationStateService.Quit();
 
     /// <summary>
-    /// True if the application is being run within an editor.
+    /// Returns whether the application is being run within an editor.
     /// </summary>
+    /// <returns>True if the application is being run within an editor; otherwise false.</returns>
     public static bool IsEditor() => ApplicationStateService.IsEditor();
 
     /// <summary>
-    /// True if the application is a build with development or debugging enabled.
+    /// Returns whether the application is a build with development or debugging enabled.
     /// </summary>
-    /// >
+    /// <returns>True if the application is a development or debug build; otherwise false.</returns>
     public static bool IsDevelopmentBuild() => ApplicationStateService.IsDevelopmentBuild();
-        
+
     /// <summary>
-    /// True if a GUI build, such as a client build.
+    /// Returns whether the application is a GUI build, such as a client build.
     /// </summary>
+    /// <returns>True if the application is a GUI build; otherwise false.</returns>
     public static bool IsGuiBuild() => ApplicationStateService.IsGuiBuild();
-        
+
     /// <summary>
-    /// True if a headless build, such as a server build.
+    /// Returns whether the application is a headless build, such as a server build.
     /// </summary>
+    /// <returns>True if the application is a headless build; otherwise false.</returns>
     public static bool IsHeadlessBuild() => ApplicationStateService.IsHeadlessBuild();
 }

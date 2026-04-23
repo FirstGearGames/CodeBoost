@@ -17,7 +17,7 @@ namespace CodeBoost.Unity.Editor
         /// <summary>
         /// Adds a define symbol for the build target.
         /// </summary>
-        /// <returns>True if the symbol was added, false if it already existed.</returns>
+        /// <returns>Returns true if the symbol was added, or false if it already existed.</returns>
         public static bool AddDefineSymbol(string symbol, NamedBuildTarget buildTarget)
         {
             HashSet<string> currentDefines = GetDefineSymbols(buildTarget);
@@ -35,14 +35,14 @@ namespace CodeBoost.Unity.Editor
         /// <summary>
         /// Adds a define symbol for the current build target.
         /// </summary>
-        /// <returns>True if the symbol was added, false if it already existed.</returns>
+        /// <returns>Returns true if the symbol was added, or false if it already existed.</returns>
 
         public static bool AddDefineSymbolToCurrentBuildTarget(string symbol) => AddDefineSymbol(symbol, GetCurrentBuildTarget());
 
         /// <summary>
         /// Removes a define symbol for the build target.
         /// </summary>
-        /// <returns>True if the symbol was removed, false if it did not exist.</returns>
+        /// <returns>Returns true if the symbol was removed, or false if it did not exist.</returns>
         public static bool RemoveDefineSymbol(string symbol, NamedBuildTarget buildTarget)
         {
             HashSet<string> currentDefines = GetDefineSymbols(buildTarget);
@@ -60,13 +60,13 @@ namespace CodeBoost.Unity.Editor
         /// <summary>
         /// Removes a define symbol for the build target.
         /// </summary>
-        /// <returns>True if the symbol was removed, false if it did not exist.</returns>
+        /// <returns>Returns true if the symbol was removed, or false if it did not exist.</returns>
         public static bool RemoveDefineSymbolToCurrentBuildTarget(string symbol) => RemoveDefineSymbol(symbol, GetCurrentBuildTarget());
 
         /// <summary>
         /// Returns the current NamedBuildTarget.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns the current NamedBuildTarget.</returns>
         public static NamedBuildTarget GetCurrentBuildTarget()
         {
             bool standaloneAndServer = false;

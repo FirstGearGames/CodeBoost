@@ -12,7 +12,7 @@ namespace CodeBoost.Unity.Types.Canvases
     public class OptionMenuImageButton : OptionMenuButton
     {
         /// <summary>
-        /// Image component to show image on.
+        /// The Image component to show the image on.
         /// </summary>
         [Tooltip("Image component to show image on.")]
         private Image _image;

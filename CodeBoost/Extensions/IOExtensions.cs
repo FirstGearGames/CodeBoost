@@ -11,7 +11,7 @@ namespace CodeBoost.Extensions;
 public static class IoExtensions
 {
     /// <summary>
-    /// How to format a platform path.
+    /// Specifies how to format a platform path.
     /// </summary>
     public enum PathFormattingType
     {
@@ -26,7 +26,7 @@ public static class IoExtensions
     }
 
     /// <summary>
-    /// How to write data to a file.
+    /// Specifies how to write data to a file.
     /// </summary>
     public enum WriteType
     {
@@ -35,13 +35,13 @@ public static class IoExtensions
         /// </summary>
         Append = 0,
         /// <summary>
-        /// Replaces existing data with new.
+        /// Replaces existing data with new data.
         /// </summary>
         Create = 1
     }
 
     /// <summary>
-    /// Writes a text value to a file path.
+    /// Writes a text value to the specified file path.
     /// </summary>
     public static void WriteToFile(string value, string path, WriteType writeType = WriteType.Create, PathFormattingType pathFormattingType = PathFormattingType.FormatToPlatform)
     {
@@ -101,7 +101,7 @@ public static class IoExtensions
     }
 
     /// <summary>
-    /// Formats a file path to the current platform.
+    /// Formats a file path for the current platform.
     /// </summary>
     public static string FormatPlatformPath(string path)
     {
@@ -126,12 +126,12 @@ public static class IoExtensions
     }
 
     /// <summary>
-    /// Returns files on a path which matches a value.
+    /// Returns files on a path which match the specified search pattern.
     /// </summary>
     public static List<string> GetDirectoryFilesRecursively(string path, string searchPattern) => GetDirectoryFilesRecursively(path, searchPattern, excludedPaths: null);
 
     /// <summary>
-    /// Returns files on a path which matches a value.
+    /// Returns files on a path which match the specified search pattern.
     /// </summary>
     public static List<string> GetDirectoryFilesRecursively(string path, string searchPattern, List<string>? excludedPaths)
     {

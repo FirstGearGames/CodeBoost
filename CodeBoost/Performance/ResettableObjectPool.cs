@@ -7,7 +7,7 @@ namespace CodeBoost.Performance;
 public static class ResettableObjectPool<T0> where T0 : IPoolResettable, new()
 {
     /// <summary>
-    /// Retrieves an instance of T0.
+    /// Retrieves an instance of T0 from the pool.
     /// </summary>
     public static T0 Rent()
     {
@@ -20,7 +20,7 @@ public static class ResettableObjectPool<T0> where T0 : IPoolResettable, new()
 
     /// <summary>
     /// Stores an instance of T0 and sets the original reference to default.
-    /// Method will not execute if value is null.
+    /// The method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref T0? value)
@@ -31,7 +31,7 @@ public static class ResettableObjectPool<T0> where T0 : IPoolResettable, new()
     }
 
     /// <summary>
-    /// Stores an instance of T0.
+    /// Stores an instance of T0 in the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
     public static void Return(T0? value)

@@ -5,19 +5,19 @@ namespace CodeBoost.Environment;
 public static class ApplicationStateService
 {
     /// <summary>
-    /// Called when ApplicationState is set.
+    /// Invoked when the ApplicationState is set.
     /// </summary>
     internal static event ApplicationStateSetEventHandler ApplicationStateSet;
 
     internal delegate void ApplicationStateSetEventHandler(IApplicationState previousApplicationState, IApplicationState nextApplicationState);
 
     /// <summary>
-    /// ILogger to use.
+    /// The IApplicationState to use.
     /// </summary>
     internal static IApplicationState ApplicationState;
 
     /// <summary>
-    /// Message when trying to access ApplicationState when there is not an instance created.
+    /// The message used when trying to access the ApplicationState when there is not an instance created.
     /// </summary>
     private static readonly string ApplicationStateIsNullMessage = $"[{nameof(ApplicationState)}] is null. Use [{nameof(ApplicationStateService)}] to set a service.";
         
@@ -27,7 +27,7 @@ public static class ApplicationStateService
     }
 
     /// <summary>
-    /// Specifies which ILogger to use.
+    /// Specifies which IApplicationState to use.
     /// </summary>
     public static void UseApplicationState(IApplicationState applicationState)
     {
@@ -38,8 +38,9 @@ public static class ApplicationStateService
     }
 
     /// <summary>
-    /// True if the application is quitting.
+    /// Returns whether the application is quitting.
     /// </summary>
+    /// <returns>True if the application is quitting; otherwise false.</returns>
     internal static bool IsQuitting()
     {
         if (ApplicationState is not null)
@@ -49,8 +50,9 @@ public static class ApplicationStateService
     }
 
     /// <summary>
-    /// True if the application is playing.
+    /// Returns whether the application is playing.
     /// </summary>
+    /// <returns>True if the application is playing; otherwise false.</returns>
     internal static bool IsPlaying()
     {
         if (ApplicationState is not null)
@@ -60,7 +62,7 @@ public static class ApplicationStateService
     }
 
     /// <summary>
-    /// Quits the application for editor or builds.
+    /// Quits the application for the editor or a build.
     /// </summary>
     internal static void Quit()
     {
@@ -71,8 +73,9 @@ public static class ApplicationStateService
     }
 
     /// <summary>
-    /// True if the application is being run within an editor.
+    /// Returns whether the application is being run within an editor.
     /// </summary>
+    /// <returns>True if the application is being run within an editor; otherwise false.</returns>
     public static bool IsEditor()
     {
         if (ApplicationState is not null)
@@ -82,9 +85,9 @@ public static class ApplicationStateService
     }
 
     /// <summary>
-    /// True if the application is a build with development or debugging enabled.
+    /// Returns whether the application is a build with development or debugging enabled.
     /// </summary>
-    /// >
+    /// <returns>True if the application is a development or debug build; otherwise false.</returns>
     public static bool IsDevelopmentBuild()
     {
         if (ApplicationState is not null)
@@ -94,8 +97,9 @@ public static class ApplicationStateService
     }
 
     /// <summary>
-    /// True if a GUI build, such as a client build.
+    /// Returns whether the application is a GUI build, such as a client build.
     /// </summary>
+    /// <returns>True if the application is a GUI build; otherwise false.</returns>
     public static bool IsGuiBuild()
     {
         if (ApplicationState is not null)
@@ -105,8 +109,9 @@ public static class ApplicationStateService
     }
 
     /// <summary>
-    /// True if a headless build, such as a server build.
+    /// Returns whether the application is a headless build, such as a server build.
     /// </summary>
+    /// <returns>True if the application is a headless build; otherwise false.</returns>
     public static bool IsHeadlessBuild()
     {
         if (ApplicationState is not null)

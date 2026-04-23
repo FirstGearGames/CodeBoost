@@ -38,11 +38,11 @@ namespace CodeBoost.Unity.Types.Canvases
         /// <param name = "complete"> True if the resize iterations are complete. Typically show your visuals when true. </param>
         public delegate void ResizeHandler(bool complete);
         /// <summary>
-        /// Elements to resize.
+        /// The elements to resize.
         /// </summary>
         private readonly List<ResizeData> _resizeDatas = new();
         /// <summary>
-        /// Singleton instance of this class.
+        /// The singleton instance of this class.
         /// </summary>
         private static RectTransformResizer _instance;
 
@@ -58,7 +58,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Calls pending resizeDatas.
+        /// Calls the pending resize datas.
         /// </summary>
         private void Resize()
         {
@@ -77,9 +77,7 @@ namespace CodeBoost.Unity.Types.Canvases
         }
 
         /// <summary>
-        /// Used to call a delegate twice, over two frames.
-        /// This is an easy way to resize RectTransforms multiple times as they will often fail after the first resize due to Unity limitations.
-        /// Note: this work-around may not be required for newer Unity versions.
+        /// Used to call a delegate twice, over two frames. This is an easy way to resize RectTransforms multiple times as they will often fail after the first resize due to Unity limitations. Note: this work-around may not be required for newer Unity versions.
         /// </summary>
         /// <param name = "del"> Delegate to invoke when resizing completes. </param>
         public static void Resize(ResizeHandler del)
