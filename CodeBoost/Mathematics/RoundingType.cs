@@ -2,6 +2,9 @@
 
 namespace CodeBoost.Mathematics;
 
+/// <summary>
+/// Specifies how a numeric value should be rounded.
+/// </summary>
 public enum RoundingType
 {
     /// <summary>

@@ -32,10 +32,6 @@ public static class ApplicationState
     /// </summary>
     public static event IApplicationState.FocusChangeEventHandler FocusChanged;
 
-    /// <summary>
-    /// Callback invoked when the underlying IApplicationState reports a focus change.
-    /// </summary>
-    /// <param name="isFocused"></param>
     private static void ApplicationState_OnFocusChanged(bool isFocused) => FocusChanged?.Invoke(isFocused);
         
     /// <summary>

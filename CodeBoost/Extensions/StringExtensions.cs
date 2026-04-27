@@ -3,17 +3,31 @@ using CodeBoost.Performance;
 
 namespace CodeBoost.Extensions;
 
+/// <summary>
+/// Extension methods for transforming and inspecting <see cref="string"/> values.
+/// </summary>
 public static partial class StringExtensions
 {
     /// <summary>
-    /// The value representing when an index is not found or specified.
+    /// The sentinel value indicating that an index is not found or has not been specified.
     /// </summary>
     public const int UnsetIndex = -1;
-        
+
     /// <summary>
-    /// Converts a member string text to PascalCase.
+    /// Returns the supplied value, or an empty string when it is null.
     /// </summary>
-    /// <remarks>Leading non-alpha characters are removed and the first alpha character is capitalized.</remarks>
+    /// <param name="value">Value to inspect.</param>
+    /// <returns>The supplied value, or an empty string when it is null.</returns>
+    public static string EmptyIfNull(this string? value) => value ?? string.Empty;
+
+    /// <summary>
+    /// Converts a member-style string to PascalCase.
+    /// </summary>
+    /// <remarks>
+    /// Leading non-alpha characters are removed and the first alpha character is capitalized.
+    /// </remarks>
+    /// <param name="value">String to convert.</param>
+    /// <returns>The PascalCase representation of the supplied string.</returns>
     public static string MemberToPascalCase(this string value)
     {
         int index = value.GetFirstLetterOrDigitIndex();
@@ -46,10 +60,17 @@ public static partial class StringExtensions
 
 
     /// <summary>
-    /// Converts a pascal case string to member case with an optional prefix.
+    /// Converts a PascalCase string to member case, optionally prepending a prefix.
     /// </summary>
-    /// <example>With a prefix of '_' value 'HelloWorld' is returned as '_helloWorld'.</example>
-    /// <remarks>Prefix is only added if missing.</remarks>
+    /// <remarks>
+    /// The prefix is only added when it is not already present at the start of the value.
+    /// </remarks>
+    /// <example>
+    /// With a prefix of <c>_</c> the value <c>HelloWorld</c> is returned as <c>_helloWorld</c>.
+    /// </example>
+    /// <param name="value">String to convert.</param>
+    /// <param name="prefix">Prefix to prepend when not already present.</param>
+    /// <returns>The member-case representation of the supplied string.</returns>
     public static string PascalCaseToMember(this string value, string prefix = "_")
     {
         int index = value.GetFirstLetterOrDigitIndex();
@@ -102,10 +123,14 @@ public static partial class StringExtensions
     }
 
     /// <summary>
-    /// Converts a string into a byte array.
+    /// Converts the supplied string into a byte array rented from the shared pool.
     /// </summary>
-    /// <returns>The number of bytes written to the buffer.</returns>
-    /// <remarks>The buffer is instantiated as a new array if it is not large enough.</remarks>
+    /// <remarks>
+    /// The buffer is rented from <see cref="System.Buffers.ArrayPool{T}.Shared"/> and may be larger than the bytes written.
+    /// </remarks>
+    /// <param name="value">String to convert.</param>
+    /// <param name="bytesWritten">Receives the number of bytes written to the buffer.</param>
+    /// <returns>The pooled byte array containing the converted string.</returns>
     public static byte[] ToBytesNonAllocated(this string value, out int bytesWritten)
     {
         int valueLength = value.Length;
@@ -124,8 +149,10 @@ public static partial class StringExtensions
     }
         
     /// <summary>
-    /// Returns the index of the first letter or number in the string.
+    /// Returns the index of the first letter or digit in the supplied string.
     /// </summary>
+    /// <param name="value">String to inspect.</param>
+    /// <returns>The zero-based index of the first letter or digit, or <see cref="UnsetIndex"/> when none is found.</returns>
     public static int GetFirstLetterOrDigitIndex(this string value)
     {
         if (string.IsNullOrWhiteSpace(value))

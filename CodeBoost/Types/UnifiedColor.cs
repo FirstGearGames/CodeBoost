@@ -5,6 +5,9 @@ using CodeBoost.Mathematics;
 
 namespace CodeBoost.Types;
 
+/// <summary>
+/// Represents a color stored as RGBA byte components, with helper accessors for floating-point values.
+/// </summary>
 [Serializable]
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct UnifiedColor
@@ -42,6 +45,13 @@ public struct UnifiedColor
     /// </summary>
     public float Af => A / 255.0f;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnifiedColor"/> struct from byte components.
+    /// </summary>
+    /// <param name="r">Red component, in the range 0-255.</param>
+    /// <param name="g">Green component, in the range 0-255.</param>
+    /// <param name="b">Blue component, in the range 0-255.</param>
+    /// <param name="a">Alpha component, in the range 0-255.</param>
     public UnifiedColor(byte r, byte g, byte b, byte a)
     {
         R = r;
@@ -50,6 +60,10 @@ public struct UnifiedColor
         A = a;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnifiedColor"/> struct by copying the components of a <see cref="Color"/>.
+    /// </summary>
+    /// <param name="color">Color to copy components from.</param>
     public UnifiedColor(Color color)
     {
         R = color.R;
@@ -58,6 +72,13 @@ public struct UnifiedColor
         A = color.A;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnifiedColor"/> struct from floating-point components in the range 0-1.
+    /// </summary>
+    /// <param name="r">Red component, in the range 0-1.</param>
+    /// <param name="g">Green component, in the range 0-1.</param>
+    /// <param name="b">Blue component, in the range 0-1.</param>
+    /// <param name="a">Alpha component, in the range 0-1.</param>
     public UnifiedColor(float r, float g, float b, float a = 1f)
     {
         R = (byte)MathCb.Clamp(r * 255, 0, 255);
@@ -67,8 +88,8 @@ public struct UnifiedColor
     }
 
     /// <summary>
-    /// Returns a Color using the current values.
+    /// Returns a <see cref="Color"/> constructed from the current ARGB component values.
     /// </summary>
-    /// <returns> A Color constructed from the current A, R, G, and B values. </returns>
+    /// <returns>A <see cref="Color"/> constructed from the current A, R, G, and B values.</returns>
     public Color GetColor() => Color.FromArgb(A, R, G, B);
 }

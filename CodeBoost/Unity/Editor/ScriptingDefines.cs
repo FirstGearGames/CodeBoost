@@ -6,6 +6,9 @@ using UnityEditor.Build;
 
 namespace CodeBoost.Unity.Editor
 {
+    /// <summary>
+    /// Provides editor-time helpers for managing Unity scripting define symbols.
+    /// </summary>
     internal static class ScriptingDefines
     {
         [InitializeOnLoadMethod]
@@ -15,9 +18,11 @@ namespace CodeBoost.Unity.Editor
         }
 
         /// <summary>
-        /// Adds a define symbol for the build target.
+        /// Adds a scripting define symbol to the supplied build target.
         /// </summary>
-        /// <returns>Returns true if the symbol was added, or false if it already existed.</returns>
+        /// <param name="symbol">Symbol to add.</param>
+        /// <param name="buildTarget">Build target to update.</param>
+        /// <returns>True when the symbol was added, or false when it already existed.</returns>
         public static bool AddDefineSymbol(string symbol, NamedBuildTarget buildTarget)
         {
             HashSet<string> currentDefines = GetDefineSymbols(buildTarget);
@@ -33,16 +38,18 @@ namespace CodeBoost.Unity.Editor
         }
 
         /// <summary>
-        /// Adds a define symbol for the current build target.
+        /// Adds a scripting define symbol to the current build target.
         /// </summary>
-        /// <returns>Returns true if the symbol was added, or false if it already existed.</returns>
-
+        /// <param name="symbol">Symbol to add.</param>
+        /// <returns>True when the symbol was added, or false when it already existed.</returns>
         public static bool AddDefineSymbolToCurrentBuildTarget(string symbol) => AddDefineSymbol(symbol, GetCurrentBuildTarget());
 
         /// <summary>
-        /// Removes a define symbol for the build target.
+        /// Removes a scripting define symbol from the supplied build target.
         /// </summary>
-        /// <returns>Returns true if the symbol was removed, or false if it did not exist.</returns>
+        /// <param name="symbol">Symbol to remove.</param>
+        /// <param name="buildTarget">Build target to update.</param>
+        /// <returns>True when the symbol was removed, or false when it did not exist.</returns>
         public static bool RemoveDefineSymbol(string symbol, NamedBuildTarget buildTarget)
         {
             HashSet<string> currentDefines = GetDefineSymbols(buildTarget);
@@ -58,15 +65,16 @@ namespace CodeBoost.Unity.Editor
         }
 
         /// <summary>
-        /// Removes a define symbol for the build target.
+        /// Removes a scripting define symbol from the current build target.
         /// </summary>
-        /// <returns>Returns true if the symbol was removed, or false if it did not exist.</returns>
+        /// <param name="symbol">Symbol to remove.</param>
+        /// <returns>True when the symbol was removed, or false when it did not exist.</returns>
         public static bool RemoveDefineSymbolToCurrentBuildTarget(string symbol) => RemoveDefineSymbol(symbol, GetCurrentBuildTarget());
 
         /// <summary>
-        /// Returns the current NamedBuildTarget.
+        /// Returns the <see cref="NamedBuildTarget"/> that represents the current editor build target.
         /// </summary>
-        /// <returns>Returns the current NamedBuildTarget.</returns>
+        /// <returns>The current <see cref="NamedBuildTarget"/>.</returns>
         public static NamedBuildTarget GetCurrentBuildTarget()
         {
             bool standaloneAndServer = false;
@@ -86,8 +94,10 @@ namespace CodeBoost.Unity.Editor
         }
 
         /// <summary>
-        /// Gets defines for a specific build target.
+        /// Returns the scripting define symbols configured for the supplied build target.
         /// </summary>
+        /// <param name="namedBuildTarget">Build target to inspect.</param>
+        /// <returns>The scripting define symbols configured for the supplied build target.</returns>
         public static HashSet<string> GetDefineSymbols(NamedBuildTarget namedBuildTarget)
         {
             string currentDefines = PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget);
@@ -100,8 +110,9 @@ namespace CodeBoost.Unity.Editor
         }
 
         /// <summary>
-        /// Gets defines for the current build target.
+        /// Returns the scripting define symbols configured for the current build target.
         /// </summary>
+        /// <returns>The scripting define symbols configured for the current build target.</returns>
         public static HashSet<string> GetDefineSymbolsForCurrentBuildTarget() => GetDefineSymbols(GetCurrentBuildTarget());
     }
 }

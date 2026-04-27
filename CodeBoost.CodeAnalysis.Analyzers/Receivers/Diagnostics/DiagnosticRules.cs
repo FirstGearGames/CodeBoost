@@ -2,6 +2,9 @@
 
 namespace CodeBoost.CodeAnalysis.Analyzers.Receivers.Diagnostics;
 
+/// <summary>
+/// Provides shared <see cref="DiagnosticDescriptor"/> instances used by CodeBoost analyzers.
+/// </summary>
 public static class DiagnosticRules
 {
     /// <summary>

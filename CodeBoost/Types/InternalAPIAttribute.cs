@@ -8,7 +8,14 @@ namespace CodeBoost.Types;
 [AttributeUsage(AttributeTargets.All)]
 public sealed class InternalApiAttribute : Attribute
 {
+    /// <summary>
+    /// Optional details describing why the marked feature is considered internal.
+    /// </summary>
     public string Details { get; }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InternalApiAttribute"/> class with optional details.
+    /// </summary>
+    /// <param name="details">Optional details describing why the marked feature is considered internal.</param>
     public InternalApiAttribute(string details = "") => Details = details;
 }
     

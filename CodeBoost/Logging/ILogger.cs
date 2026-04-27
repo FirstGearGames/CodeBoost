@@ -1,32 +1,40 @@
 namespace CodeBoost.Logging;
 
+/// <summary>
+/// Defines the contract used by CodeBoost loggers.
+/// </summary>
 public interface ILogger
 {
     /// <summary>
-    /// Returns the settings to use for this logger.
+    /// Returns the settings that should be used for this logger.
     /// </summary>
-    /// <returns>The settings to use for the logger.</returns>
+    /// <returns>The settings that govern this logger's behavior.</returns>
     public LoggerSetting GetLoggerSetting();
 
     /// <summary>
-    /// Disables always including the stacktrace in development environments.
+    /// Returns whether the logger disables the unconditional inclusion of a stacktrace in development environments.
     /// </summary>
-    /// <returns>True to disable always including the stacktrace in development environments.</returns>
-    /// <remarks>Even with unconditional inclusions disabled, the stacktrace will still be included for higher level log calls.</remarks>
+    /// <remarks>
+    /// Even when unconditional inclusion is disabled, the stacktrace will still be included for higher-level log calls.
+    /// </remarks>
+    /// <returns>True when unconditional development stacktraces should be suppressed.</returns>
     public bool DisableUnconditionalDevelopmentStacktrace();
 
     /// <summary>
-    /// Logs a message as information.
+    /// Logs the supplied message at the information level.
     /// </summary>
+    /// <param name="message">Message to log.</param>
     public void LogInformation(string message);
 
     /// <summary>
-    /// Logs a message as a warning.
+    /// Logs the supplied message at the warning level.
     /// </summary>
+    /// <param name="message">Message to log.</param>
     public void LogWarning(string message);
 
     /// <summary>
-    /// Logs a message as an error.
+    /// Logs the supplied message at the error level.
     /// </summary>
+    /// <param name="message">Message to log.</param>
     public void LogError(string message);
 }

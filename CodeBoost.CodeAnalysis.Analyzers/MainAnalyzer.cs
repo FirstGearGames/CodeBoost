@@ -7,14 +7,19 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeBoost.CodeAnalysis.Analyzers;
 
+/// <summary>
+/// Top-level diagnostic analyzer that wires up CodeBoost receivers and reports their cached diagnostics.
+/// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class MainAnalyzer : DiagnosticAnalyzer
 {
+    /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ImmutableArray.Create(
             DiagnosticRules.CodeHealthReporterWarning,
             DiagnosticRules.CodeHealthReporterError);
 
+    /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);

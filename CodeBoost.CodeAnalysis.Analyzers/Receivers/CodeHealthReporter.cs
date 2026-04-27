@@ -12,14 +12,17 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace CodeBoost.CodeAnalysis.Analyzers.Receivers;
 
+/// <summary>
+/// Reports diagnostics produced by the CodeBoost code-health checks during compilation.
+/// </summary>
 public class CodeHealthReporter
 {
     /// <summary>
-    /// The full names of NamedTypes checked to be networked.
+    /// The full names of named types that have already been checked.
     /// </summary>
     private readonly HashSet<string> _typesCheckedFullName = new();
     /// <summary>
-    /// The current CachedDiagnostics.
+    /// The diagnostics that have been collected so far.
     /// </summary>
     private readonly List<Diagnostic> _cachedDiagnostics = [];
     private readonly string _poolResettableFullName;
@@ -34,6 +37,9 @@ public class CodeHealthReporter
     private readonly string _poolResettableMethodAttributeName;
 
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CodeHealthReporter"/> class and resolves the attribute and interface names used by the checks.
+    /// </summary>
     public CodeHealthReporter()
     {
         string? name;
@@ -89,9 +95,10 @@ public class CodeHealthReporter
     }
 
     /// <summary>
-    /// Returns whether there are any CachedDiagnostics and purges existing entries.
+    /// Tries to retrieve and clear the cached diagnostics that have been collected so far.
     /// </summary>
-    /// <returns>True if there were cached diagnostics that have been returned and purged; otherwise false.</returns>
+    /// <param name="cachedDiagnostics">Receives the cached diagnostics, or null when none are present.</param>
+    /// <returns>True when cached diagnostics were returned and purged; otherwise false.</returns>
     public bool TryPurgeCachedDiagnostics(out List<Diagnostic>? cachedDiagnostics)
     {
         if (_cachedDiagnostics.Count == 0)
@@ -106,6 +113,11 @@ public class CodeHealthReporter
         return true;
     }
 
+    /// <summary>
+    /// Handles a class declaration discovered during analysis.
+    /// </summary>
+    /// <param name="context">Analysis context for the discovered node.</param>
+    /// <param name="classDeclarationSyntax">Class declaration syntax to process.</param>
     public void HandleClassDeclarationSyntax(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax classDeclarationSyntax)
     {
         SemanticModel semanticModel = context.SemanticModel;
@@ -115,6 +127,11 @@ public class CodeHealthReporter
         HandleClassDeclarationSyntax(semanticModel, classDeclarationSyntax);
     }
 
+    /// <summary>
+    /// Handles a class declaration discovered during analysis using the supplied semantic model.
+    /// </summary>
+    /// <param name="semanticModel">Semantic model used to resolve symbols.</param>
+    /// <param name="classDeclarationSyntax">Class declaration syntax to process.</param>
     public void HandleClassDeclarationSyntax(SemanticModel semanticModel, ClassDeclarationSyntax classDeclarationSyntax)
     {
         if (semanticModel.GetDeclaredSymbol(classDeclarationSyntax) is not INamedTypeSymbol namedTypeSymbol)
@@ -123,6 +140,11 @@ public class CodeHealthReporter
         AddNamedType(semanticModel, namedTypeSymbol, FindingFlags.Recursive);
     }
 
+    /// <summary>
+    /// Handles a struct declaration discovered during analysis.
+    /// </summary>
+    /// <param name="context">Analysis context for the discovered node.</param>
+    /// <param name="structDeclarationSyntax">Struct declaration syntax to process.</param>
     public void HandleStructDeclarationSyntax(SyntaxNodeAnalysisContext context, StructDeclarationSyntax structDeclarationSyntax)
     {
         SemanticModel semanticModel = context.SemanticModel;
@@ -132,6 +154,11 @@ public class CodeHealthReporter
         HandleStructDeclarationSyntax(semanticModel, structDeclarationSyntax);
     }
 
+    /// <summary>
+    /// Handles a struct declaration discovered during analysis using the supplied semantic model.
+    /// </summary>
+    /// <param name="semanticModel">Semantic model used to resolve symbols.</param>
+    /// <param name="structDeclarationSyntax">Struct declaration syntax to process.</param>
     public void HandleStructDeclarationSyntax(SemanticModel semanticModel, StructDeclarationSyntax structDeclarationSyntax)
     {
         if (semanticModel.GetDeclaredSymbol(structDeclarationSyntax) is not INamedTypeSymbol namedTypeSymbol)

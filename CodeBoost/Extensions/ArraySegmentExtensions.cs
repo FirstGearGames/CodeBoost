@@ -3,11 +3,15 @@ using System.Buffers;
 
 namespace CodeBoost.Extensions;
 
+/// <summary>
+/// Extension methods for working with <see cref="ArraySegment{T}"/> values.
+/// </summary>
 public static class ArraySegmentExtensions
 {
     /// <summary>
-    /// Returns the underlying array to <see cref="ArrayPool{T}.Shared"/> if it is not null.
+    /// Returns the underlying array of the supplied segment to <see cref="ArrayPool{T}.Shared"/> when it is not null.
     /// </summary>
+    /// <param name="arraySegment">Segment whose underlying array should be returned to the shared pool.</param>
     public static void PoolArrayIntoShared(this ArraySegment<byte> arraySegment)
     {
         if (arraySegment.Array is not null)
@@ -41,6 +45,10 @@ public static class ArraySegmentExtensions
         /// </summary>
         private int _index;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ArraySegmentEnumerator{T0}"/> struct that walks the supplied segment.
+        /// </summary>
+        /// <param name="segment">Segment to enumerate.</param>
         public ArraySegmentEnumerator(ArraySegment<T0> segment)
         {
             _array = segment.Array;
@@ -58,9 +66,9 @@ public static class ArraySegmentExtensions
         }
 
         /// <summary>
-        /// Iterates to the next entry.
+        /// Advances the enumerator to the next entry in the segment.
         /// </summary>
-        /// <returns>True if there is another entry to enumerate; otherwise, false.</returns>
+        /// <returns>True when another entry is available; otherwise false.</returns>
         public bool MoveNext()
         {
             _index++;
@@ -68,7 +76,7 @@ public static class ArraySegmentExtensions
         }
 
         /// <summary>
-        /// Gets the current entry being enumerated.
+        /// The entry currently being enumerated.
         /// </summary>
         public T0? Current => _array is null ? default : _array[_index];
     }

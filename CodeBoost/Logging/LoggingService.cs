@@ -8,17 +8,24 @@ using System;
 
 namespace CodeBoost.Logging;
 
+/// <summary>
+/// Provides a static logging service that delegates to the registered <see cref="ILogger"/> implementation.
+/// </summary>
 public static class LoggingService
 {
     /// <summary>
-    /// Called when the logger is set.
+    /// Invoked when the active logger is set.
     /// </summary>
     public static event LoggerSetEventHandler? LoggerSet;
 
+    /// <summary>
+    /// Represents the method that handles the <see cref="LoggerSet"/> event.
+    /// </summary>
+    /// <param name="logger">The logger that was registered.</param>
     public delegate void LoggerSetEventHandler(ILogger logger);
 
     /// <summary>
-    /// The ILogger to use.
+    /// The active <see cref="ILogger"/> instance.
     /// </summary>
     public static ILogger? Logger;
     /// <summary>
@@ -36,8 +43,9 @@ public static class LoggingService
     }
 
     /// <summary>
-    /// Specifies which ILogger to use.
+    /// Sets the <see cref="ILogger"/> instance that the service will delegate to.
     /// </summary>
+    /// <param name="logger">Logger to register.</param>
     public static void UseLogger(ILogger logger)
     {
         Logger = logger;
@@ -46,7 +54,10 @@ public static class LoggingService
         LoggerSet?.Invoke(logger);
     }
 
-        
+    /// <summary>
+    /// Returns whether the active logger disables the unconditional inclusion of a stacktrace in development environments.
+    /// </summary>
+    /// <returns>True when unconditional development stacktraces are suppressed.</returns>
     public static bool DisableUnconditionalDevelopmentStacktrace()
     {
         if (Logger is not null)
@@ -56,8 +67,9 @@ public static class LoggingService
     }
 
     /// <summary>
-    /// Logs a message as information.
+    /// Logs the supplied message at the information level.
     /// </summary>
+    /// <param name="message">Message to log.</param>
     public static void LogInformation(string message)
     {
         if (Logger is not null)
@@ -74,8 +86,9 @@ public static class LoggingService
     }
 
     /// <summary>
-    /// Logs a message as a warning.
+    /// Logs the supplied message at the warning level.
     /// </summary>
+    /// <param name="message">Message to log.</param>
     public static void LogWarning(string message)
     {
         if (Logger is not null)
@@ -92,8 +105,9 @@ public static class LoggingService
     }
 
     /// <summary>
-    /// Logs a message as an error.
+    /// Logs the supplied message at the error level.
     /// </summary>
+    /// <param name="message">Message to log.</param>
     public static void LogError(string message)
     {
         if (Logger is not null)
