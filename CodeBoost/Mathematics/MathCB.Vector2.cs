@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using CodeBoost.Extensions;
 
 namespace CodeBoost.Mathematics;
 
@@ -15,7 +16,7 @@ public static partial class MathCb
         float dotA = Vector2.Dot(av, ab);
         float dotB = Vector2.Dot(ab, ab);
 
-        return (float)Clamp01(dotA / dotB);
+        return (float)((double)(dotA / dotB)).Clamp01();
     }
 
     /// <summary>

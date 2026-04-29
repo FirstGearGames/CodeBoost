@@ -1,9 +1,95 @@
 ﻿using System;
+using System.Globalization;
 
 namespace CodeBoost.Extensions;
 
 public static class DoubleExtensions
 {
+    /// <summary>
+    /// Returns the supplied value formatted with leading zeros up to the requested padding width.
+    /// </summary>
+    /// <param name="value">Value to format.</param>
+    /// <param name="padding">Total minimum width of the resulting string.</param>
+    /// <returns>The padded string representation of the value.</returns>
+    public static string Pad(this double value, int padding)
+    {
+        return value.ToString(CultureInfo.InvariantCulture).PadLeft(padding, '0');
+    }
+
+    /// <summary>
+    /// Clamps the supplied value into the inclusive range from <c>0</c> to <c>1</c>.
+    /// </summary>
+    /// <param name="value">Value to clamp.</param>
+    /// <returns>The clamped value.</returns>
+    public static double Clamp01(this double value)
+    {
+        if (value < 0d)
+            return 0d;
+
+        if (value > 1d)
+            return 1d;
+
+        return value;
+    }
+
+    /// <summary>
+    /// Returns whether the supplied values are within the requested tolerance of each other.
+    /// </summary>
+    /// <param name="value">First value to compare.</param>
+    /// <param name="other">Second value to compare.</param>
+    /// <param name="tolerance">Maximum allowed absolute difference.</param>
+    /// <returns>True when the values are within the supplied tolerance.</returns>
+    public static bool IsApproximately(this double value, double other, double tolerance = 0.00001d) => Math.Abs(value - other) <= tolerance;
+
+    /// <summary>
+    /// Returns the sign of the supplied value as <c>-1</c> or <c>1</c>.
+    /// </summary>
+    /// <remarks>
+    /// A value of zero returns <c>1</c>.
+    /// </remarks>
+    /// <param name="value">Value whose sign is being inspected.</param>
+    /// <returns>The sign of the value as <c>-1</c> or <c>1</c>.</returns>
+    public static double NonZeroSign(this double value) => value >= 0 ? 1d : -1d;
+
+    /// <summary>
+    /// Returns whether the supplied value lies within the inclusive range from <paramref name="minimum"/> to <paramref name="maximum"/>.
+    /// </summary>
+    /// <param name="value">Value to inspect.</param>
+    /// <param name="minimum">Inclusive minimum value.</param>
+    /// <param name="maximum">Inclusive maximum value.</param>
+    /// <returns>True when the value lies within the inclusive range.</returns>
+    public static bool IsBetweenInclusive(this double value, double minimum, double maximum) => value >= minimum && value <= maximum;
+
+    /// <summary>
+    /// Returns whether every value in the supplied array is equal to the first value.
+    /// </summary>
+    /// <remarks>
+    /// True is returned when the array is null or empty.
+    /// </remarks>
+    /// <param name="values">Values to compare.</param>
+    /// <returns>True when every value matches the first.</returns>
+    public static bool AreValuesMatching(this double[] values)
+    {
+        if (values is null)
+            return true;
+
+        int length = values.Length;
+
+        if (length <= 1)
+            return true;
+
+        double firstValue = values[0];
+
+        for (int i = 1; i < length; i++)
+        {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (firstValue != values[i])
+                return false;
+        }
+
+        return true;
+    }
+
     /// <summary>
     /// Converts the supplied <see cref="double"/> value into a clamped <see cref="long"/> using the requested accuracy.
     /// </summary>

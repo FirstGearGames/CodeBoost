@@ -2,7 +2,7 @@
 #define UNITY_ENGINE
 #endif
 #if UNITY_ENGINE
-using CodeBoost.Mathematics;
+using CodeBoost.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -186,14 +186,14 @@ namespace CodeBoost.Unity.Types.Canvases
              * This is checked because even if at alpha we want to
              * complete the cycle if not done once so that all
              * local states and canvasgroup settings are proper. */
-            if (_completedOnce && MathCb.IsApproximately(CanvasGroup.alpha, targetAlpha))
+            if (_completedOnce && ((double)CanvasGroup.alpha).IsApproximately(targetAlpha))
                 return;
 
             float rate = 1f / duration;
             CanvasGroup.alpha = Mathf.MoveTowards(CanvasGroup.alpha, targetAlpha, rate * Time.deltaTime);
 
             // If complete.
-            if (MathCb.IsApproximately(CanvasGroup.alpha, targetAlpha))
+            if (((double)CanvasGroup.alpha).IsApproximately(targetAlpha))
                 CompleteFade(fadingIn);
         }
 

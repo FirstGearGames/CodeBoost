@@ -1,4 +1,4 @@
-﻿using CodeBoost.Extensions;
+using CodeBoost.Extensions;
 
 namespace CodeBoost.Mathematics;
 
@@ -8,41 +8,11 @@ namespace CodeBoost.Mathematics;
 public static partial class MathCb
 {
     /// <summary>
-    /// Returns true if all values are within tolerance of each other.
-    /// </summary>
-    /// <remarks>True is returned if values are null or empty.</remarks>
-    public static bool AreValuesMatching(float[] values)
-    {
-        //Null array, return as matching since there is nothing to compare.
-        if (values is null)
-            return true;
-
-        int length = values.Length;
-
-        //No values, must match.
-        if (length <= 1)
-            return true;
-
-        //Cache first value for quicker referencing.
-        float firstValue = values[0];
-
-        for (int i = 1; i < length; i++)
-        {
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (firstValue != values[i])
-                return false;
-        }
-
-        // If this far all values match.
-        return true;
-    }
-
-    /// <summary>
     /// Returns a clamped float within a specified range.
     /// </summary>
-    /// <param name = "value"> Value to clamp. </param>
-    /// <param name = "minimum"> Minimum value. </param>
-    /// <param name = "maximum"> Maximum value. </param>
+    /// <param name="value">Value to clamp.</param>
+    /// <param name="minimum">Minimum value.</param>
+    /// <param name="maximum">Maximum value.</param>
     /// <returns>The value clamped within the specified range.</returns>
     public static float Clamp(float value, float minimum, float maximum)
     {
@@ -53,24 +23,13 @@ public static partial class MathCb
 
         return value;
     }
-        
-        
-    /// <summary>
-    /// Converts a single to an Int32.
-    /// </summary>
-    /// <param name="value">Value to convert.</param>
-    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>
-    public static int SingleToInt32Unsafe(double value, float accuracy)
-    {
-        int wholeValue = (int)Clamp((int)(value * (1f / accuracy)), int.MinValue, int.MaxValue);
-        return wholeValue;
-    }
 
     /// <summary>
-    /// Converts a single to a UInt32.
+    /// Converts a single to a UInt32 using ZigZag encoding after clamping into the range of <see cref="int"/>.
     /// </summary>
     /// <param name="value">Value to convert.</param>
-    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>
+    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    /// <returns>The converted UInt32 value.</returns>
     public static uint SingleToUInt32Unsafe(double value, float accuracy)
     {
         int wholeValue = (int)Clamp((int)(value * (1f / accuracy)), int.MinValue, int.MaxValue);

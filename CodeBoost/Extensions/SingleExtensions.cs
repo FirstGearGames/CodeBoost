@@ -58,4 +58,34 @@ public static class SingleExtensions
         int wholeValue = value.ToInt32Unsafe(accuracy, rounding);
         return wholeValue.ToSingle(accuracy);
     }
+
+    /// <summary>
+    /// Returns whether every value in the supplied array is equal to the first value.
+    /// </summary>
+    /// <remarks>
+    /// True is returned when the array is null or empty.
+    /// </remarks>
+    /// <param name="values">Values to compare.</param>
+    /// <returns>True when every value matches the first.</returns>
+    public static bool AreValuesMatching(this float[] values)
+    {
+        if (values is null)
+            return true;
+
+        int length = values.Length;
+
+        if (length <= 1)
+            return true;
+
+        float firstValue = values[0];
+
+        for (int i = 1; i < length; i++)
+        {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (firstValue != values[i])
+                return false;
+        }
+
+        return true;
+    }
 }
