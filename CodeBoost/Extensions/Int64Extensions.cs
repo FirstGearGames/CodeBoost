@@ -6,20 +6,15 @@ public static class Int64Extensions
     /// Converts an Int64 to a UInt64 using ZigZag encoding.
     /// </summary>
     /// <param name="value">Value to convert.</param>
-    public static ulong ConvertToUInt64(this long value) => (ulong)((value << 1) ^ (value >> 63));
-        
+    public static ulong ToUInt64(this long value) => (ulong)((value << 1) ^ (value >> 63));
+
     /// <summary>
-    /// Converts an Int64 to a Double without error checking.
+    /// Converts a <see cref="long"/> to a <see cref="double"/> using the requested accuracy.
     /// </summary>
     /// <param name="value">Value to convert.</param>
-    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>
-    public static double ToDoubleUnsafe(this long value, float accuracy) 
-    {
-        float divisor = 1f / accuracy;
-        float floatValue = value / divisor;
-
-        return floatValue;
-    }
+    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    /// <returns>The converted double-precision value.</returns>
+    public static double ToDouble(this long value, float accuracy) => value * accuracy;
 
     /// <summary>
     /// Returns whether the whole flags value contains the specified part.

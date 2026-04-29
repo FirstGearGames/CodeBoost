@@ -75,6 +75,6 @@ public static partial class MathCb
     {
         int wholeValue = (int)Clamp((int)(value * (1f / accuracy)), int.MinValue, int.MaxValue);
 
-        return wholeValue.ConvertToUInt32();
+        return wholeValue.ToUInt32();
     }
 }

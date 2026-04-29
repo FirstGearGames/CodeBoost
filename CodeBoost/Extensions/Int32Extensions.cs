@@ -6,20 +6,15 @@ public static class Int32Extensions
     /// Converts an Int32 to a UInt32 using ZigZag encoding.
     /// </summary>
     /// <param name="value">Value to convert.</param>
-    public static uint ConvertToUInt32(this int value) => (uint)((value << 1) ^ (value >> 31));
+    public static uint ToUInt32(this int value) => (uint)((value << 1) ^ (value >> 31));
         
     /// <summary>
-    /// Converts an Int32 to a Single.
+    /// Converts an <see cref="int"/> to a <see cref="float"/> using the requested accuracy.
     /// </summary>
     /// <param name="value">Value to convert.</param>
-    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>
-    public static float ToSingleUnsafe(this int value, float accuracy)
-    {
-        float divisor = 1f / accuracy;
-        float floatValue = value / divisor;
-
-        return floatValue;
-    }
+    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    /// <returns>The converted floating-point value.</returns>
+    public static float ToSingle(this int value, float accuracy) => value * accuracy;
 
     /// <summary>
     /// Returns whether the whole flags value contains the specified part.
