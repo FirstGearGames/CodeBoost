@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace CodeBoost.Extensions;
 
@@ -11,6 +12,7 @@ public static class DoubleExtensions
     /// <param name="value">Value to format.</param>
     /// <param name="padding">Total minimum width of the resulting string.</param>
     /// <returns>The padded string representation of the value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Pad(this double value, int padding)
     {
         return value.ToString(CultureInfo.InvariantCulture).PadLeft(padding, '0');
@@ -21,6 +23,7 @@ public static class DoubleExtensions
     /// </summary>
     /// <param name="value">Value to clamp.</param>
     /// <returns>The clamped value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double Clamp01(this double value)
     {
         if (value < 0d)
@@ -39,6 +42,7 @@ public static class DoubleExtensions
     /// <param name="other">Second value to compare.</param>
     /// <param name="tolerance">Maximum allowed absolute difference.</param>
     /// <returns>True when the values are within the supplied tolerance.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsApproximately(this double value, double other, double tolerance = 0.00001d) => Math.Abs(value - other) <= tolerance;
 
     /// <summary>
@@ -49,6 +53,7 @@ public static class DoubleExtensions
     /// </remarks>
     /// <param name="value">Value whose sign is being inspected.</param>
     /// <returns>The sign of the value as <c>-1</c> or <c>1</c>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double NonZeroSign(this double value) => value >= 0 ? 1d : -1d;
 
     /// <summary>
@@ -58,6 +63,7 @@ public static class DoubleExtensions
     /// <param name="minimum">Inclusive minimum value.</param>
     /// <param name="maximum">Inclusive maximum value.</param>
     /// <returns>True when the value lies within the inclusive range.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsBetweenInclusive(this double value, double minimum, double maximum) => value >= minimum && value <= maximum;
 
     /// <summary>
@@ -68,6 +74,7 @@ public static class DoubleExtensions
     /// </remarks>
     /// <param name="values">Values to compare.</param>
     /// <returns>True when every value matches the first.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool AreValuesMatching(this double[] values)
     {
         if (values is null)
@@ -97,6 +104,7 @@ public static class DoubleExtensions
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1d</c>.</param>
     /// <param name="rounding">Rounding strategy applied to the scaled value before conversion.</param>
     /// <returns>The converted value, clamped to the range of <see cref="long"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long ToInt64(this double value, double accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
     {
         double scaled = Math.Round(value * (1d / accuracy), rounding);
@@ -112,6 +120,7 @@ public static class DoubleExtensions
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1d</c>.</param>
     /// <param name="rounding">Rounding strategy applied to the scaled value before conversion.</param>
     /// <returns>The converted value, which may overflow if the scaled result falls outside the range of <see cref="long"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long ToInt64Unsafe(this double value, double accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
     {
         return (long)Math.Round(value * (1d / accuracy), rounding);
@@ -124,6 +133,7 @@ public static class DoubleExtensions
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
     /// <param name="rounding">Rounding strategy applied during quantization.</param>
     /// <returns>The quantized value snapped to the requested accuracy.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double Quantize(this double value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
     {
         long wholeValue = value.ToInt64(accuracy, rounding);
@@ -137,6 +147,7 @@ public static class DoubleExtensions
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
     /// <param name="rounding">Rounding strategy applied during quantization.</param>
     /// <returns>The quantized value snapped to the requested accuracy, which may overflow if the scaled result falls outside the range of <see cref="long"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double QuantizeUnsafe(this double value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
     {
         long wholeValue = value.ToInt64Unsafe(accuracy, rounding);

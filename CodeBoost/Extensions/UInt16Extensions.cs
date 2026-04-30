@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace CodeBoost.Extensions;
 
@@ -10,5 +10,6 @@ public static class UInt16Extensions
     /// <summary>
     /// Returns whether the whole flags value contains the specified part.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool FastContains(this ushort whole, ushort part) => (whole & part) == part;
 }

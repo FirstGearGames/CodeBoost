@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace CodeBoost.Extensions;
 
@@ -8,6 +9,7 @@ public static class Int32Extensions
     /// Converts an Int32 to a UInt32 using ZigZag encoding.
     /// </summary>
     /// <param name="value">Value to convert.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint ToUInt32(this int value) => (uint)((value << 1) ^ (value >> 31));
 
     /// <summary>
@@ -16,6 +18,7 @@ public static class Int32Extensions
     /// <param name="value">Value to convert.</param>
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
     /// <returns>The converted floating-point value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float ToSingle(this int value, float accuracy) => value * accuracy;
 
     /// <summary>
@@ -25,6 +28,7 @@ public static class Int32Extensions
     /// <param name="divisor">Divisor to divide the value by.</param>
     /// <param name="rounding">Rounding strategy applied to the division result.</param>
     /// <returns>The rounded quotient of the division.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int Divide(this int value, int divisor, MidpointRounding rounding = MidpointRounding.ToEven)
     {
         double result = (double)value / divisor;
@@ -40,6 +44,7 @@ public static class Int32Extensions
     /// </remarks>
     /// <param name="values">Values to compare.</param>
     /// <returns>True when every value matches the first.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool AreValuesMatching(this int[] values)
     {
         if (values is null)
@@ -62,5 +67,6 @@ public static class Int32Extensions
     /// <summary>
     /// Returns whether the whole flags value contains the specified part.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool FastContains(this int whole, int part) => (whole & part) == part;
 }

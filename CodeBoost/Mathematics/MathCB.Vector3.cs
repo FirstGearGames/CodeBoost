@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using CodeBoost.Extensions;
 
 namespace CodeBoost.Mathematics;
@@ -8,6 +9,7 @@ public static partial class MathCb
     /// <summary>
     /// Returns the normalized position of a value between a and b.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float InverseLerp(Vector3 a, Vector3 b, Vector3 value)
     {
         Vector3 ab = b - a;
@@ -23,6 +25,7 @@ public static partial class MathCb
     /// Interpolates between three Vector3 values.
     /// </summary>
     /// <returns>The interpolated Vector3 value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector3 Lerp3(Vector3 a, Vector3 b, Vector3 c, float percentage)
     {
         Vector3 r0 = Vector3.Lerp(a, b, percentage);

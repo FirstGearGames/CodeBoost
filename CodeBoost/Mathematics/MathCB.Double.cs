@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using CodeBoost.Extensions;
 
 namespace CodeBoost.Mathematics;
@@ -16,6 +17,7 @@ public static partial class MathCb
     /// <param name="minimum">Inclusive minimum value.</param>
     /// <param name="maximum">Inclusive maximum value.</param>
     /// <returns>A random value between the minimum and the inclusive maximum.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double RandomInclusive(double minimum, double maximum)
     {
         double range = maximum - minimum + double.Epsilon;
@@ -29,6 +31,7 @@ public static partial class MathCb
     /// <param name="minimum">Inclusive minimum value.</param>
     /// <param name="maximum">Exclusive maximum value.</param>
     /// <returns>A random value between the minimum and the exclusive maximum.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double RandomExclusive(double minimum, double maximum)
     {
         double range = maximum - minimum;
@@ -40,6 +43,7 @@ public static partial class MathCb
     /// Returns a random value between <c>0f</c> and <c>1f</c> inclusive.
     /// </summary>
     /// <returns>A random value between <c>0f</c> and <c>1f</c>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double Random01() => RandomInclusive(0f, 1f);
 
     /// <summary>
@@ -49,6 +53,7 @@ public static partial class MathCb
     /// <param name="end">Ending value of the interpolation.</param>
     /// <param name="percentage">Interpolation percentage in the range <c>0</c> to <c>1</c>.</param>
     /// <returns>The interpolated value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double Lerp(double start, double end, double percentage)
     {
         percentage = percentage.Clamp01();
@@ -61,6 +66,7 @@ public static partial class MathCb
     /// </summary>
     /// <param name="value">Value whose sign may be flipped.</param>
     /// <returns>The original value, or its negation, chosen at random.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double RandomSign(this float value)
     {
         if (RandomInclusive(0UL, 1UL) == 0)

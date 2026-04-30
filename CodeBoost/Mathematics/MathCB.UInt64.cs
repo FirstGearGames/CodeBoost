@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace CodeBoost.Mathematics;
 
 /// <summary>
@@ -12,6 +14,7 @@ public static partial class MathCb
     /// <param name="minimum">Minimum value.</param>
     /// <param name="maximum">Maximum value.</param>
     /// <returns>The value clamped within the specified range.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong Clamp(ulong value, ulong minimum, ulong maximum)
     {
         if (value < minimum)
@@ -28,5 +31,6 @@ public static partial class MathCb
     /// <param name="value">First value to compare.</param>
     /// <param name="other">Second value to compare.</param>
     /// <returns>The lower of the two supplied values.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong Min(ulong value, ulong other) => value < other ? value : other;
 }

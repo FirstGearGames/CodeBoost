@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using CodeBoost.Logging;
 using CodeBoost.Mathematics;
 
@@ -10,6 +11,7 @@ public static class UInt32Extensions
     /// Converts a UInt32 to an Int32 using ZigZag encoding.
     /// </summary>
     /// <param name="value">Value to convert.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ConvertToInt32(this uint value) => (int)((value >> 1) ^ (~(value & 1) + 1));
 
     /// <summary>
@@ -17,6 +19,7 @@ public static class UInt32Extensions
     /// </summary>
     /// <param name="value">Value to convert.</param>
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float ToSingleUnsafe(this uint value, float accuracy)
     {
         int signedValue = value.ConvertToInt32();
@@ -34,6 +37,7 @@ public static class UInt32Extensions
     /// <param name="divisor">Divisor to divide the value by.</param>
     /// <param name="roundingType">Rounding type to use.</param>
     /// <returns>The rounded quotient of the division, or <c>0</c> when the divisor is <c>0</c>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint Divide(this uint value, uint divisor, RoundingType roundingType)
     {
         if (divisor == 0)
@@ -68,6 +72,7 @@ public static class UInt32Extensions
     /// </remarks>
     /// <param name="values">Values to compare.</param>
     /// <returns>True when every value matches the first.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool AreValuesMatching(this uint[] values)
     {
         if (values is null)
@@ -90,5 +95,6 @@ public static class UInt32Extensions
     /// <summary>
     /// Returns whether the whole flags value contains the specified part.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool FastContains(this uint whole, uint part) => (whole & part) == part;
 }

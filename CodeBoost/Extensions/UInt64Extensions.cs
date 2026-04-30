@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using CodeBoost.Logging;
 using CodeBoost.Mathematics;
 
@@ -16,12 +17,14 @@ public static class UInt64Extensions
     /// </summary>
     /// <returns>The number of bytes required to pack bitCount.</returns>
     /// <remarks>When a 0 <see cref="bitCount"/> is provided the returned value will also be 0.</remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint ToPackedByteCount(this ulong bitCount) => (uint)(bitCount + 7) / 8;
 
     /// <summary>
     /// Converts a UInt64 to an Int64 using ZigZag encoding.
     /// </summary>
     /// <param name="value">Value to convert.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long ConvertToInt64(this ulong value) => (long)((value >> 1) ^ (~(value & 1) + 1));
 
     /// <summary>
@@ -31,6 +34,7 @@ public static class UInt64Extensions
     /// <param name="divisor">Divisor to divide the value by.</param>
     /// <param name="roundingType">Rounding type to use.</param>
     /// <returns>The rounded quotient of the division, or <c>0</c> when the divisor is <c>0</c>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ulong Divide(this ulong value, ulong divisor, RoundingType roundingType)
     {
         if (divisor == 0)
@@ -63,6 +67,7 @@ public static class UInt64Extensions
     /// <param name="value">Value to format.</param>
     /// <param name="padding">Total minimum width of the resulting string.</param>
     /// <returns>The padded string representation of the value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Pad(this ulong value, int padding)
     {
         if (padding < 0)
@@ -79,6 +84,7 @@ public static class UInt64Extensions
     /// </remarks>
     /// <param name="values">Values to compare.</param>
     /// <returns>True when every value matches the first.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool AreValuesMatching(this ulong[] values)
     {
         if (values is null)
@@ -101,5 +107,6 @@ public static class UInt64Extensions
     /// <summary>
     /// Returns whether the whole flags value contains the specified part.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool FastContains(this ulong whole, ulong part) => (whole & part) == part;
 }
