@@ -81,40 +81,40 @@ public static class Logger
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogInformation(string message, [CallerMemberName] string methodName = "") => LoggingService.LogInformation($"{Logger.GetLogMessagePrefix(methodName)}{message}");
+    public static void LogInformation(string message, [CallerMemberName] string methodName = "") => LoggingService.LogInformation($"{GetLogMessagePrefix(methodName)}{message}");
     /// <summary>
     /// Logs the supplied message at the warning level.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogWarning(string message, [CallerMemberName] string methodName = "") => LoggingService.LogWarning($"{Logger.GetLogMessagePrefix(methodName)}{message}");
+    public static void LogWarning(string message, [CallerMemberName] string methodName = "") => LoggingService.LogWarning($"{GetLogMessagePrefix(methodName)}{message}");
     /// <summary>
     /// Logs the supplied message at the error level.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogError(string message, [CallerMemberName] string methodName = "") => LoggingService.LogError($"{Logger.GetLogMessagePrefix(methodName)}{message}");
+    public static void LogError(string message, [CallerMemberName] string methodName = "") => LoggingService.LogError($"{GetLogMessagePrefix(methodName)}{message}");
     /// <summary>
     /// Logs the supplied message at the information level prefixed with the supplied type name.
     /// </summary>
     /// <param name="type">Type used in the log prefix.</param>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogInformation(Type type, string message, [CallerMemberName] string methodName = "") => Logger.LogInformation($"{Logger.GetLogMessagePrefix(type, methodName)}{message}");
+    public static void LogInformation(Type type, string message, [CallerMemberName] string methodName = "") => LogInformation($"{GetLogMessagePrefix(type, methodName)}{message}");
     /// <summary>
     /// Logs the supplied message at the warning level prefixed with the supplied type name.
     /// </summary>
     /// <param name="type">Type used in the log prefix.</param>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogWarning(Type type, string message, [CallerMemberName] string methodName = "") => Logger.LogWarning($"{Logger.GetLogMessagePrefix(type, methodName)}{message}");
+    public static void LogWarning(Type type, string message, [CallerMemberName] string methodName = "") => LogWarning($"{GetLogMessagePrefix(type, methodName)}{message}");
     /// <summary>
     /// Logs the supplied message at the error level prefixed with the supplied type name.
     /// </summary>
     /// <param name="type">Type used in the log prefix.</param>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogError(Type type, string message, [CallerMemberName] string methodName = "") => Logger.LogError($"{Logger.GetLogMessagePrefix(type, methodName)}{message}");
+    public static void LogError(Type type, string message, [CallerMemberName] string methodName = "") => LogError($"{GetLogMessagePrefix(type, methodName)}{message}");
 
     /// <summary>
     /// Returns the prefix used to annotate a log message with both the outer and inner types and the originating method name.

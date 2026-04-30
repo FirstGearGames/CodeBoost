@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using CodeBoost.Mathematics;
 
@@ -17,9 +17,9 @@ public static class SingleExtensions
     /// <param name="rounding">Rounding strategy applied to the scaled value before conversion.</param>
     /// <returns>The converted value, clamped to the range of <see cref="int"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ToInt32(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    public static int ToInt32(this float value, float accuracy)
     {
-        long wholeValue = (long)Math.Round(value * (1f / accuracy), rounding);
+        long wholeValue = (long)(value * (1f /  accuracy));
         return (int)MathCb.Clamp(wholeValue, int.MinValue, int.MaxValue);
     }
 
@@ -31,9 +31,9 @@ public static class SingleExtensions
     /// <param name="rounding">Rounding strategy applied to the scaled value before conversion.</param>
     /// <returns>The converted value, which may overflow if the scaled result falls outside the range of <see cref="int"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ToInt32Unsafe(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    public static int ToInt32Unsafe(this float value, float accuracy)
     {
-        return (int)Math.Round(value * (1f / accuracy), rounding);
+        return (int)(value * (1f /  accuracy));
     }
 
     /// <summary>
@@ -44,9 +44,9 @@ public static class SingleExtensions
     /// <param name="rounding">Rounding strategy applied during quantization.</param>
     /// <returns>The quantized value snapped to the requested accuracy.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float Quantize(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    public static float Quantize(this float value, float accuracy)
     {
-        int wholeValue = value.ToInt32(accuracy, rounding);
+        int wholeValue = value.ToInt32(accuracy);
         return wholeValue.ToSingle(accuracy);
     }
 
@@ -58,9 +58,9 @@ public static class SingleExtensions
     /// <param name="rounding">Rounding strategy applied during quantization.</param>
     /// <returns>The quantized value snapped to the requested accuracy, which may overflow if the scaled result falls outside the range of <see cref="int"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float QuantizeUnsafe(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    public static float QuantizeUnsafe(this float value, float accuracy)
     {
-        int wholeValue = value.ToInt32Unsafe(accuracy, rounding);
+        int wholeValue = value.ToInt32Unsafe(accuracy);
         return wholeValue.ToSingle(accuracy);
     }
 

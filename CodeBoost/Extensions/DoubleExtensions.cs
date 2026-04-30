@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
@@ -105,11 +105,13 @@ public static class DoubleExtensions
     /// <param name="rounding">Rounding strategy applied to the scaled value before conversion.</param>
     /// <returns>The converted value, clamped to the range of <see cref="long"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long ToInt64(this double value, double accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    public static long ToInt64(this double value, double accuracy)
     {
-        double scaled = Math.Round(value * (1d / accuracy), rounding);
+        double scaled = value * (1d / accuracy);
+
         if (scaled >= 9.223372036854775e18) return long.MaxValue;
         if (scaled <= -9.223372036854775e18) return long.MinValue;
+        
         return (long)scaled;
     }
 
@@ -121,9 +123,9 @@ public static class DoubleExtensions
     /// <param name="rounding">Rounding strategy applied to the scaled value before conversion.</param>
     /// <returns>The converted value, which may overflow if the scaled result falls outside the range of <see cref="long"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long ToInt64Unsafe(this double value, double accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    public static long ToInt64Unsafe(this double value, double accuracy)
     {
-        return (long)Math.Round(value * (1d / accuracy), rounding);
+        return (long)(value * (1d / accuracy));
     }
 
     /// <summary>
@@ -134,9 +136,9 @@ public static class DoubleExtensions
     /// <param name="rounding">Rounding strategy applied during quantization.</param>
     /// <returns>The quantized value snapped to the requested accuracy.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double Quantize(this double value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    public static double Quantize(this double value, float accuracy)
     {
-        long wholeValue = value.ToInt64(accuracy, rounding);
+        long wholeValue = value.ToInt64(accuracy);
         return wholeValue.ToDouble(accuracy);
     }
 
@@ -148,9 +150,9 @@ public static class DoubleExtensions
     /// <param name="rounding">Rounding strategy applied during quantization.</param>
     /// <returns>The quantized value snapped to the requested accuracy, which may overflow if the scaled result falls outside the range of <see cref="long"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double QuantizeUnsafe(this double value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    public static double QuantizeUnsafe(this double value, float accuracy)
     {
-        long wholeValue = value.ToInt64Unsafe(accuracy, rounding);
+        long wholeValue = value.ToInt64Unsafe(accuracy);
         return wholeValue.ToDouble(accuracy);
     }
 }
