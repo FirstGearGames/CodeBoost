@@ -64,4 +64,18 @@ public static class Vector3Extensions
     {
         return new(value.X.QuantizeUnsafe(accuracy, rounding), value.Y.QuantizeUnsafe(accuracy, rounding), value.Z.QuantizeUnsafe(accuracy, rounding));
     }
+
+    /// <summary>
+    /// Returns true when every component of <paramref name="value"/> is within <paramref name="accuracy"/> of the corresponding component of <paramref name="otherValue"/>.
+    /// </summary>
+    /// <param name="value">First vector.</param>
+    /// <param name="otherValue">Second vector.</param>
+    /// <param name="accuracy">Per-component accuracy tolerance.</param>
+    /// <returns>True when every component lies within the accuracy tolerance.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsWithinAccuracy(this Vector3 value, Vector3 otherValue, float accuracy)
+    {
+        Vector3 difference = value - otherValue;
+        return Math.Abs(difference.X) <= accuracy && Math.Abs(difference.Y) <= accuracy && Math.Abs(difference.Z) <= accuracy;
+    }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using CodeBoost.Logging;
 using CodeBoost.Mathematics;
@@ -12,24 +12,8 @@ public static class UInt32Extensions
     /// </summary>
     /// <param name="value">Value to convert.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int ConvertToInt32(this uint value) => (int)((value >> 1) ^ (~(value & 1) + 1));
-
-    /// <summary>
-    /// Converts a UInt32 to a Single without error checking.
-    /// </summary>
-    /// <param name="value">Value to convert.</param>
-    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than 1f.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float ToSingleUnsafe(this uint value, float accuracy)
-    {
-        int signedValue = value.ConvertToInt32();
-
-        float divisor = 1f / accuracy;
-        float floatValue = signedValue / divisor;
-
-        return floatValue;
-    }
-
+    public static int ToInt32(this uint value) => (int)((value >> 1) ^ (~(value & 1) + 1));
+    
     /// <summary>
     /// Divides the supplied value by the divisor using the requested rounding strategy.
     /// </summary>

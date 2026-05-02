@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
@@ -108,8 +108,10 @@ public static class DoubleExtensions
     public static long ToInt64(this double value, double accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
     {
         double scaled = Math.Round(value * (1d / accuracy), rounding);
+
         if (scaled >= 9.223372036854775e18) return long.MaxValue;
         if (scaled <= -9.223372036854775e18) return long.MinValue;
+
         return (long)scaled;
     }
 
