@@ -39,31 +39,31 @@ public static class Vector3Extensions
         return float.IsNaN(value.X) || float.IsNaN(value.Y) || float.IsNaN(value.Z);
     }
 
-    /// <summary>
-    /// Quantizes each component of the supplied <see cref="System.Numerics.Vector3"/> to the nearest multiple of the requested accuracy with clamping.
-    /// </summary>
-    /// <param name="value">Vector to quantize.</param>
-    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
-    /// <param name="rounding">Rounding strategy applied during quantization.</param>
-    /// <returns>The quantized vector with each component snapped to the requested accuracy.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3 Quantize(this Vector3 value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
-    {
-        return new(value.X.Quantize(accuracy, rounding), value.Y.Quantize(accuracy, rounding), value.Z.Quantize(accuracy, rounding));
-    }
+    // /// <summary>
+    // /// Quantizes each component of the supplied <see cref="System.Numerics.Vector3"/> to the nearest multiple of the requested accuracy with clamping.
+    // /// </summary>
+    // /// <param name="value">Vector to quantize.</param>
+    // /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    // /// <param name="rounding">Rounding strategy applied during quantization.</param>
+    // /// <returns>The quantized vector with each component snapped to the requested accuracy.</returns>
+    // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    // public static Vector3 Quantize(this Vector3 value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    // {
+    //     return new(value.X.Quantize(accuracy, rounding), value.Y.Quantize(accuracy, rounding), value.Z.Quantize(accuracy, rounding));
+    // }
 
-    /// <summary>
-    /// Quantizes each component of the supplied <see cref="System.Numerics.Vector3"/> to the nearest multiple of the requested accuracy without range checking.
-    /// </summary>
-    /// <param name="value">Vector to quantize.</param>
-    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
-    /// <param name="rounding">Rounding strategy applied during quantization.</param>
-    /// <returns>The quantized vector, which may overflow if any scaled component falls outside the range of <see cref="int"/>.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector3 QuantizeUnsafe(this Vector3 value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
-    {
-        return new(value.X.QuantizeUnsafe(accuracy, rounding), value.Y.QuantizeUnsafe(accuracy, rounding), value.Z.QuantizeUnsafe(accuracy, rounding));
-    }
+    // /// <summary>
+    // /// Quantizes each component of the supplied <see cref="System.Numerics.Vector3"/> to the nearest multiple of the requested accuracy without range checking.
+    // /// </summary>
+    // /// <param name="value">Vector to quantize.</param>
+    // /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    // /// <param name="rounding">Rounding strategy applied during quantization.</param>
+    // /// <returns>The quantized vector, which may overflow if any scaled component falls outside the range of <see cref="int"/>.</returns>
+    // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    // public static Vector3 QuantizeUnsafe(this Vector3 value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    // {
+    //     return new(value.X.QuantizeUnsafe(accuracy, rounding), value.Y.QuantizeUnsafe(accuracy, rounding), value.Z.QuantizeUnsafe(accuracy, rounding));
+    // }
 
     /// <summary>
     /// Returns true when every component of <paramref name="value"/> is within <paramref name="accuracy"/> of the corresponding component of <paramref name="otherValue"/>.
