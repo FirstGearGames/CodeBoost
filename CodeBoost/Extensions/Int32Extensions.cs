@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 
 namespace CodeBoost.Extensions;
@@ -19,7 +19,7 @@ public static class Int32Extensions
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
     /// <returns>The converted floating-point value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float ToSingle(this int value, float accuracy) => value * accuracy;
+    public static float ToSingle(this int value, float accuracy) => (float)(value * (decimal)accuracy);
 
     /// <summary>
     /// Divides the supplied value by the divisor and rounds the result.

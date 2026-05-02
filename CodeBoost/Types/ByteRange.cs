@@ -36,7 +36,7 @@ public struct ByteRange
     /// <summary>
     /// Clamps the value between Minimum and Maximum.
     /// </summary>
-    public byte Clamp(byte value) => (byte)MathCb.Clamp(value, Minimum, Maximum);
+    public byte Clamp(byte value) => Math.Clamp(value, Minimum, Maximum);
 
     /// <summary>
     /// Returns true if the value is within the range of Minimum and Maximum.

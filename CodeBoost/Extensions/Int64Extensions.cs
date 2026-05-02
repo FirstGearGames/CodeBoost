@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 
 namespace CodeBoost.Extensions;
@@ -19,7 +19,7 @@ public static class Int64Extensions
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
     /// <returns>The converted double-precision value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double ToDouble(this long value, float accuracy) => value * accuracy;
+    public static double ToDouble(this long value, float accuracy) =>  (double)(value * (decimal)accuracy);
 
     /// <summary>
     /// Divides the supplied value by the divisor and rounds the result.

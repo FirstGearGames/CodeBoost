@@ -32,10 +32,4 @@ public struct IntRange
     /// </summary>
     /// <returns> A random value greater than or equal to Minimum and less than or equal to Maximum. </returns>
     public int RandomInclusive() => (int)MathCb.RandomInclusive(Minimum, Maximum);
-
-    /// <summary>
-    /// Clamps a value between Minimum and Maximum.
-    /// </summary>
-    /// <returns> The clamped value. </returns>
-    public int Clamp(int value) => (int)MathCb.Clamp(value, Minimum, Maximum);
 }

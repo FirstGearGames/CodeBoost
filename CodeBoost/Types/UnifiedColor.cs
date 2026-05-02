@@ -81,10 +81,10 @@ public struct UnifiedColor
     /// <param name="a">Alpha component, in the range 0-1.</param>
     public UnifiedColor(float r, float g, float b, float a = 1f)
     {
-        R = (byte)MathCb.Clamp(r * 255, 0, 255);
-        G = (byte)MathCb.Clamp(g * 255, 0, 255);
-        B = (byte)MathCb.Clamp(b * 255, 0, 255);
-        A = (byte)MathCb.Clamp(a * 255, 0, 255);
+        R = (byte)Math.Clamp(r * 255, 0, 255);
+        G = (byte)Math.Clamp(g * 255, 0, 255);
+        B = (byte)Math.Clamp(b * 255, 0, 255);
+        A = (byte)Math.Clamp(a * 255, 0, 255);
     }
 
     /// <summary>

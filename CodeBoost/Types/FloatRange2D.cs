@@ -34,11 +34,11 @@ public struct FloatRange2D
 
     public float ClampX(float original)
     {
-        return MathCb.Clamp(original, X.Minimum, X.Maximum);
+        return Math.Clamp(original, X.Minimum, X.Maximum);
     }
 
     public float ClampY(float original)
     {
-        return MathCb.Clamp(original, Y.Minimum, Y.Maximum);
+        return Math.Clamp(original, Y.Minimum, Y.Maximum);
     }
 }

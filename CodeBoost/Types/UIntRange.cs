@@ -34,11 +34,6 @@ public struct UIntRange
     public uint RandomInclusive() => (uint)MathCb.RandomInclusive(Minimum, Maximum);
 
     /// <summary>
-    /// Clamps a value between Minimum and Maximum.
-    /// </summary>
-    public uint Clamp(uint value) => (uint)MathCb.Clamp(value, Minimum, Maximum);
-
-    /// <summary>
     /// Returns true if the value is within the range of Minimum and Maximum.
     /// </summary>
     public bool InRange(uint value) => value >= Minimum && value <= Maximum;

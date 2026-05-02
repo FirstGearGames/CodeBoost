@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace CodeBoost.Mathematics;
 
@@ -7,24 +7,6 @@ namespace CodeBoost.Mathematics;
 /// </summary>
 public static partial class MathCb
 {
-    /// <summary>
-    /// Returns a clamped ulong within a specified range.
-    /// </summary>
-    /// <param name="value">Value to clamp.</param>
-    /// <param name="minimum">Minimum value.</param>
-    /// <param name="maximum">Maximum value.</param>
-    /// <returns>The value clamped within the specified range.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong Clamp(ulong value, ulong minimum, ulong maximum)
-    {
-        if (value < minimum)
-            value = minimum;
-        else if (value > maximum)
-            value = maximum;
-
-        return value;
-    }
-
     /// <summary>
     /// Returns whichever value is lower.
     /// </summary>
