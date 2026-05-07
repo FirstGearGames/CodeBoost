@@ -35,33 +35,33 @@ public static class SingleExtensions
         return (int)Math.Round(value * (1f / accuracy), rounding);
     }
 
-    // /// <summary>
-    // /// Quantizes the supplied <see cref="float"/> value to the nearest multiple of the requested accuracy with clamping.
-    // /// </summary>
-    // /// <param name="value">Value to quantize.</param>
-    // /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
-    // /// <param name="rounding">Rounding strategy applied during quantization.</param>
-    // /// <returns>The quantized value snapped to the requested accuracy.</returns>
-    // [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    // public static float Quantize(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
-    // {
-    //     int wholeValue = value.ToInt32(accuracy, rounding);
-    //     return wholeValue.ToSingle(accuracy);
-    // }
+    /// <summary>
+    /// Quantizes the supplied <see cref="float"/> value to the nearest multiple of the requested accuracy with clamping.
+    /// </summary>
+    /// <param name="value">Value to quantize.</param>
+    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    /// <param name="rounding">Rounding strategy applied during quantization.</param>
+    /// <returns>The quantized value snapped to the requested accuracy.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float Quantize(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    {
+        int wholeValue = value.ToInt32(accuracy, rounding);
+        return wholeValue.ToSingle(accuracy);
+    }
 
-    // /// <summary>
-    // /// Quantizes the supplied <see cref="float"/> value to the nearest multiple of the requested accuracy without range checking.
-    // /// </summary>
-    // /// <param name="value">Value to quantize.</param>
-    // /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
-    // /// <param name="rounding">Rounding strategy applied during quantization.</param>
-    // /// <returns>The quantized value snapped to the requested accuracy, which may overflow if the scaled result falls outside the range of <see cref="int"/>.</returns>
-    // [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    // public static float QuantizeUnsafe(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
-    // {
-    //     int wholeValue = value.ToInt32Unsafe(accuracy, rounding);
-    //     return wholeValue.ToSingle(accuracy);
-    // }
+    /// <summary>
+    /// Quantizes the supplied <see cref="float"/> value to the nearest multiple of the requested accuracy without range checking.
+    /// </summary>
+    /// <param name="value">Value to quantize.</param>
+    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    /// <param name="rounding">Rounding strategy applied during quantization.</param>
+    /// <returns>The quantized value snapped to the requested accuracy, which may overflow if the scaled result falls outside the range of <see cref="int"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float QuantizeUnsafe(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
+    {
+        int wholeValue = value.ToInt32Unsafe(accuracy, rounding);
+        return wholeValue.ToSingle(accuracy);
+    }
 
     /// <summary>
     /// Returns whether every value in the supplied array matches the first value within the requested accuracy.
