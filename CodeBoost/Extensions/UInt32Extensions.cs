@@ -13,6 +13,23 @@ public static class UInt32Extensions
     /// <param name="value">Value to convert.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int ToInt32(this uint value) => (int)((value >> 1) ^ (~(value & 1) + 1));
+
+    /// <summary>
+    /// Converts a UInt32 to an Int32 using ZigZag encoding.
+    /// </summary>
+    /// <param name="value">Value to convert.</param>
+    /// <remarks>Alias for <see cref="ToInt32"/> retained for callers that disambiguate from a direct <c>(int)value</c> cast.</remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int ConvertToInt32(this uint value) => ToInt32(value);
+
+    /// <summary>
+    /// Converts a UInt32 produced by an accuracy-scaled encoder back to a <see cref="float"/> by treating the value as a ZigZag-encoded signed step count and multiplying by <paramref name="accuracy"/>.
+    /// </summary>
+    /// <param name="value">Scaled value to convert.</param>
+    /// <param name="accuracy">Accuracy used during encoding. This value is typically less than <c>1f</c>.</param>
+    /// <returns>The reconstructed floating-point value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float ToSingleUnsafe(this uint value, float accuracy) => ToInt32(value) * accuracy;
     
     /// <summary>
     /// Divides the supplied value by the divisor using the requested rounding strategy.
