@@ -28,7 +28,7 @@ public static class ResettableListPool<T0> where T0 : IPoolResettable, new()
     /// Stores an instance of List in the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(List<T0>? value, PoolReturnType collectionReturnType)
+    public static void Return(List<T0> value, PoolReturnType collectionReturnType)
     {
         if (value is null)
             return;

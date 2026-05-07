@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using CodeBoost.Extensions;
 
 namespace CodeBoost.Performance;
 
@@ -13,6 +12,10 @@ public static class Utf8EncodingPool
     /// The stack of pooled instances.
     /// </summary>
     private static readonly Stack<UTF8Encoding> Stack = new();
+    /// <summary>
+    /// The lock that guards concurrent access to <see cref="Stack"/>.
+    /// </summary>
+    private static readonly object StackLock = new();
 
     /// <summary>
     /// Returns a value from the stack or creates a new instance when the stack is empty.
@@ -20,10 +23,13 @@ public static class Utf8EncodingPool
     /// <returns>A UTF8Encoding instance from the pool, or a newly constructed one if the pool is empty.</returns>
     public static UTF8Encoding Rent()
     {
-        if (!Stack.TryPop(out UTF8Encoding result))
-            result = new(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
-            
-        return result;
+        lock (StackLock)
+        {
+            if (Stack.TryPop(out UTF8Encoding result))
+                return result;
+        }
+
+        return new(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
     }
 
     /// <summary>
@@ -47,6 +53,9 @@ public static class Utf8EncodingPool
         if (value is null)
             return;
 
-        Stack.Push(value);
+        lock (StackLock)
+        {
+            Stack.Push(value);
+        }
     }
 }

@@ -17,23 +17,66 @@ namespace CodeBoost.Logging;
 public static class Logger<TOuter, TInner0>
 {
     /// <summary>
+    /// Returns whether information-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsInformationEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsInformationEnabled;
+    }
+    /// <summary>
+    /// Returns whether warning-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsWarningEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsWarningEnabled;
+    }
+    /// <summary>
+    /// Returns whether error-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsErrorEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsErrorEnabled;
+    }
+
+    /// <summary>
     /// Logs the supplied message at the information level prefixed with the outer and inner type names.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogInformation(string message, [CallerMemberName] string methodName = "") => LoggingService.LogInformation($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+    public static void LogInformation(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsInformationEnabled)
+            return;
+
+        LoggingService.LogInformationUnchecked($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the warning level prefixed with the outer and inner type names.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogWarning(string message, [CallerMemberName] string methodName = "") => LoggingService.LogWarning($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+    public static void LogWarning(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsWarningEnabled)
+            return;
+
+        LoggingService.LogWarningUnchecked($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the error level prefixed with the outer and inner type names.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogError(string message, [CallerMemberName] string methodName = "") => LoggingService.LogError($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+    public static void LogError(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsErrorEnabled)
+            return;
+
+        LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+    }
 }
 
 /// <summary>
@@ -43,23 +86,66 @@ public static class Logger<TOuter, TInner0>
 public static class Logger<T0>
 {
     /// <summary>
+    /// Returns whether information-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsInformationEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsInformationEnabled;
+    }
+    /// <summary>
+    /// Returns whether warning-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsWarningEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsWarningEnabled;
+    }
+    /// <summary>
+    /// Returns whether error-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsErrorEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsErrorEnabled;
+    }
+
+    /// <summary>
     /// Logs the supplied message at the information level prefixed with the type name.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogInformation(string message, [CallerMemberName] string methodName = "") => LoggingService.LogInformation($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message}");
+    public static void LogInformation(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsInformationEnabled)
+            return;
+
+        LoggingService.LogInformationUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the warning level prefixed with the type name.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogWarning(string message, [CallerMemberName] string methodName = "") => LoggingService.LogWarning($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message}");
+    public static void LogWarning(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsWarningEnabled)
+            return;
+
+        LoggingService.LogWarningUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the error level prefixed with the type name.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogError(string message, [CallerMemberName] string methodName = "") => LoggingService.LogError($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message}");
+    public static void LogError(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsErrorEnabled)
+            return;
+
+        LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message}");
+    }
 }
 
 /// <summary>
@@ -67,6 +153,31 @@ public static class Logger<T0>
 /// </summary>
 public static class Logger
 {
+    /// <summary>
+    /// Returns whether information-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsInformationEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsInformationEnabled;
+    }
+    /// <summary>
+    /// Returns whether warning-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsWarningEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsWarningEnabled;
+    }
+    /// <summary>
+    /// Returns whether error-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    public static bool IsErrorEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => LoggingService.IsErrorEnabled;
+    }
+
     /// <summary>
     /// Returns whether the active logger disables the unconditional inclusion of a stacktrace in development environments.
     /// </summary>
@@ -81,40 +192,76 @@ public static class Logger
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogInformation(string message, [CallerMemberName] string methodName = "") => LoggingService.LogInformation($"{GetLogMessagePrefix(methodName)}{message}");
+    public static void LogInformation(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsInformationEnabled)
+            return;
+
+        LoggingService.LogInformationUnchecked($"{GetLogMessagePrefix(methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the warning level.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogWarning(string message, [CallerMemberName] string methodName = "") => LoggingService.LogWarning($"{GetLogMessagePrefix(methodName)}{message}");
+    public static void LogWarning(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsWarningEnabled)
+            return;
+
+        LoggingService.LogWarningUnchecked($"{GetLogMessagePrefix(methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the error level.
     /// </summary>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogError(string message, [CallerMemberName] string methodName = "") => LoggingService.LogError($"{GetLogMessagePrefix(methodName)}{message}");
+    public static void LogError(string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsErrorEnabled)
+            return;
+
+        LoggingService.LogErrorUnchecked($"{GetLogMessagePrefix(methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the information level prefixed with the supplied type name.
     /// </summary>
     /// <param name="type">Type used in the log prefix.</param>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogInformation(Type type, string message, [CallerMemberName] string methodName = "") => LogInformation($"{GetLogMessagePrefix(type, methodName)}{message}");
+    public static void LogInformation(Type type, string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsInformationEnabled)
+            return;
+
+        LoggingService.LogInformationUnchecked($"{GetLogMessagePrefix(type, methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the warning level prefixed with the supplied type name.
     /// </summary>
     /// <param name="type">Type used in the log prefix.</param>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogWarning(Type type, string message, [CallerMemberName] string methodName = "") => LogWarning($"{GetLogMessagePrefix(type, methodName)}{message}");
+    public static void LogWarning(Type type, string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsWarningEnabled)
+            return;
+
+        LoggingService.LogWarningUnchecked($"{GetLogMessagePrefix(type, methodName)}{message}");
+    }
     /// <summary>
     /// Logs the supplied message at the error level prefixed with the supplied type name.
     /// </summary>
     /// <param name="type">Type used in the log prefix.</param>
     /// <param name="message">Message to log.</param>
     /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
-    public static void LogError(Type type, string message, [CallerMemberName] string methodName = "") => LogError($"{GetLogMessagePrefix(type, methodName)}{message}");
+    public static void LogError(Type type, string message, [CallerMemberName] string methodName = "")
+    {
+        if (!LoggingService.IsErrorEnabled)
+            return;
+
+        LoggingService.LogErrorUnchecked($"{GetLogMessagePrefix(type, methodName)}{message}");
+    }
 
     /// <summary>
     /// Returns the prefix used to annotate a log message with both the outer and inner types and the originating method name.

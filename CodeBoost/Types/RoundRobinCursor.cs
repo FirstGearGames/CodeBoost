@@ -1,8 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using CodeBoost.CodeAnalysis;
 using CodeBoost.Logging;
 using CodeBoost.Performance;
+#pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CS8601 // Possible null reference assignment.
 
 namespace CodeBoost.Types;
 
@@ -34,8 +38,8 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
     /// </summary>
     [PoolResettableMember]
     private long _lastCallTicks;
-    /// <summary>                                                                                                                                 
-    /// Indicates whether <see cref="Initialize"/> has completed successfully. Enumerate calls return an empty sequence while this is false       
+    /// <summary>
+    /// Indicates whether <see cref="Initialize"/> has completed successfully. Enumerate calls return an empty sequence while this is false
     /// </summary>
     [PoolResettableMember]
     private bool _isInitialized;
@@ -86,10 +90,12 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
         if (sweepWindowMilliseconds == 0)
         {
             Logger<RoundRobinCursor<T0>>.LogError($"The sweep window [{sweepWindowMilliseconds}] must be larger than 0.");
+
             return false;
         }
 
         _sweepWindowMilliseconds = sweepWindowMilliseconds;
+
         return true;
     }
 
@@ -97,10 +103,10 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
     /// Yields the next wrap-around batch from the underlying collection, measuring elapsed time from <see cref="DateTime.UtcNow"/> ticks captured between calls.
     /// </summary>
     /// <returns>The next batch of elements. Empty when the collection is empty.</returns>
-    public IEnumerable<T0> Enumerate()
+    public BatchEnumerable Enumerate()
     {
         if (!_isInitialized)
-            return [];
+            return default;
 
         long currentTicks = DateTime.UtcNow.Ticks;
         long elapsedMilliseconds = 0;
@@ -125,14 +131,14 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
     /// </summary>
     /// <param name="elapsedMilliseconds">The number of milliseconds that have passed since the previous call. Used to size the returned batch as a fraction of the sweep window.</param>
     /// <returns>The next batch of elements. Empty when the collection is empty.</returns>
-    public IEnumerable<T0> Enumerate(uint elapsedMilliseconds)
+    public BatchEnumerable Enumerate(uint elapsedMilliseconds)
     {
         if (!_isInitialized)
-            yield break;
+            return default;
 
         int collectionCount = _collection.Count;
         if (collectionCount == 0)
-            yield break;
+            return default;
 
         long batchScaled = collectionCount * elapsedMilliseconds / _sweepWindowMilliseconds;
         int batchSize;
@@ -144,13 +150,7 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
         else
             batchSize = (int)batchScaled;
 
-        for (int i = 0; i < batchSize; i++)
-        {
-            if (_lastIndex >= collectionCount)
-                _lastIndex = 0;
-
-            yield return _collection[(int)_lastIndex++];
-        }
+        return new(this, batchSize);
     }
 
     public void OnReturn()
@@ -163,4 +163,114 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
     }
 
     public void OnRent() { }
+
+    /// <summary>
+    /// A non-allocating wrapper that exposes a <see cref="BatchEnumerator"/> for a sized batch produced by a <see cref="RoundRobinCursor{T0}"/>.
+    /// </summary>
+    public readonly struct BatchEnumerable : IEnumerable<T0>
+    {
+        /// <summary>
+        /// The cursor whose state advances as the batch is consumed.
+        /// </summary>
+        private readonly RoundRobinCursor<T0> _cursor;
+        /// <summary>
+        /// The number of elements the batch is allowed to yield.
+        /// </summary>
+        private readonly int _batchSize;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal BatchEnumerable(RoundRobinCursor<T0> cursor, int batchSize)
+        {
+            _cursor = cursor;
+            _batchSize = batchSize;
+        }
+
+        /// <summary>
+        /// Returns a struct enumerator that walks the batch without allocations.
+        /// </summary>
+        /// <returns>A <see cref="BatchEnumerator"/> over the batch.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public BatchEnumerator GetEnumerator() => new(_cursor, _batchSize);
+
+        IEnumerator<T0> IEnumerable<T0>.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    /// <summary>
+    /// A struct enumerator that walks a single batch produced by a <see cref="RoundRobinCursor{T0}"/>, advancing the cursor's last-index as elements are consumed.
+    /// </summary>
+    public struct BatchEnumerator : IEnumerator<T0>
+    {
+        /// <summary>
+        /// The element returned by the most recent successful <see cref="MoveNext"/> call.
+        /// </summary>
+        public T0 Current { get; private set; }
+
+        /// <summary>
+        /// The cursor whose state advances as the batch is consumed.
+        /// </summary>
+        private readonly RoundRobinCursor<T0> _cursor;
+        /// <summary>
+        /// The number of elements the batch is allowed to yield.
+        /// </summary>
+        private readonly int _batchSize;
+        /// <summary>
+        /// The number of elements yielded so far by this enumerator.
+        /// </summary>
+        private int _consumed;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal BatchEnumerator(RoundRobinCursor<T0> cursor, int batchSize)
+        {
+            _cursor = cursor;
+            _batchSize = batchSize;
+            _consumed = 0;
+            Current = default;
+        }
+
+        /// <summary>
+        /// Advances the enumerator to the next element of the batch and updates the cursor's last-index.
+        /// </summary>
+        /// <returns>True when an element was produced; false when the batch is exhausted.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool MoveNext()
+        {
+            if (_cursor is null)
+                return false;
+
+            if (_consumed >= _batchSize)
+                return false;
+
+            IReadOnlyList<T0> collection = _cursor._collection;
+            if (collection is null)
+                return false;
+
+            int collectionCount = collection.Count;
+            if (collectionCount == 0)
+                return false;
+
+            uint lastIndex = _cursor._lastIndex;
+            if (lastIndex >= collectionCount)
+                lastIndex = 0;
+
+            Current = collection[(int)lastIndex];
+            _cursor._lastIndex = lastIndex + 1;
+            _consumed++;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Resets the consumed count for this enumerator. Does not rewind the cursor itself.
+        /// </summary>
+        public void Reset()
+        {
+            _consumed = 0;
+            Current = default;
+        }
+
+        object IEnumerator.Current => Current;
+
+        public void Dispose() { }
+    }
 }

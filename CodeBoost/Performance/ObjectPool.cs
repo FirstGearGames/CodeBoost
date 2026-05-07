@@ -44,9 +44,8 @@ public static class ObjectPool<T0> where T0 : new()
     /// <returns>A new or pooled instance of T0.</returns>
     public static T0 Rent()
     {
-        T0 result;
-
-        if (Wrapper.Value.LocalStack.TryPop(out result))
+        Stack<T0> localStack = Wrapper.Value.LocalStack;
+        if (localStack.TryPop(out T0 result))
             return result;
 
         lock (GlobalStack)
@@ -63,28 +62,29 @@ public static class ObjectPool<T0> where T0 : new()
     /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref T0? value)
+    public static void ReturnAndNullifyReference(ref T0 value)
     {
         Return(value);
 
-        value = default;
+        value = default!;
     }
 
     /// <summary>
     /// Returns a generic object to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(T0? value)
+    public static void Return(T0 value)
     {
         if (value is null)
             return;
 
-        // Note: If T0 implements an interface like IResettable, 
+        // Note: If T0 implements an interface like IResettable,
         // you would call value.Clear() or value.Reset() here.
 
-        if (Wrapper.Value.LocalStack.Count < MaximumThreadLocalStackSize)
+        Stack<T0> localStack = Wrapper.Value.LocalStack;
+        if (localStack.Count < MaximumThreadLocalStackSize)
         {
-            Wrapper.Value.LocalStack.Push(value);
+            localStack.Push(value);
             return;
         }
 
@@ -107,7 +107,7 @@ public static class ObjectPool<T0> where T0 : new()
 
         lock (GlobalStack)
         {
-            while (localStack.TryPop(out T0? item))
+            while (localStack.TryPop(out T0 item))
             {
                 if (GlobalStack.Count < MaximumGlobalStackSize)
                     GlobalStack.Push(item);

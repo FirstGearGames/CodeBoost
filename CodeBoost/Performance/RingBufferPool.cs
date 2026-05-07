@@ -45,9 +45,8 @@ public static class RingBufferPool<T0>
     /// <returns>A cleared RingBuffer collection.</returns>
     public static RingBuffer<T0> Rent()
     {
-        RingBuffer<T0> result;
-
-        if (Wrapper.Value.LocalStack.TryPop(out result))
+        Stack<RingBuffer<T0>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.TryPop(out RingBuffer<T0> result))
             return result;
 
         lock (GlobalStack)
@@ -64,7 +63,7 @@ public static class RingBufferPool<T0>
     /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref RingBuffer<T0>? value)
+    public static void ReturnAndNullifyReference(ref RingBuffer<T0> value)
     {
         Return(value);
 
@@ -75,16 +74,17 @@ public static class RingBufferPool<T0>
     /// Returns a RingBuffer to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(RingBuffer<T0>? value)
+    public static void Return(RingBuffer<T0> value)
     {
         if (value is null)
             return;
 
         value.Clear();
 
-        if (Wrapper.Value.LocalStack.Count < MaximumThreadLocalStackSize)
+        Stack<RingBuffer<T0>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.Count < MaximumThreadLocalStackSize)
         {
-            Wrapper.Value.LocalStack.Push(value);
+            localStack.Push(value);
             return;
         }
 
@@ -98,6 +98,29 @@ public static class RingBufferPool<T0>
     }
 
     /// <summary>
+    /// Returns a RingBuffer to the pool without invoking <see cref="RingBuffer{T0}.Clear"/>. Callers must have already nulled populated slots and reset write state via <see cref="RingBuffer{T0}.ResetWriteState"/> before calling this method.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
+    internal static void ReturnAlreadyCleared(RingBuffer<T0> value)
+    {
+        if (value is null)
+            return;
+
+        Stack<RingBuffer<T0>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.Count < MaximumThreadLocalStackSize)
+        {
+            localStack.Push(value);
+            return;
+        }
+
+        lock (GlobalStack)
+        {
+            if (GlobalStack.Count < MaximumGlobalStackSize)
+                GlobalStack.Push(value);
+        }
+    }
+
+    /// <summary>
     /// Flushes the ThreadLocal RingBuffer stack into the global stack.
     /// </summary>
     private static void Flush(Stack<RingBuffer<T0>> localStack)
@@ -107,7 +130,7 @@ public static class RingBufferPool<T0>
 
         lock (GlobalStack)
         {
-            while (localStack.TryPop(out RingBuffer<T0>? item))
+            while (localStack.TryPop(out RingBuffer<T0> item))
             {
                 if (GlobalStack.Count < MaximumGlobalStackSize)
                     GlobalStack.Push(item);

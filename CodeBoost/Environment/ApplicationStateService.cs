@@ -1,5 +1,3 @@
-using CodeBoost.Extensions;
-
 namespace CodeBoost.Environment;
 
 public static class ApplicationStateService
@@ -56,7 +54,7 @@ public static class ApplicationStateService
     internal static bool IsPlaying()
     {
         if (ApplicationState is not null)
-            return ApplicationState.IsQuitting();
+            return ApplicationState.IsPlaying();
 
         throw new(ApplicationStateIsNullMessage);
     }
@@ -66,10 +64,10 @@ public static class ApplicationStateService
     /// </summary>
     internal static void Quit()
     {
-        if (ApplicationState is not null)
-            ApplicationState.Quit();
+        if (ApplicationState is null)
+            throw new(ApplicationStateIsNullMessage);
 
-        throw new(ApplicationStateIsNullMessage);
+        ApplicationState.Quit();
     }
 
     /// <summary>

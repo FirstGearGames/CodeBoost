@@ -45,9 +45,8 @@ public static class BoostedQueuePool<T0>
     /// <returns>A cleared BoostedQueue collection.</returns>
     public static BoostedQueue<T0> Rent()
     {
-        BoostedQueue<T0> result;
-
-        if (Wrapper.Value.LocalStack.TryPop(out result))
+        Stack<BoostedQueue<T0>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.TryPop(out BoostedQueue<T0> result))
             return result;
 
         lock (GlobalStack)
@@ -64,7 +63,7 @@ public static class BoostedQueuePool<T0>
     /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref BoostedQueue<T0>? value)
+    public static void ReturnAndNullifyReference(ref BoostedQueue<T0> value)
     {
         Return(value);
 
@@ -75,16 +74,17 @@ public static class BoostedQueuePool<T0>
     /// Returns a BoostedQueue to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(BoostedQueue<T0>? value)
+    public static void Return(BoostedQueue<T0> value)
     {
         if (value is null)
             return;
 
         value.Clear();
 
-        if (Wrapper.Value.LocalStack.Count < MaximumThreadLocalStackSize)
+        Stack<BoostedQueue<T0>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.Count < MaximumThreadLocalStackSize)
         {
-            Wrapper.Value.LocalStack.Push(value);
+            localStack.Push(value);
             return;
         }
 
@@ -98,6 +98,29 @@ public static class BoostedQueuePool<T0>
     }
 
     /// <summary>
+    /// Returns a BoostedQueue to the pool without invoking <see cref="BoostedQueue{T0}.Clear"/>. Callers must have already drained items and reset write state via <see cref="BoostedQueue{T0}.ResetWriteState"/> before calling this method.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
+    internal static void ReturnAlreadyCleared(BoostedQueue<T0> value)
+    {
+        if (value is null)
+            return;
+
+        Stack<BoostedQueue<T0>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.Count < MaximumThreadLocalStackSize)
+        {
+            localStack.Push(value);
+            return;
+        }
+
+        lock (GlobalStack)
+        {
+            if (GlobalStack.Count < MaximumGlobalStackSize)
+                GlobalStack.Push(value);
+        }
+    }
+
+    /// <summary>
     /// Flushes the ThreadLocal BoostedQueue stack into the global stack.
     /// </summary>
     private static void Flush(Stack<BoostedQueue<T0>> localStack)
@@ -107,7 +130,7 @@ public static class BoostedQueuePool<T0>
 
         lock (GlobalStack)
         {
-            while (localStack.TryPop(out BoostedQueue<T0>? item))
+            while (localStack.TryPop(out BoostedQueue<T0> item))
             {
                 if (GlobalStack.Count < MaximumGlobalStackSize)
                     GlobalStack.Push(item);

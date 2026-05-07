@@ -49,54 +49,57 @@ public static class Weighted
         //Indexes which can no longer be checked.
         HashSet<int> exhaustedIndexes = HashSetPool<int>.Rent();
 
-        while (results.Count < addCount)
+        uint totalPicked = 0;
+        while (totalPicked < addCount)
         {
-            int startCount = results.Count;
-            //Pick a random weight.
+            // All entries have reached their quantity limits — nothing left to pick.
+            if (exhaustedIndexes.Count >= sourceCount)
+                break;
+
+            // Pick a random weight along the cumulative distribution.
             float rnd = (float)MathCb.RandomInclusive(0f, totalWeight);
+            bool isPicked = false;
 
             for (int i = 0; i < sourceCount; i++)
             {
-                //Entry cannot be iterated anymore due to quantity limits on it.
+                // Entry cannot be iterated anymore due to quantity limits on it.
                 if (exhaustedIndexes.Contains(i))
                     continue;
 
                 T0 item = source[i];
                 float weight = item.GetWeight();
 
-                if (rnd <= weight)
+                rnd -= weight;
+                if (rnd > 0f)
+                    continue;
+
+                // Try to get current count.
+                results.TryGetValue(item, out uint currentCount);
+
+                uint newCount = currentCount + 1;
+                // Update count for item.
+                results[item] = newCount;
+                totalPicked++;
+                isPicked = true;
+
+                /* If item cannot be allowed more counts
+                 * then remove it possible results
+                 * and update weight to be without
+                 * the items weight. */
+                if (!allowRepeatingEntries || newCount >= item.GetQuantityRange().Maximum)
                 {
-                    // Try to get current count.
-                    results.TryGetValue(item, out uint currentCount);
-
-                    uint newCount = currentCount + 1;
-                    // Update count for item.
-                    results[item] = newCount;
-                    /* If item cannot be allowed more counts
-                     * then remove it possible results
-                     * and update weight to be without
-                     * the items weight. */
-                    if (!allowRepeatingEntries || newCount >= item.GetQuantityRange().Maximum)
-                    {
-                        exhaustedIndexes.Add(i);
-                        totalWeight -= weight;
-                    }
-
-                    break;
+                    exhaustedIndexes.Add(i);
+                    totalWeight -= weight;
                 }
-            }
 
-            /* If exhausted entries is the same as source count
-             * then this means everything has been added to it's
-             * maximum possible count. */
-
-            /* If nothing was added to results then
-             * something went wrong. */
-            if (results.Count == startCount)
-            {
-                Logger.LogError($"An iteration of {nameof(GetValues)} unexpectedly did not add a value to results.");
                 break;
             }
+
+            /* If nothing was picked then either floating-point drift
+             * left rnd above the remaining weight or every remaining
+             * weight is zero. Either way, no further progress is possible. */
+            if (!isPicked)
+                break;
         }
 
         HashSetPool<int>.Return(exhaustedIndexes);

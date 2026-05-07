@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using CodeBoost.Types;
 
 namespace CodeBoost.Performance;
@@ -15,7 +16,7 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
     /// <summary>
     /// Stores an instance of BoostedQueue and sets the original reference to null.
     /// </summary>
-    public static void ReturnAndNullifyReference(ref BoostedQueue<T0>? value, PoolReturnType collectionReturnType)
+    public static void ReturnAndNullifyReference(ref BoostedQueue<T0> value, PoolReturnType collectionReturnType)
     {
         Return(value, collectionReturnType);
 
@@ -25,15 +26,19 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
     /// <summary>
     /// Stores an instance of BoostedQueue in the pool.
     /// </summary>
-    public static void Return(BoostedQueue<T0>? value, PoolReturnType collectionReturnType)
+    public static void Return(BoostedQueue<T0> value, PoolReturnType collectionReturnType)
     {
         if (value is null)
             return;
 
-        while (value.TryDequeue(out T0? item))
+        bool isReferenceOrContainsReferences = RuntimeHelpers.IsReferenceOrContainsReferences<T0>();
+
+        while (value.TryDequeue(out T0 item, defaultArrayEntry: isReferenceOrContainsReferences))
             item?.OnReturn();
 
+        value.ResetWriteState();
+
         if (collectionReturnType is PoolReturnType.Return)
-            BoostedQueuePool<T0>.Return(value);
+            BoostedQueuePool<T0>.ReturnAlreadyCleared(value);
     }
 }

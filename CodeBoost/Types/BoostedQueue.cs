@@ -1,5 +1,6 @@
-﻿using CodeBoost.Logging;
 using System;
+using System.Runtime.CompilerServices;
+using CodeBoost.Logging;
 #pragma warning disable CS8603 // Possible null reference return.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
@@ -46,16 +47,19 @@ public class BoostedQueue<T0>
     /// Enqueues an entry.
     /// </summary>
     /// <param name = "data"> </param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Enqueue(T0 data)
     {
         if (_written == _collection.Length)
             Resize();
 
-        if (WriteIndex >= _collection.Length)
-            WriteIndex = 0;
-        _collection[WriteIndex] = data;
+        int writeIndex = WriteIndex;
+        if (writeIndex >= _collection.Length)
+            writeIndex = 0;
 
-        WriteIndex++;
+        _collection[writeIndex] = data;
+
+        WriteIndex = writeIndex + 1;
         _written++;
     }
 
@@ -70,10 +74,12 @@ public class BoostedQueue<T0>
         if (_written == 0)
         {
             result = default;
+
             return false;
         }
 
         result = Dequeue(defaultArrayEntry);
+
         return true;
     }
 
@@ -81,19 +87,23 @@ public class BoostedQueue<T0>
     /// Dequeues the next entry.
     /// </summary>
     /// <param name = "defaultArrayEntry"> True to set the array entry as default. </param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T0 Dequeue(bool defaultArrayEntry = true)
     {
         if (_written == 0)
             return default;
 
-        T0 result = _collection[_read];
+        int read = _read;
+        T0 result = _collection[read];
         if (defaultArrayEntry)
-            _collection[_read] = default;
+            _collection[read] = default;
 
         _written--;
-        _read++;
-        if (_read >= _collection.Length)
-            _read = 0;
+
+        read++;
+        if (read >= _collection.Length)
+            read = 0;
+        _read = read;
 
         return result;
     }
@@ -108,10 +118,12 @@ public class BoostedQueue<T0>
         if (_written == 0)
         {
             result = default;
+
             return false;
         }
 
         result = Peek();
+
         return true;
     }
 
@@ -132,11 +144,11 @@ public class BoostedQueue<T0>
     /// </summary>
     public T0 GetIndexOrDefault(int simulatedIndex)
     {
-        int offset = GetRealIndex(simulatedIndex, allowUnusedBuffer: false, log: false);
-        if (offset != -1 && offset < _collection.Length)
-            return _collection[offset];
+        int offset = GetRealIndex(simulatedIndex, log: false);
+        if (offset == -1)
+            return default;
 
-        return default;
+        return _collection[offset];
     }
 
     /// <summary>
@@ -148,14 +160,40 @@ public class BoostedQueue<T0>
         WriteIndex = 0;
         _written = 0;
 
-        DefaultCollection(_collection);
-        DefaultCollection(_resizeBuffer);
+        if (_collection.Length > 0)
+            Array.Clear(_collection, 0, _collection.Length);
+    }
 
-        void DefaultCollection(T0[] array)
+    /// <summary>
+    /// Resets the read and write indices without touching the underlying array. Callers that have already nulled their populated slots use this to skip the redundant <see cref="Array.Clear(System.Array, int, int)"/> in <see cref="Clear"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void ResetWriteState()
+    {
+        _read = 0;
+        WriteIndex = 0;
+        _written = 0;
+    }
+
+    /// <summary>
+    /// Returns the value at the actual index as it relates to the simulated index.
+    /// </summary>
+    /// <param name = "simulatedIndex"> Simulated index to return. A value of 0 would return the first simulated index in the collection. </param>
+    /// <returns> The value stored at the simulated index. </returns>
+    public T0 this[int simulatedIndex]
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
         {
-            int count = array.Length;
-            for (int i = 0; i < count; i++)
-                array[i] = default;
+            int offset = GetRealIndex(simulatedIndex, log: true);
+
+            return _collection[offset];
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        set
+        {
+            int offset = GetRealIndex(simulatedIndex, log: true);
+            _collection[offset] = value;
         }
     }
 
@@ -190,54 +228,29 @@ public class BoostedQueue<T0>
     }
 
     /// <summary>
-    /// Returns the value at the actual index as it relates to the simulated index.
-    /// </summary>
-    /// <param name = "simulatedIndex"> Simulated index to return. A value of 0 would return the first simulated index in the collection. </param>
-    /// <returns> The value stored at the simulated index. </returns>
-    public T0 this[int simulatedIndex]
-    {
-        get
-        {
-            int offset = GetRealIndex(simulatedIndex);
-            return _collection[offset];
-        }
-        set
-        {
-            int offset = GetRealIndex(simulatedIndex);
-            _collection[offset] = value;
-        }
-    }
-
-    /// <summary>
     /// Returns the real index of the collection using a simulated index.
     /// </summary>
-    /// <param name = "allowUnusedBuffer"> True to allow an index be returned from an unused portion of the buffer so long as it is within bounds. </param>
-    private int GetRealIndex(int simulatedIndex, bool allowUnusedBuffer = false, bool log = true)
+    /// <param name = "simulatedIndex"> Simulated index to translate. </param>
+    /// <param name = "log"> True to log when the index is out of range. </param>
+    /// <returns> The real index of the collection, or -1 when the simulated index is out of range. </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private int GetRealIndex(int simulatedIndex, bool log)
     {
-        if (simulatedIndex >= Capacity)
-        {
-            return ReturnError();
-        }
-
         int written = _written;
-        // May be out of bounds if allowUnusedBuffer is false.
-        if (simulatedIndex >= written)
+        int capacity = _collection.Length;
+
+        if ((uint)simulatedIndex >= (uint)written)
         {
-            if (!allowUnusedBuffer)
-                return ReturnError();
-        }
+            if (log && Logger<BoostedQueue<T0>>.IsErrorEnabled)
+                Logger<BoostedQueue<T0>>.LogError($"Index {simulatedIndex} is out of range. Collection count is {written}, Capacity is {capacity}");
 
-        int offset = Capacity - written + simulatedIndex + WriteIndex;
-        if (offset >= Capacity)
-            offset -= Capacity;
-
-        return offset;
-
-        int ReturnError()
-        {
-            if (log)
-                Logger<BoostedQueue<T0>>.LogError($"Index {simulatedIndex} is out of range. Collection count is {_written}, Capacity is {Capacity}");
             return -1;
         }
+
+        int offset = capacity - written + simulatedIndex + WriteIndex;
+        if (offset >= capacity)
+            offset -= capacity;
+
+        return offset;
     }
 }

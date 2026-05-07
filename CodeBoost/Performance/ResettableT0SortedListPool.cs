@@ -15,7 +15,7 @@ public static class ResettableT0SortedListPool<T0, T1> where T0 : IPoolResettabl
     /// <summary>
     /// Stores an instance of SortedList and sets the original reference to null.
     /// </summary>
-    public static void ReturnAndNullifyReference(ref SortedList<T0, T1>? value, PoolReturnType collectionReturnType)
+    public static void ReturnAndNullifyReference(ref SortedList<T0, T1> value, PoolReturnType collectionReturnType)
     {
         Return(value, collectionReturnType);
 
@@ -25,7 +25,7 @@ public static class ResettableT0SortedListPool<T0, T1> where T0 : IPoolResettabl
     /// <summary>
     /// Stores an instance of SortedList in the pool.
     /// </summary>
-    public static void Return(SortedList<T0, T1>? value, PoolReturnType collectionReturnType)
+    public static void Return(SortedList<T0, T1> value, PoolReturnType collectionReturnType)
     {
         if (value is null)
             return;

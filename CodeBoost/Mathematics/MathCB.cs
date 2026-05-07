@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace CodeBoost.Mathematics;
 
@@ -8,7 +9,11 @@ namespace CodeBoost.Mathematics;
 public static partial class MathCb
 {
     /// <summary>
-    /// Used to generate random values.
+    /// Per-thread random instance. <see cref="System.Random"/> is not thread-safe; concurrent access from multiple threads on a shared instance can return zero or corrupt internal state.
     /// </summary>
-    private static readonly Random Random = new();
+    private static readonly ThreadLocal<Random> Random = new(() => new Random(Interlocked.Increment(ref _randomSeedCounter)));
+    /// <summary>
+    /// A monotonically increasing counter used to seed each thread's <see cref="Random"/> uniquely. Avoids the time-resolution collision when multiple threads construct <see cref="Random"/> simultaneously.
+    /// </summary>
+    private static int _randomSeedCounter;
 }

@@ -21,7 +21,8 @@ public static partial class MathCb
     public static double RandomInclusive(double minimum, double maximum)
     {
         double range = maximum - minimum + double.Epsilon;
-        double multiplier = Random.NextDouble() * range;
+        double multiplier = Random.Value!.NextDouble() * range;
+
         return multiplier + minimum;
     }
 
@@ -35,7 +36,8 @@ public static partial class MathCb
     public static double RandomExclusive(double minimum, double maximum)
     {
         double range = maximum - minimum;
-        double multiplier = Random.NextDouble() * range;
+        double multiplier = Random.Value!.NextDouble() * range;
+
         return multiplier + minimum;
     }
 
@@ -69,7 +71,7 @@ public static partial class MathCb
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double RandomSign(this float value)
     {
-        if (RandomInclusive(0UL, 1UL) == 0)
+        if (Random.Value!.Next(2) == 0)
             return value;
 
         return value * -1d;

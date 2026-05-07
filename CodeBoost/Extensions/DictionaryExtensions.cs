@@ -31,10 +31,10 @@ public static class DictionaryExtensions
     /// Returns the keys of the dictionary as a list.
     /// </summary>
     /// <remarks>The returned list is taken from a collection pool.</remarks>
-    public static List<TValue> KeysToList<TKey, TValue>(this IDictionary<TKey, TValue> dict)
+    public static List<TKey> KeysToList<TKey, TValue>(this IDictionary<TKey, TValue> dict)
     {
-        List<TValue> result = ListPool<TValue>.Rent();
-        dict.ValuesToList(ref result);
+        List<TKey> result = ListPool<TKey>.Rent();
+        dict.KeysToList(ref result);
 
         return result;
     }

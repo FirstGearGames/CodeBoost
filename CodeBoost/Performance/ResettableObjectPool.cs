@@ -23,7 +23,7 @@ public static class ResettableObjectPool<T0> where T0 : IPoolResettable, new()
     /// The method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref T0? value)
+    public static void ReturnAndNullifyReference(ref T0 value)
     {
         Return(value);
             
@@ -34,7 +34,7 @@ public static class ResettableObjectPool<T0> where T0 : IPoolResettable, new()
     /// Stores an instance of T0 in the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(T0? value)
+    public static void Return(T0 value)
     {
         if (value is null)
             return;

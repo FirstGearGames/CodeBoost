@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using CodeBoost.Types;
 
 namespace CodeBoost.Extensions;
@@ -7,9 +8,13 @@ namespace CodeBoost.Extensions;
 public static class ListExtensions
 {
     /// <summary>
-    /// The randomizer used for shuffling.
+    /// Per-thread randomizer used for shuffling. <see cref="System.Random"/> is not thread-safe; concurrent access from multiple threads on a shared instance can return zero or corrupt internal state.
     /// </summary>
-    private static readonly Random Random = new();
+    private static readonly ThreadLocal<Random> Random = new(() => new Random(Interlocked.Increment(ref _randomSeedCounter)));
+    /// <summary>
+    /// A monotonically increasing counter used to seed each thread's <see cref="Random"/> uniquely.
+    /// </summary>
+    private static int _randomSeedCounter;
 
     /// <summary>
     /// Adds an element to the collection if it does not already exist.
@@ -66,10 +71,12 @@ public static class ListExtensions
     /// </summary>
     public static void Shuffle<T0>(this List<T0> lst)
     {
+        Random random = Random.Value!;
+
         int n = lst.Count;
         for (int i = 0; i < n - 1; i++)
         {
-            int r = i + Random.Next(n - i);
+            int r = i + random.Next(n - i);
             (lst[r], lst[i]) = (lst[i], lst[r]);
         }
     }

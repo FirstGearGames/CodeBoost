@@ -44,9 +44,8 @@ public static class SortedListPool<T0, T1>
     /// <returns>A cleared SortedList collection.</returns>
     public static SortedList<T0, T1> Rent()
     {
-        SortedList<T0, T1> result;
-
-        if (Wrapper.Value.LocalStack.TryPop(out result))
+        Stack<SortedList<T0, T1>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.TryPop(out SortedList<T0, T1> result))
             return result;
 
         lock (GlobalStack)
@@ -63,7 +62,7 @@ public static class SortedListPool<T0, T1>
     /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref SortedList<T0, T1>? value)
+    public static void ReturnAndNullifyReference(ref SortedList<T0, T1> value)
     {
         Return(value);
 
@@ -74,16 +73,17 @@ public static class SortedListPool<T0, T1>
     /// Returns a SortedList to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(SortedList<T0, T1>? value)
+    public static void Return(SortedList<T0, T1> value)
     {
         if (value is null)
             return;
 
         value.Clear();
 
-        if (Wrapper.Value.LocalStack.Count < MaximumThreadLocalStackSize)
+        Stack<SortedList<T0, T1>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.Count < MaximumThreadLocalStackSize)
         {
-            Wrapper.Value.LocalStack.Push(value);
+            localStack.Push(value);
             return;
         }
 
@@ -106,7 +106,7 @@ public static class SortedListPool<T0, T1>
 
         lock (GlobalStack)
         {
-            while (localStack.TryPop(out SortedList<T0, T1>? item))
+            while (localStack.TryPop(out SortedList<T0, T1> item))
             {
                 if (GlobalStack.Count < MaximumGlobalStackSize)
                     GlobalStack.Push(item);

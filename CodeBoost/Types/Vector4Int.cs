@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace CodeBoost.Types;
 
@@ -26,6 +27,7 @@ public struct Vector4Int
     /// <summary>
     /// Creates a new Vector4Int using the specified values.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector4Int(int x = 0, int y = 0, int z = 0, int w = 0)
     {
         X = x;
@@ -37,6 +39,7 @@ public struct Vector4Int
     /// <summary>
     /// Creates a new Vector4Int using the specified value.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector4Int(Vector4Int vector4Int)
     {
         X = vector4Int.X;
@@ -48,6 +51,7 @@ public struct Vector4Int
     /// <summary>
     /// Creates a new Vector4Int using the specified value.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector4Int(Vector4 vector4, MidpointRounding rounding)
     {
         X = (int)Math.Round(vector4.X, rounding);

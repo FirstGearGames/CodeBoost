@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using CodeBoost.Environment;
 using CodeBoost.Extensions;
 using System;
@@ -67,6 +68,31 @@ public static class LoggingService
     }
 
     /// <summary>
+    /// Returns whether the active logger and current logging level allow information messages to be emitted. Inspect this before formatting an interpolated message to skip the cost when logging is disabled.
+    /// </summary>
+    public static bool IsInformationEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Logger is not null && _loggerLevelAsUnderlyingType >= (byte)LoggerLevel.Information;
+    }
+    /// <summary>
+    /// Returns whether the active logger and current logging level allow warning messages to be emitted. Inspect this before formatting an interpolated message to skip the cost when logging is disabled.
+    /// </summary>
+    public static bool IsWarningEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Logger is not null && _loggerLevelAsUnderlyingType >= (byte)LoggerLevel.Warning;
+    }
+    /// <summary>
+    /// Returns whether the active logger and current logging level allow error messages to be emitted. Inspect this before formatting an interpolated message to skip the cost when logging is disabled.
+    /// </summary>
+    public static bool IsErrorEnabled
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Logger is not null && _loggerLevelAsUnderlyingType >= (byte)LoggerLevel.Error;
+    }
+
+    /// <summary>
     /// Logs the supplied message at the information level.
     /// </summary>
     /// <param name="message">Message to log.</param>
@@ -122,6 +148,27 @@ public static class LoggingService
             throw new(LoggerIsNullMessage);
         }
     }
+
+    /// <summary>
+    /// Logs the supplied message at the information level without checking whether the logger is set or whether the level allows the message. Callers must verify both via <see cref="IsInformationEnabled"/> beforehand.
+    /// </summary>
+    /// <param name="message">Message to log.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static void LogInformationUnchecked(string message) => Logger!.LogInformation(message);
+
+    /// <summary>
+    /// Logs the supplied message at the warning level without checking whether the logger is set or whether the level allows the message. Callers must verify both via <see cref="IsWarningEnabled"/> beforehand.
+    /// </summary>
+    /// <param name="message">Message to log.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static void LogWarningUnchecked(string message) => Logger!.LogWarning(message);
+
+    /// <summary>
+    /// Logs the supplied message at the error level without checking whether the logger is set or whether the level allows the message. Callers must verify both via <see cref="IsErrorEnabled"/> beforehand.
+    /// </summary>
+    /// <param name="message">Message to log.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static void LogErrorUnchecked(string message) => Logger!.LogError(message);
 
     /// <summary>
     /// Gets the logger level for the current environment.

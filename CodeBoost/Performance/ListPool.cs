@@ -44,9 +44,8 @@ public static class ListPool<T0>
     /// <returns>A cleared List collection.</returns>
     public static List<T0> Rent()
     {
-        List<T0> result;
-
-        if (Wrapper.Value.LocalStack.TryPop(out result))
+        Stack<List<T0>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.TryPop(out List<T0> result))
             return result;
 
         lock (GlobalStack)
@@ -63,7 +62,7 @@ public static class ListPool<T0>
     /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref List<T0>? value)
+    public static void ReturnAndNullifyReference(ref List<T0> value)
     {
         Return(value);
 
@@ -74,16 +73,17 @@ public static class ListPool<T0>
     /// Returns a List to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(List<T0>? value)
+    public static void Return(List<T0> value)
     {
         if (value is null)
             return;
 
         value.Clear();
 
-        if (Wrapper.Value.LocalStack.Count < MaximumThreadLocalStackSize)
+        Stack<List<T0>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.Count < MaximumThreadLocalStackSize)
         {
-            Wrapper.Value.LocalStack.Push(value);
+            localStack.Push(value);
             return;
         }
 
@@ -106,7 +106,7 @@ public static class ListPool<T0>
 
         lock (GlobalStack)
         {
-            while (localStack.TryPop(out List<T0>? item))
+            while (localStack.TryPop(out List<T0> item))
             {
                 if (GlobalStack.Count < MaximumGlobalStackSize)
                     GlobalStack.Push(item);

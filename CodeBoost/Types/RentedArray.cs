@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.Runtime.CompilerServices;
 
 namespace CodeBoost.Types;
 
@@ -38,6 +39,6 @@ public readonly struct RentedArray<T0> : IDisposable
 
     public void Dispose()
     {
-        _pool.Return(Array);
+        _pool.Return(Array, RuntimeHelpers.IsReferenceOrContainsReferences<T0>());
     }
 }

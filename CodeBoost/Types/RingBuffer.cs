@@ -1,6 +1,8 @@
+using System;
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using CodeBoost.Logging;
 #pragma warning disable CS8603 // Possible null reference return.
 #pragma warning disable CS8601 // Possible null reference assignment.
@@ -39,6 +41,10 @@ public class RingBuffer<T0> : IEnumerable<T0>
         /// </summary>
         private int _startIndex;
         /// <summary>
+        /// The capacity of the enumerated collection, captured during initialization.
+        /// </summary>
+        private int _capacity;
+        /// <summary>
         /// True if currently enumerating.
         /// </summary>
         private bool Enumerating => _enumeratedRingBuffer is not null;
@@ -47,20 +53,22 @@ public class RingBuffer<T0> : IEnumerable<T0>
         /// </summary>
         private int _initializeCollectionCount;
 
-        public void Initialize(RingBuffer<T0> c)
+        public void Initialize(RingBuffer<T0> ringBuffer)
         {
             // if none are written then return.
-            if (c.Count == 0)
+            if (ringBuffer.Count == 0)
                 return;
 
             _entriesEnumerated = 0;
-            _startIndex = c.GetRealIndex(0);
-            _enumeratedRingBuffer = c;
-            _collection = c.Collection;
-            _initializeCollectionCount = c.Count;
+            _startIndex = ringBuffer.GetRealIndex(0);
+            _enumeratedRingBuffer = ringBuffer;
+            _collection = ringBuffer.Collection;
+            _capacity = ringBuffer.Capacity;
+            _initializeCollectionCount = ringBuffer.Count;
             Current = default;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext()
         {
             if (!Enumerating)
@@ -71,20 +79,21 @@ public class RingBuffer<T0> : IEnumerable<T0>
             if (written != _initializeCollectionCount)
             {
                 Logger<RingBuffer<T0>>.LogError($"Collection was modified during enumeration.");
-                // This will force a return/reset.
-                _entriesEnumerated = written;
+                Reset();
+
+                return false;
             }
 
             if (_entriesEnumerated >= written)
             {
                 Reset();
+
                 return false;
             }
 
             int index = _startIndex + _entriesEnumerated;
-            int capacity = _enumeratedRingBuffer.Capacity;
-            if (index >= capacity)
-                index -= capacity;
+            if (index >= _capacity)
+                index -= _capacity;
             Current = _collection[index];
 
             _entriesEnumerated++;
@@ -174,23 +183,19 @@ public class RingBuffer<T0> : IEnumerable<T0>
 
         if (Collection is null)
         {
-            GetNewCollection();
+            Collection = ArrayPool<T0>.Shared.Rent(capacity);
         }
         else if (Collection.Length < capacity)
         {
-            Clear();
-            ArrayPool<T0>.Shared.Return(Collection);
-            GetNewCollection();
-        }
-        else
-        {
-            Clear();
+            ArrayPool<T0>.Shared.Return(Collection, RuntimeHelpers.IsReferenceOrContainsReferences<T0>());
+            Collection = ArrayPool<T0>.Shared.Rent(capacity);
         }
 
         Capacity = capacity;
-        Initialized = true;
 
-        void GetNewCollection() => Collection = ArrayPool<T0>.Shared.Rent(capacity);
+        Clear();
+
+        Initialized = true;
     }
 
     /// <summary>
@@ -211,9 +216,19 @@ public class RingBuffer<T0> : IEnumerable<T0>
     /// </summary>
     public void Clear()
     {
-        for (int i = 0; i < Capacity; i++)
-            Collection[i] = default;
+        Array.Clear(Collection, 0, Capacity);
 
+        _written = 0;
+        WriteIndex = 0;
+        _enumerator.Reset();
+    }
+
+    /// <summary>
+    /// Resets the write indices and enumerator state without touching the underlying array. Callers that have already nulled their populated slots use this to skip the redundant <see cref="Array.Clear(System.Array, int, int)"/> in <see cref="Clear"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void ResetWriteState()
+    {
         _written = 0;
         WriteIndex = 0;
         _enumerator.Reset();
@@ -227,29 +242,32 @@ public class RingBuffer<T0> : IEnumerable<T0>
     /// <param name = "data"> Data to insert. </param>
     public T0 Insert(int simulatedIndex, T0 data)
     {
-        Initialize();
-
         int written = _written;
-        // If simulatedIndex is 0 and none are written then add.
-        if (simulatedIndex == 0 && written == 0)
+
+        // Insert at the end (or into an empty buffer) is an append.
+        if (simulatedIndex == written)
             return Add(data);
 
         int realIndex = GetRealIndex(simulatedIndex);
         if (realIndex == -1)
             return default;
 
+        int capacity = Capacity;
+        int lastSimulatedIndex = written == capacity ? written - 1 : written;
 
-        // If adding to the end or none written.
-        if (simulatedIndex == written - 1)
-            return Add(data);
-
-        int lastSimulatedIndex = written == Capacity ? written - 1 : written;
+        int lRealIndex = capacity - written + lastSimulatedIndex + WriteIndex;
+        while (lRealIndex >= capacity)
+            lRealIndex -= capacity;
 
         while (lastSimulatedIndex > simulatedIndex)
         {
-            int lRealIndex = GetRealIndex(lastSimulatedIndex, true);
-            int lPrevRealIndex = GetRealIndex(lastSimulatedIndex - 1);
+            int lPrevRealIndex = lRealIndex - 1;
+            if (lPrevRealIndex < 0)
+                lPrevRealIndex += capacity;
+
             Collection[lRealIndex] = Collection[lPrevRealIndex];
+
+            lRealIndex = lPrevRealIndex;
             lastSimulatedIndex--;
         }
 
@@ -267,10 +285,9 @@ public class RingBuffer<T0> : IEnumerable<T0>
     /// </summary>
     /// <param name = "data"> Data to add. </param>
     /// <returns> Replaced entry. Value will be default if no entry was replaced. </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T0 Add(T0 data)
     {
-        Initialize();
-
         T0 current = Collection[WriteIndex];
 
         Collection[WriteIndex] = data;
@@ -288,10 +305,15 @@ public class RingBuffer<T0> : IEnumerable<T0>
         if (_written == 0)
             return default;
 
-        int offset = GetRealIndex(0);
+        int capacity = Capacity;
+        int offset = capacity - _written + WriteIndex;
+        if (offset >= capacity)
+            offset -= capacity;
+
         T0 result = Collection[offset];
 
         RemoveRange(fromStart: true, 1);
+
         return result;
     }
 
@@ -304,14 +326,19 @@ public class RingBuffer<T0> : IEnumerable<T0>
         if (_written == 0)
         {
             result = default;
-                
+
             return false;
         }
 
-        int offset = GetRealIndex(0);
+        int capacity = Capacity;
+        int offset = capacity - _written + WriteIndex;
+        if (offset >= capacity)
+            offset -= capacity;
+
         result = Collection[offset];
 
         RemoveRange(fromStart: true, 1);
+
         return true;
     }
 
@@ -328,72 +355,86 @@ public class RingBuffer<T0> : IEnumerable<T0>
     /// <returns> The value stored at the simulated index. </returns>
     public T0 this[int simulatedIndex]
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
             int offset = GetRealIndex(simulatedIndex);
-            if (offset >= 0)
-                return Collection[offset];
-                
-            return default;
+            if (offset < 0)
+                return default;
+
+            return Collection[offset];
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set
         {
             int offset = GetRealIndex(simulatedIndex);
-            if (offset >= 0)
-                Collection[offset] = value;
+            if (offset < 0)
+                return;
+
+            Collection[offset] = value;
         }
     }
 
     /// <summary>
     /// Increases written count and handles offset changes.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void IncreaseWritten()
     {
         int capacity = Capacity;
 
-        WriteIndex++;
-        _written++;
-        // If index would exceed next iteration reset it.
-        if (WriteIndex >= capacity)
-            WriteIndex = 0;
+        int writeIndex = WriteIndex + 1;
+        if (writeIndex >= capacity)
+            writeIndex = 0;
+        WriteIndex = writeIndex;
 
-        /* If written has exceeded capacity
-         * then the start index needs to be moved
-         * to adjust for overwritten values. */
-        if (_written > capacity)
-            _written = capacity;
+        if (_written < capacity)
+            _written++;
+    }
+
+    /// <summary>
+    /// Outputs the underlying state needed to walk the ring without going through the indexer. Hoisting these in one call avoids repeated property reads when the caller iterates the buffer in a tight loop.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public RingBufferWalkState<T0> GetWalkState()
+    {
+        T0[] collection = Collection;
+        int count = _written;
+        int capacity = Capacity;
+
+        int baseReal = capacity - count + WriteIndex;
+        if (baseReal >= capacity)
+            baseReal -= capacity;
+
+        int lastReal = baseReal + count - 1;
+        if (lastReal >= capacity)
+            lastReal -= capacity;
+
+        return new RingBufferWalkState<T0>(collection, count, capacity, baseReal, lastReal);
     }
 
     /// <summary>
     /// Returns the real index of the collection using a simulated index.
     /// </summary>
-    /// <param name = "allowUnusedBuffer"> True to allow an index be returned from an unused portion of the buffer so long as it is within bounds. </param>
-    private int GetRealIndex(int simulatedIndex, bool allowUnusedBuffer = false)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private int GetRealIndex(int simulatedIndex)
     {
-        if (simulatedIndex >= Capacity)
-        {
-            return ReturnError();
-        }
-
         int written = _written;
-        // May be out of bounds if allowUnusedBuffer is false.
-        if (simulatedIndex >= written)
+        int capacity = Capacity;
+
+        if ((uint)simulatedIndex >= (uint)written)
         {
-            if (!allowUnusedBuffer)
-                return ReturnError();
-        }
+            if (Logger<RingBuffer<T0>>.IsErrorEnabled)
+                Logger<RingBuffer<T0>>.LogError($"Index [{simulatedIndex}] is out of range. Collection Count [{written}] Capacity [{capacity}].");
 
-        int offset = Capacity - written + simulatedIndex + WriteIndex;
-        if (offset >= Capacity)
-            offset -= Capacity;
-
-        return offset;
-
-        int ReturnError()
-        {
-            Logger<RingBuffer<T0>>.LogError($"Index [{simulatedIndex}] is out of range. Collection Count [{_written}] Capacity [{Capacity}].");
             return -1;
         }
+
+        int offset = capacity - written + simulatedIndex + WriteIndex;
+        if (offset >= capacity)
+            offset -= capacity;
+
+        return offset;
     }
 
     /// <summary>
@@ -405,6 +446,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
     {
         if (length == 0)
             return;
+
         if (length < 0)
         {
             Logger<RingBuffer<T0>>.LogError("Negative values cannot be removed.");
@@ -418,16 +460,53 @@ public class RingBuffer<T0> : IEnumerable<T0>
             return;
         }
 
-        _written -= length;
+        bool isReferenceOrContainsReferences = RuntimeHelpers.IsReferenceOrContainsReferences<T0>();
+        int capacity = Capacity;
+
         if (fromStart)
         {
-            // No steps are needed from start other than reduce written, which is done above.
+            if (isReferenceOrContainsReferences)
+            {
+                int startReal = capacity - _written + WriteIndex;
+                if (startReal >= capacity)
+                    startReal -= capacity;
+
+                ClearCircularRange(startReal, length);
+            }
+
+            _written -= length;
         }
         else
         {
-            WriteIndex -= length;
-            if (WriteIndex < 0)
-                WriteIndex += Capacity;
+            int newWriteIndex = WriteIndex - length;
+            if (newWriteIndex < 0)
+                newWriteIndex += capacity;
+
+            if (isReferenceOrContainsReferences)
+                ClearCircularRange(newWriteIndex, length);
+
+            _written -= length;
+            WriteIndex = newWriteIndex;
+        }
+    }
+
+    /// <summary>
+    /// Clears a contiguous range of the underlying collection, wrapping around the end when needed.
+    /// </summary>
+    /// <param name = "startReal"> The real index at which to begin clearing. </param>
+    /// <param name = "length"> The number of slots to clear. </param>
+    private void ClearCircularRange(int startReal, int length)
+    {
+        int capacity = Capacity;
+        int firstChunk = capacity - startReal;
+        if (firstChunk >= length)
+        {
+            Array.Clear(Collection, startReal, length);
+        }
+        else
+        {
+            Array.Clear(Collection, startReal, firstChunk);
+            Array.Clear(Collection, 0, length - firstChunk);
         }
     }
 
@@ -437,8 +516,8 @@ public class RingBuffer<T0> : IEnumerable<T0>
     /// <returns> An enumerator for the collection. </returns>
     public Enumerator GetEnumerator()
     {
-        Initialize();
         _enumerator.Initialize(this);
+
         return _enumerator;
     }
 

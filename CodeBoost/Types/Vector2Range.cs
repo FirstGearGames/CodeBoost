@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using CodeBoost.Mathematics;
 
 namespace CodeBoost.Types;
@@ -19,6 +20,7 @@ public struct Vector2Range
     /// <summary>
     /// Creates ranges using the minimum and maximum values for each axis.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2Range(Vector2 minimum, Vector2 maximum)
     {
         X = new(minimum.X, maximum.X);
@@ -28,6 +30,7 @@ public struct Vector2Range
     /// <summary>
     /// Creates ranges using the specified minimum and maximum values.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2Range(float minimum, float maximum)
     {
         X = new(minimum, maximum);
@@ -38,6 +41,7 @@ public struct Vector2Range
     /// Returns a random value between Minimum and Maximum.
     /// </summary>
     /// <returns> A random Vector2 with each component in the inclusive range of its axis. </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector2 RandomInclusive()
     {
         float x = (float)MathCb.RandomInclusive(X.Minimum, X.Maximum);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using CodeBoost.Mathematics;
 using SystemVector3 = System.Numerics.Vector3;
 
@@ -23,6 +24,7 @@ public struct Vector3Range
     /// <summary>
     /// Creates ranges using the minimum and maximum values for each axis.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector3Range(SystemVector3 minimum, SystemVector3 maximum)
     {
         X = new(minimum.X, maximum.X);
@@ -33,6 +35,7 @@ public struct Vector3Range
     /// <summary>
     /// Creates ranges using the specified minimum and maximum values.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Vector3Range(float minimum, float maximum)
     {
         X = new(minimum, maximum);
@@ -44,6 +47,7 @@ public struct Vector3Range
     /// Returns a random value between Minimum and Maximum.
     /// </summary>
     /// <returns> A random Vector3 with each component in the inclusive range of its axis. </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public SystemVector3 RandomInclusive()
     {
         float x = (float)MathCb.RandomInclusive(X.Minimum, X.Maximum);

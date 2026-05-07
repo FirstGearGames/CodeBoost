@@ -44,9 +44,8 @@ public static class DictionaryPool<T0, T1>
     /// <returns>A cleared Dictionary collection.</returns>
     public static Dictionary<T0, T1> Rent()
     {
-        Dictionary<T0, T1> result;
-
-        if (Wrapper.Value.LocalStack.TryPop(out result))
+        Stack<Dictionary<T0, T1>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.TryPop(out Dictionary<T0, T1> result))
             return result;
 
         lock (GlobalStack)
@@ -81,9 +80,10 @@ public static class DictionaryPool<T0, T1>
 
         value.Clear();
 
-        if (Wrapper.Value.LocalStack.Count < MaximumThreadLocalStackSize)
+        Stack<Dictionary<T0, T1>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.Count < MaximumThreadLocalStackSize)
         {
-            Wrapper.Value.LocalStack.Push(value);
+            localStack.Push(value);
             return;
         }
 

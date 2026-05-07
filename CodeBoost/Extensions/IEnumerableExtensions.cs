@@ -18,12 +18,15 @@ public static class EnumerableExtensions
 
         StringBuilder stringBuilder = ObjectPool<StringBuilder>.Rent();
         stringBuilder.Clear();
-            
+
         foreach (T0 item in thisValue)
-            stringBuilder.Append(item + delimiter);
+        {
+            stringBuilder.Append(item);
+            stringBuilder.Append(delimiter);
+        }
 
         // Remove ending delimiter.
-        if (stringBuilder.Length > delimiter.Length)
+        if (stringBuilder.Length >= delimiter.Length)
             stringBuilder.Length -= delimiter.Length;
 
         string result = stringBuilder.ToString();
