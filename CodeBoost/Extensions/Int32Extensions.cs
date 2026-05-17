@@ -22,6 +22,16 @@ public static class Int32Extensions
     public static float ToSingle(this int value, float accuracy) => (float)(value * (decimal)accuracy);
 
     /// <summary>
+    /// Converts an <see cref="int"/> to a <see cref="float"/> using the requested accuracy without intermediate decimal precision.
+    /// </summary>
+    /// <param name="value">Value to convert.</param>
+    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    /// <returns>The converted floating-point value.</returns>
+    /// <remarks>Faster than <see cref="ToSingle"/> but may accumulate small rounding error for large magnitudes.</remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float ToSingleUnsafe(this int value, float accuracy) => value * accuracy;
+
+    /// <summary>
     /// Divides the supplied value by the divisor and rounds the result.
     /// </summary>
     /// <param name="value">Value to divide.</param>

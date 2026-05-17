@@ -22,6 +22,16 @@ public static class Int64Extensions
     public static double ToDouble(this long value, float accuracy) =>  (double)(value * (decimal)accuracy);
 
     /// <summary>
+    /// Converts a <see cref="long"/> to a <see cref="double"/> using the requested accuracy without intermediate decimal precision.
+    /// </summary>
+    /// <param name="value">Value to convert.</param>
+    /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
+    /// <returns>The converted double-precision value.</returns>
+    /// <remarks>Faster than <see cref="ToDouble"/> but may accumulate small rounding error for large magnitudes.</remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static double ToDoubleUnsafe(this long value, float accuracy) => value * accuracy;
+
+    /// <summary>
     /// Divides the supplied value by the divisor and rounds the result.
     /// </summary>
     /// <param name="value">Value to divide.</param>

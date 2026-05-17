@@ -25,7 +25,7 @@ public static class UInt64Extensions
     /// </summary>
     /// <param name="value">Value to convert.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static long ConvertToInt64(this ulong value) => (long)((value >> 1) ^ (~(value & 1) + 1));
+    public static long ToInt64(this ulong value) => (long)((value >> 1) ^ (~(value & 1) + 1));
 
     /// <summary>
     /// Divides the supplied value by the divisor using the requested rounding strategy.
