@@ -13,30 +13,40 @@ public static class ResettableListPool<T0> where T0 : IPoolResettable, new()
     public static List<T0> Rent() => ListPool<T0>.Rent();
 
     /// <summary>
-    /// Stores an instance of List and sets the original reference to default.
-    /// The method will not execute if the value is null.
+    /// Resets each item in the List by invoking <see cref="IPoolResettable.OnReturn"/>; the List itself is not returned to the pool.
     /// </summary>
-    /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref List<T0> value, PoolReturnType collectionReturnType)
-    {
-        Return(value, collectionReturnType);
-
-        value = null;
-    }
-
-    /// <summary>
-    /// Stores an instance of List in the pool.
-    /// </summary>
-    /// <param name = "value"> Value to return. </param>
-    public static void Return(List<T0> value, PoolReturnType collectionReturnType)
+    /// <param name="value">List whose items to reset. Null values are ignored.</param>
+    public static void Reset(List<T0> value)
     {
         if (value is null)
             return;
 
         foreach (T0 item in value)
             item?.OnReturn();
+    }
 
-        if (collectionReturnType is PoolReturnType.Return)
-            ListPool<T0>.Return(value);
+    /// <summary>
+    /// Resets each item in the List via <see cref="Reset"/> and returns the List to the pool.
+    /// </summary>
+    /// <param name="value">List to return. Null values are ignored.</param>
+    public static void Return(List<T0> value)
+    {
+        if (value is null)
+            return;
+
+        Reset(value);
+
+        ListPool<T0>.Return(value);
+    }
+
+    /// <summary>
+    /// Calls <see cref="Return"/> on the List and sets the original reference to null.
+    /// </summary>
+    /// <param name="value">List to return; cleared to null after the call.</param>
+    public static void ReturnAndNullifyReference(ref List<T0> value)
+    {
+        Return(value);
+
+        value = null;
     }
 }
