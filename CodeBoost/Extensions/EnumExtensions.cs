@@ -9,6 +9,26 @@ namespace CodeBoost.Extensions;
 public static class EnumExtensions
 {
     /// <summary>
+    /// Returns the enum type name and value as a string.
+    /// </summary>
+    /// <example>MyEnum.Two</example>
+    [PreserveLogic]
+    public static string ToTypeNameAndValueString<T0>(this T0 enumValue) where T0 : Enum
+    {
+        return $"{typeof(T0).Name}.{enumValue}";
+    }
+
+    /// <summary>
+    /// Returns the enum full type name and value as a string.
+    /// </summary>
+    /// <example>Namespace.MyEnum.Two</example>
+    [PreserveLogic]
+    public static string ToTypeFullNameAndValueString<T0>(this T0 enumValue) where T0 : Enum
+    {
+        return $"{typeof(T0).FullName}.{enumValue}";
+    }
+
+    /// <summary>
     /// Returns the enum name and value as a string.
     /// </summary>
     /// <example>MyEnum.Two</example>
