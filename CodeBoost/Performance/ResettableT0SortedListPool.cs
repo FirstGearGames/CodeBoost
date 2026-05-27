@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace CodeBoost.Performance;
 
 /// <summary>
-/// A pool for a SortedList whose keys are resettable.
+/// A pool for a Dictionary which is resettable.
 /// </summary>
 public static class ResettableT0SortedListPool<T0, T1> where T0 : IPoolResettable, new()
 {
@@ -12,41 +12,27 @@ public static class ResettableT0SortedListPool<T0, T1> where T0 : IPoolResettabl
     /// </summary>
     public static SortedList<T0, T1> Rent() => SortedListPool<T0, T1>.Rent();
 
-    /// <summary>
-    /// Resets each key in the SortedList by invoking <see cref="IPoolResettable.OnReturn"/>; the SortedList itself is not returned to the pool.
-    /// </summary>
-    /// <param name="value">SortedList whose keys to reset. Null values are ignored.</param>
-    public static void Reset(SortedList<T0, T1> value)
-    {
-        if (value is null)
-            return;
-
-        foreach (T0 item in value.Keys)
-            item?.OnReturn();
-    }
-
-    /// <summary>
-    /// Resets each key in the SortedList via <see cref="Reset"/> and returns the SortedList to the pool.
-    /// </summary>
-    /// <param name="value">SortedList to return. Null values are ignored.</param>
-    public static void Return(SortedList<T0, T1> value)
-    {
-        if (value is null)
-            return;
-
-        Reset(value);
-
-        SortedListPool<T0, T1>.Return(value);
-    }
-
-    /// <summary>
-    /// Calls <see cref="Return"/> on the SortedList and sets the original reference to null.
-    /// </summary>
-    /// <param name="value">SortedList to return; cleared to null after the call.</param>
+    //xml resets and returns, and nullifies the references.
     public static void ReturnAndNullifyReference(ref SortedList<T0, T1> value)
     {
         Return(value);
 
         value = null;
+    }
+
+    //xml resets and returns.
+    public static void Return(SortedList<T0, T1> value)
+    {
+        if (value is null)
+            return;
+        
+        SortedListPool<T0, T1>.Return(value);
+    }
+
+    //xml resets only.
+    public static void Reset(SortedList<T0, T1> value)
+    {
+        foreach (T0 entry in value.Keys)
+            entry?.OnReturn();
     }
 }

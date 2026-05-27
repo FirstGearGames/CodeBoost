@@ -13,45 +13,31 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
     /// </summary>
     public static BoostedQueue<T0> Rent() => BoostedQueuePool<T0>.Rent();
 
-    /// <summary>
-    /// Drains the BoostedQueue, invoking <see cref="IPoolResettable.OnReturn"/> on each item, and resets the queue's write state; the BoostedQueue itself is not returned to the pool.
-    /// </summary>
-    /// <param name="value">BoostedQueue whose items to reset. Null values are ignored.</param>
-    public static void Reset(BoostedQueue<T0> value)
+    //xml resets and returns, and nullifies the references.
+    public static void ReturnAndNullifyReference(ref BoostedQueue<T0> value)
     {
-        if (value is null)
-            return;
+        Return(value);
 
-        bool isReferenceOrContainsReferences = RuntimeHelpers.IsReferenceOrContainsReferences<T0>();
-
-        while (value.TryDequeue(out T0 item, defaultArrayEntry: isReferenceOrContainsReferences))
-            item?.OnReturn();
-
-        value.ResetWriteState();
+        value = null;
     }
-
-    /// <summary>
-    /// Drains the BoostedQueue via <see cref="Reset"/> and returns the BoostedQueue to the pool.
-    /// </summary>
-    /// <param name="value">BoostedQueue to return. Null values are ignored.</param>
+    
+    //xml resets and returns.
     public static void Return(BoostedQueue<T0> value)
     {
         if (value is null)
             return;
 
         Reset(value);
-
-        BoostedQueuePool<T0>.ReturnAlreadyCleared(value);
+        
+        BoostedQueuePool<T0>.Return(value);
     }
 
-    /// <summary>
-    /// Calls <see cref="Return"/> on the BoostedQueue and sets the original reference to null.
-    /// </summary>
-    /// <param name="value">BoostedQueue to return; cleared to null after the call.</param>
-    public static void ReturnAndNullifyReference(ref BoostedQueue<T0> value)
+    //xml resets only.
+    public static void Reset(BoostedQueue<T0> value) 
     {
-        Return(value);
+        bool isReferenceOrContainsReferences = RuntimeHelpers.IsReferenceOrContainsReferences<T0>();
 
-        value = null;
+        while (value.TryDequeue(out T0 entry, defaultArrayEntry: isReferenceOrContainsReferences))
+            entry?.OnReturn();
     }
 }

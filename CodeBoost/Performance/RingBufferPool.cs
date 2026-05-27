@@ -96,30 +96,7 @@ public static class RingBufferPool<T0>
 
         //If here both stacks are at capacity.
     }
-
-    /// <summary>
-    /// Returns a RingBuffer to the pool without invoking <see cref="RingBuffer{T0}.Clear"/>. Callers must have already nulled populated slots and reset write state via <see cref="RingBuffer{T0}.ResetWriteState"/> before calling this method.
-    /// </summary>
-    /// <param name = "value"> Value to return. </param>
-    internal static void ReturnAlreadyCleared(RingBuffer<T0> value)
-    {
-        if (value is null)
-            return;
-
-        Stack<RingBuffer<T0>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.Count < MaximumThreadLocalStackSize)
-        {
-            localStack.Push(value);
-            return;
-        }
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.Count < MaximumGlobalStackSize)
-                GlobalStack.Push(value);
-        }
-    }
-
+    
     /// <summary>
     /// Flushes the ThreadLocal RingBuffer stack into the global stack.
     /// </summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace CodeBoost.Performance;
 
 /// <summary>
-/// A pool for a Dictionary whose keys are resettable.
+/// A pool for a Dictionary which is resettable.
 /// </summary>
 public static class ResettableT0DictionaryPool<T0, T1> where T0 : IPoolResettable, new()
 {
@@ -12,23 +12,15 @@ public static class ResettableT0DictionaryPool<T0, T1> where T0 : IPoolResettabl
     /// </summary>
     public static Dictionary<T0, T1> Rent() => DictionaryPool<T0, T1>.Rent();
 
-    /// <summary>
-    /// Resets each key in the Dictionary by invoking <see cref="IPoolResettable.OnReturn"/>; the Dictionary itself is not returned to the pool.
-    /// </summary>
-    /// <param name="value">Dictionary whose keys to reset. Null values are ignored.</param>
-    public static void Reset(Dictionary<T0, T1> value)
+    //xml resets and returns, and nullifies the references.
+    public static void ReturnAndNullifyReference(ref Dictionary<T0, T1> value)
     {
-        if (value is null)
-            return;
+        Return(value);
 
-        foreach (T0 item in value.Keys)
-            item?.OnReturn();
+        value = null;
     }
 
-    /// <summary>
-    /// Resets each key in the Dictionary via <see cref="Reset"/> and returns the Dictionary to the pool.
-    /// </summary>
-    /// <param name="value">Dictionary to return. Null values are ignored.</param>
+    //xml resets and returns.
     public static void Return(Dictionary<T0, T1> value)
     {
         if (value is null)
@@ -39,14 +31,10 @@ public static class ResettableT0DictionaryPool<T0, T1> where T0 : IPoolResettabl
         DictionaryPool<T0, T1>.Return(value);
     }
 
-    /// <summary>
-    /// Calls <see cref="Return"/> on the Dictionary and sets the original reference to null.
-    /// </summary>
-    /// <param name="value">Dictionary to return; cleared to null after the call.</param>
-    public static void ReturnAndNullifyReference(ref Dictionary<T0, T1> value)
+    //xml resets only.
+    public static void Reset(Dictionary<T0, T1> value)
     {
-        Return(value);
-
-        value = null;
+        foreach (T0 entry in value.Keys)
+            entry?.OnReturn();
     }
 }
