@@ -39,6 +39,6 @@ public readonly struct RentedArray<T0> : IDisposable
 
     public void Dispose()
     {
-        _pool.Return(Array, RuntimeHelpers.IsReferenceOrContainsReferences<T0>());
+        _pool.Return(Array, Polyfill.IsReferenceOrContainsReferences<T0>());
     }
 }

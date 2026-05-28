@@ -19,7 +19,7 @@ public static class SingleExtensions
     public static int ToInt32(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
     {
         long wholeValue = (long)Math.Round(value * (1f / accuracy), rounding);
-        return (int)Math.Clamp(wholeValue, int.MinValue, int.MaxValue);
+        return (int)Polyfill.Clamp(wholeValue, (long)int.MinValue, (long)int.MaxValue);
     }
 
     /// <summary>

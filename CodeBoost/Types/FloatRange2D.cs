@@ -31,8 +31,8 @@ public struct FloatRange2D
     public Vector3 Clamp(Vector3 original) => new(ClampX(original.X), ClampY(original.Y), original.Z);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public float ClampX(float original) => Math.Clamp(original, X.Minimum, X.Maximum);
+    public float ClampX(float original) => Polyfill.Clamp(original, X.Minimum, X.Maximum);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public float ClampY(float original) => Math.Clamp(original, Y.Minimum, Y.Maximum);
+    public float ClampY(float original) => Polyfill.Clamp(original, Y.Minimum, Y.Maximum);
 }

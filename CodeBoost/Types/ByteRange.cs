@@ -41,7 +41,7 @@ public struct ByteRange
     /// Clamps the value between Minimum and Maximum.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public byte Clamp(byte value) => Math.Clamp(value, Minimum, Maximum);
+    public byte Clamp(byte value) => Polyfill.Clamp(value, Minimum, Maximum);
 
     /// <summary>
     /// Returns true if the value is within the range of Minimum and Maximum.

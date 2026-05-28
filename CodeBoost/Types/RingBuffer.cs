@@ -187,7 +187,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
         }
         else if (Collection.Length < capacity)
         {
-            ArrayPool<T0>.Shared.Return(Collection, RuntimeHelpers.IsReferenceOrContainsReferences<T0>());
+            ArrayPool<T0>.Shared.Return(Collection, Polyfill.IsReferenceOrContainsReferences<T0>());
             Collection = ArrayPool<T0>.Shared.Rent(capacity);
         }
 
@@ -460,7 +460,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
             return;
         }
 
-        bool isReferenceOrContainsReferences = RuntimeHelpers.IsReferenceOrContainsReferences<T0>();
+        bool isReferenceOrContainsReferences = Polyfill.IsReferenceOrContainsReferences<T0>();
         int capacity = Capacity;
 
         if (fromStart)

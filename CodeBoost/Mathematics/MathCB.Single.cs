@@ -18,7 +18,7 @@ public static partial class MathCb
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint SingleToUInt32Unsafe(double value, float accuracy)
     {
-        int wholeValue = Math.Clamp((int)Math.Round(value * (1d / accuracy), MidpointRounding.AwayFromZero), int.MinValue, int.MaxValue);
+        int wholeValue = Polyfill.Clamp((int)Math.Round(value * (1d / accuracy), MidpointRounding.AwayFromZero), int.MinValue, int.MaxValue);
 
         return wholeValue.ToUInt32();
     }

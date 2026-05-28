@@ -100,10 +100,10 @@ public struct UnifiedColor
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public UnifiedColor(float r, float g, float b, float a = 1f)
     {
-        R = (byte)Math.Clamp(r * 255, 0, 255);
-        G = (byte)Math.Clamp(g * 255, 0, 255);
-        B = (byte)Math.Clamp(b * 255, 0, 255);
-        A = (byte)Math.Clamp(a * 255, 0, 255);
+        R = (byte)Polyfill.Clamp(r * 255, 0, 255);
+        G = (byte)Polyfill.Clamp(g * 255, 0, 255);
+        B = (byte)Polyfill.Clamp(b * 255, 0, 255);
+        A = (byte)Polyfill.Clamp(a * 255, 0, 255);
     }
 
     /// <summary>
