@@ -3,7 +3,9 @@ using System.Threading;
 
 namespace CodeBoost.Performance;
 
-//xml
+/// <summary>
+/// A pool for a SortedDictionary which is resettable.
+/// </summary>
 public static class ResettableT1SortedDictionaryPool<T0, T1>
 {
     /// <summary>

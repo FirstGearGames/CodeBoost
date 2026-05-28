@@ -14,7 +14,10 @@ public static class ResettableHashSetPool<T0> where T0 : IPoolResettable, new()
     /// </summary>
     public static HashSet<T0> Rent() => HashSetPool<T0>.Rent();
 
-    //xml resets and returns, and nullifies the references.
+    /// <summary>
+    /// Resets the HashSet, returns it to the pool, and nullifies the reference.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref HashSet<T0> value)
     {
         Return(value);
@@ -22,7 +25,10 @@ public static class ResettableHashSetPool<T0> where T0 : IPoolResettable, new()
         value = null;
     }
 
-    //xml resets and returns.
+    /// <summary>
+    /// Resets the HashSet and returns it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void Return(HashSet<T0> value)
     {
         if (value is null)
@@ -33,7 +39,10 @@ public static class ResettableHashSetPool<T0> where T0 : IPoolResettable, new()
         HashSetPool<T0>.Return(value);
     }
 
-    //xml resets only.
+    /// <summary>
+    /// Resets the HashSet without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
     public static void Reset(HashSet<T0> value)
     {
         foreach (T0 entry in value)

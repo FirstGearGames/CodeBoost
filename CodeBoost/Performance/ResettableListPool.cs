@@ -12,7 +12,10 @@ public static class ResettableListPool<T0> where T0 : IPoolResettable, new()
     /// </summary>
     public static List<T0> Rent() => ListPool<T0>.Rent();
 
-    //xml resets and returns, and nullifies the references.
+    /// <summary>
+    /// Resets the List, returns it to the pool, and nullifies the reference.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref List<T0> value)
     {
         Return(value);
@@ -20,7 +23,10 @@ public static class ResettableListPool<T0> where T0 : IPoolResettable, new()
         value = null;
     }
     	
-    //xml resets and returns.
+    /// <summary>
+    /// Resets the List and returns it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void Return(List<T0> value)
     {
         if (value is null)
@@ -31,7 +37,10 @@ public static class ResettableListPool<T0> where T0 : IPoolResettable, new()
         ListPool<T0>.Return(value);
     }
 	
-    //xml resets only.
+    /// <summary>
+    /// Resets the List without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
     public static void Reset(List<T0> value)
     {
         foreach (T0 entry in value)

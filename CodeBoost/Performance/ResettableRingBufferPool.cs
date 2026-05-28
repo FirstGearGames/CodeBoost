@@ -12,7 +12,10 @@ public static class ResettableRingBufferPool<T0> where T0 : IPoolResettable, new
     /// </summary>
     public static RingBuffer<T0> Rent() => RingBufferPool<T0>.Rent();
 
-    //xml resets and returns, and nullifies the references.
+    /// <summary>
+    /// Resets the RingBuffer, returns it to the pool, and nullifies the reference.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref RingBuffer<T0> value)
     {
         Return(value);
@@ -34,7 +37,10 @@ public static class ResettableRingBufferPool<T0> where T0 : IPoolResettable, new
         RingBufferPool<T0>.Return(value);
     }
 
-    //xml resets only.
+    /// <summary>
+    /// Resets the RingBuffer without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
     public static void Reset(RingBuffer<T0> value)
     {
         foreach (T0 entry in value)

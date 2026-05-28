@@ -12,7 +12,10 @@ public static class ResettableT0T1SortedListPool<T0, T1> where T0 : IPoolResetta
     /// </summary>
     public static SortedList<T0, T1> Rent() => SortedListPool<T0, T1>.Rent();
 
-    //xml resets and returns, and nullifies the references.
+    /// <summary>
+    /// Resets the SortedList, returns it to the pool, and nullifies the reference.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref SortedList<T0, T1> value)
     {
         Return(value);
@@ -20,7 +23,10 @@ public static class ResettableT0T1SortedListPool<T0, T1> where T0 : IPoolResetta
         value = null;
     }
 
-    //xml resets and returns.
+    /// <summary>
+    /// Resets the SortedList and returns it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void Return(SortedList<T0, T1> value)
     {
         if (value is null)
@@ -31,7 +37,10 @@ public static class ResettableT0T1SortedListPool<T0, T1> where T0 : IPoolResetta
         SortedListPool<T0, T1>.Return(value);
     }
 
-    //xml resets only.
+    /// <summary>
+    /// Resets the SortedList without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
     public static void Reset(SortedList<T0, T1> value)
     {
         foreach (T0 entry in value.Keys)

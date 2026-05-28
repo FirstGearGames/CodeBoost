@@ -13,7 +13,10 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
     /// </summary>
     public static BoostedQueue<T0> Rent() => BoostedQueuePool<T0>.Rent();
 
-    //xml resets and returns, and nullifies the references.
+    /// <summary>
+    /// Resets the BoostedQueue, returns it to the pool, and nullifies the reference.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref BoostedQueue<T0> value)
     {
         Return(value);
@@ -21,7 +24,10 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
         value = null;
     }
     
-    //xml resets and returns.
+    /// <summary>
+    /// Resets the BoostedQueue and returns it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void Return(BoostedQueue<T0> value)
     {
         if (value is null)
@@ -32,8 +38,11 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
         BoostedQueuePool<T0>.Return(value);
     }
 
-    //xml resets only.
-    public static void Reset(BoostedQueue<T0> value) 
+    /// <summary>
+    /// Resets the BoostedQueue without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
+    public static void Reset(BoostedQueue<T0> value)
     {
         bool isReferenceOrContainsReferences = RuntimeHelpers.IsReferenceOrContainsReferences<T0>();
 

@@ -12,7 +12,10 @@ public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResetta
     /// </summary>
     public static Dictionary<T0, T1> Rent() => DictionaryPool<T0, T1>.Rent();
 
-    //xml resets and returns, and nullifies the references.
+    /// <summary>
+    /// Resets the Dictionary, returns it to the pool, and nullifies the reference.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void ReturnAndNullifyReference(ref Dictionary<T0, T1> value)
     {
         Return(value);
@@ -20,7 +23,10 @@ public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResetta
         value = null;
     }
 
-    //xml resets and returns.
+    /// <summary>
+    /// Resets the Dictionary and returns it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to return. </param>
     public static void Return(Dictionary<T0, T1> value)
     {
         if (value is null)
@@ -31,8 +37,11 @@ public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResetta
         DictionaryPool<T0, T1>.Return(value);
     }
     
-    //xml resets only.
-    public static void Reset(Dictionary<T0, T1> value) 
+    /// <summary>
+    /// Resets the Dictionary without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
+    public static void Reset(Dictionary<T0, T1> value)
     {
         foreach (KeyValuePair<T0, T1> entry in value)
         {
