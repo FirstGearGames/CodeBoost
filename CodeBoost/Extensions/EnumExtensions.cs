@@ -13,12 +13,23 @@ public static class EnumExtensions
     /// </summary>
     /// <example>MyEnum.Two</example>
     [PreserveLogic]
-    public static string ToTypeAndValueString<T0>(this T0 enumValue, bool useFullName) where T0 : Enum
+    public static string ToTypeFullNameAndValueString<T0>(this T0 enumValue) where T0 : Enum
     {
         Type type = typeof(T0);
 
-        string? name = useFullName ? type.FullName : type.Name;
-        return $"{name}.{enumValue}";
+        return $"{type.FullName}.{enumValue}";
+    }
+
+    /// <summary>
+    /// Returns the enum name and value as a string.
+    /// </summary>
+    /// <example>MyEnum.Two</example>
+    [PreserveLogic]
+    public static string ToTypeNameAndValueString<T0>(this T0 enumValue) where T0 : Enum
+    {
+        Type type = typeof(T0);
+
+        return $"{type.Name}.{enumValue}";
     }
 
     /// <summary>
@@ -95,7 +106,8 @@ public static class EnumExtensions
 
         for (int i = 0; i < array.Length; i++)
         {
-            ulong value = (ulong)(object)array[i];
+            // Unbox to the validated underlying type (long) before converting; unboxing a long-backed enum directly to ulong throws InvalidCastException.
+            ulong value = (ulong)(long)(object)array[i];
             if (value > maximumValue)
                 maximumValue = value;
             else if (value < minimumValue)

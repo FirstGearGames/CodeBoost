@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CodeBoost.Logging;
+using CodeBoost.Performance;
 #pragma warning disable CS8603 // Possible null reference return.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
@@ -187,7 +188,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
         }
         else if (Collection.Length < capacity)
         {
-            ArrayPool<T0>.Shared.Return(Collection, RuntimeHelpers.IsReferenceOrContainsReferences<T0>());
+            ArrayPool<T0>.Shared.Return(Collection, ContainsReferences<T0>.Value);
             Collection = ArrayPool<T0>.Shared.Rent(capacity);
         }
 
@@ -218,17 +219,6 @@ public class RingBuffer<T0> : IEnumerable<T0>
     {
         Array.Clear(Collection, 0, Capacity);
 
-        _written = 0;
-        WriteIndex = 0;
-        _enumerator.Reset();
-    }
-
-    /// <summary>
-    /// Resets the write indices and enumerator state without touching the underlying array. Callers that have already nulled their populated slots use this to skip the redundant <see cref="Array.Clear(System.Array, int, int)"/> in <see cref="Clear"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void ResetWriteState()
-    {
         _written = 0;
         WriteIndex = 0;
         _enumerator.Reset();
@@ -410,7 +400,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
         if (lastReal >= capacity)
             lastReal -= capacity;
 
-        return new RingBufferWalkState<T0>(collection, count, capacity, baseReal, lastReal);
+        return new(collection, count, capacity, baseReal, lastReal);
     }
 
     /// <summary>
@@ -460,7 +450,7 @@ public class RingBuffer<T0> : IEnumerable<T0>
             return;
         }
 
-        bool isReferenceOrContainsReferences = RuntimeHelpers.IsReferenceOrContainsReferences<T0>();
+        bool isReferenceOrContainsReferences = ContainsReferences<T0>.Value;
         int capacity = Capacity;
 
         if (fromStart)

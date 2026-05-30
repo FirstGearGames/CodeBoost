@@ -13,30 +13,37 @@ public static class ResettableListPool<T0> where T0 : IPoolResettable, new()
     public static List<T0> Rent() => ListPool<T0>.Rent();
 
     /// <summary>
-    /// Stores an instance of List and sets the original reference to default.
-    /// The method will not execute if the value is null.
+    /// Resets the List, returns it to the pool, and nullifies the reference.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref List<T0> value, PoolReturnType collectionReturnType)
+    public static void ReturnAndNullifyReference(ref List<T0> value)
     {
-        Return(value, collectionReturnType);
+        Return(value);
 
         value = null;
     }
-
+    	
     /// <summary>
-    /// Stores an instance of List in the pool.
+    /// Resets the List and returns it to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(List<T0> value, PoolReturnType collectionReturnType)
+    public static void Return(List<T0> value)
     {
         if (value is null)
             return;
 
-        foreach (T0 item in value)
-            item?.OnReturn();
+        Reset(value);
 
-        if (collectionReturnType is PoolReturnType.Return)
-            ListPool<T0>.Return(value);
+        ListPool<T0>.Return(value);
+    }
+	
+    /// <summary>
+    /// Resets the List without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
+    public static void Reset(List<T0> value)
+    {
+        foreach (T0 entry in value)
+            entry?.OnRent();
     }
 }

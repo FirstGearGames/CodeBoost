@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using CodeBoost.Extensions;
 
 namespace CodeBoost.Types;
 
@@ -31,8 +32,8 @@ public struct FloatRange2D
     public Vector3 Clamp(Vector3 original) => new(ClampX(original.X), ClampY(original.Y), original.Z);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public float ClampX(float original) => Math.Clamp(original, X.Minimum, X.Maximum);
+    public float ClampX(float original) => original.Clamp(X.Minimum, X.Maximum);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public float ClampY(float original) => Math.Clamp(original, Y.Minimum, Y.Maximum);
+    public float ClampY(float original) => original.Clamp(Y.Minimum, Y.Maximum);
 }

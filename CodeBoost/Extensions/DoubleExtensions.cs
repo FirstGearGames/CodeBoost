@@ -19,6 +19,25 @@ public static class DoubleExtensions
     }
 
     /// <summary>
+    /// Clamps the supplied value into the inclusive range from <paramref name="minimum"/> to <paramref name="maximum"/>.
+    /// </summary>
+    /// <param name="value">Value to clamp.</param>
+    /// <param name="minimum">Inclusive minimum value.</param>
+    /// <param name="maximum">Inclusive maximum value.</param>
+    /// <returns>The clamped value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static double Clamp(this double value, double minimum, double maximum)
+    {
+        if (value < minimum)
+            return minimum;
+
+        if (value > maximum)
+            return maximum;
+
+        return value;
+    }
+
+    /// <summary>
     /// Clamps the supplied value into the inclusive range from <c>0</c> to <c>1</c>.
     /// </summary>
     /// <param name="value">Value to clamp.</param>

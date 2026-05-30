@@ -9,6 +9,25 @@ namespace CodeBoost.Extensions;
 public static class SingleExtensions
 {
     /// <summary>
+    /// Clamps the supplied value into the inclusive range from <paramref name="minimum"/> to <paramref name="maximum"/>.
+    /// </summary>
+    /// <param name="value">Value to clamp.</param>
+    /// <param name="minimum">Inclusive minimum value.</param>
+    /// <param name="maximum">Inclusive maximum value.</param>
+    /// <returns>The clamped value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static float Clamp(this float value, float minimum, float maximum)
+    {
+        if (value < minimum)
+            return minimum;
+
+        if (value > maximum)
+            return maximum;
+
+        return value;
+    }
+
+    /// <summary>
     /// Converts the supplied <see cref="float"/> value into a clamped <see cref="int"/> using the requested accuracy.
     /// </summary>
     /// <param name="value">Value to convert.</param>
@@ -19,7 +38,7 @@ public static class SingleExtensions
     public static int ToInt32(this float value, float accuracy, MidpointRounding rounding = MidpointRounding.AwayFromZero)
     {
         long wholeValue = (long)Math.Round(value * (1f / accuracy), rounding);
-        return (int)Math.Clamp(wholeValue, int.MinValue, int.MaxValue);
+        return (int)wholeValue.Clamp(int.MinValue, int.MaxValue);
     }
 
     /// <summary>

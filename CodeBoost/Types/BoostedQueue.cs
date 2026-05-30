@@ -163,18 +163,7 @@ public class BoostedQueue<T0>
         if (_collection.Length > 0)
             Array.Clear(_collection, 0, _collection.Length);
     }
-
-    /// <summary>
-    /// Resets the read and write indices without touching the underlying array. Callers that have already nulled their populated slots use this to skip the redundant <see cref="Array.Clear(System.Array, int, int)"/> in <see cref="Clear"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void ResetWriteState()
-    {
-        _read = 0;
-        WriteIndex = 0;
-        _written = 0;
-    }
-
+    
     /// <summary>
     /// Returns the value at the actual index as it relates to the simulated index.
     /// </summary>

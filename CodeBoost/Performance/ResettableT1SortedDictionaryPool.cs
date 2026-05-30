@@ -1,24 +1,22 @@
 using System.Collections.Generic;
 using System.Threading;
 using CodeBoost.Extensions;
-using CodeBoost.Logging;
-using CodeBoost.Types;
 
 namespace CodeBoost.Performance;
 
 /// <summary>
-/// A pool for RingBuffer collections.
+/// A pool for a SortedDictionary which is resettable.
 /// </summary>
-public static class RingBufferPool<T0>
+public static class ResettableT1SortedDictionaryPool<T0, T1>
 {
     /// <summary>
-    /// The stack for the ThreadLocal RingBuffer.
+    /// The stack for the ThreadLocal Dictionary.
     /// </summary>
-    private static readonly ThreadLocal<ThreadLocalStackWrapper<RingBuffer<T0>>> Wrapper;
+    private static readonly ThreadLocal<ThreadLocalStackWrapper<SortedDictionary<T0, T1>>> Wrapper;
     /// <summary>
-    /// The stack for the global RingBuffer.
+    /// The stack for the global Dictionary.
     /// </summary>
-    private static readonly Stack<RingBuffer<T0>> GlobalStack = [];
+    private static readonly Stack<SortedDictionary<T0, T1>> GlobalStack = [];
     /// <summary>
     /// Maximum number of entries allowed in the global stack.
     /// </summary>
@@ -28,25 +26,19 @@ public static class RingBufferPool<T0>
     /// </summary>
     private const int MaximumThreadLocalStackSize = 100;
 
-    static RingBufferPool()
+    static ResettableT1SortedDictionaryPool()
     {
-        // if (typeof(IPoolResettable).IsAssignableFrom(typeof(T0)))
-        // {
-        //     Logger.LogError(typeof(RingBufferPool<>), $"[{typeof(T0).Name}] implements IPoolResettable; use the Resettable pool instead.");
-        //     return;
-        // }
-        //
         Wrapper = new(valueFactory: () => new(Flush), trackAllValues: false);
     }
 
     /// <summary>
-    /// Rents a RingBuffer from the pool.
+    /// Rents a Dictionary from the pool.
     /// </summary>
-    /// <returns>A cleared RingBuffer collection.</returns>
-    public static RingBuffer<T0> Rent()
+    /// <returns>A cleared Dictionary collection.</returns>
+    public static SortedDictionary<T0, T1> Rent()
     {
-        Stack<RingBuffer<T0>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.TryPop(out RingBuffer<T0> result))
+        Stack<SortedDictionary<T0, T1>> localStack = Wrapper.Value.LocalStack;
+        if (localStack.TryPop(out SortedDictionary<T0, T1> result))
             return result;
 
         lock (GlobalStack)
@@ -59,11 +51,11 @@ public static class RingBufferPool<T0>
     }
 
     /// <summary>
-    /// Returns a RingBuffer to the pool and sets the provided reference to null.
+    /// Returns a Dictionary to the pool and sets the provided reference to null.
     /// This method will not execute if the value is null.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void ReturnAndNullifyReference(ref RingBuffer<T0> value)
+    public static void ReturnAndNullifyReference(ref SortedDictionary<T0, T1> value)
     {
         Return(value);
 
@@ -71,17 +63,17 @@ public static class RingBufferPool<T0>
     }
 
     /// <summary>
-    /// Returns a RingBuffer to the pool.
+    /// Returns a Dictionary to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(RingBuffer<T0> value)
+    public static void Return(SortedDictionary<T0, T1> value)
     {
         if (value is null)
             return;
 
         value.Clear();
 
-        Stack<RingBuffer<T0>> localStack = Wrapper.Value.LocalStack;
+        Stack<SortedDictionary<T0, T1>> localStack = Wrapper.Value.LocalStack;
         if (localStack.Count < MaximumThreadLocalStackSize)
         {
             localStack.Push(value);
@@ -96,18 +88,18 @@ public static class RingBufferPool<T0>
 
         //If here both stacks are at capacity.
     }
-    
+
     /// <summary>
-    /// Flushes the ThreadLocal RingBuffer stack into the global stack.
+    /// Flushes the ThreadLocal Dictionary stack into the global stack.
     /// </summary>
-    private static void Flush(Stack<RingBuffer<T0>> localStack)
+    private static void Flush(Stack<SortedDictionary<T0, T1>> localStack)
     {
         if (localStack.Count == 0)
             return;
 
         lock (GlobalStack)
         {
-            while (localStack.TryPop(out RingBuffer<T0> item))
+            while (localStack.TryPop(out SortedDictionary<T0, T1> item))
             {
                 if (GlobalStack.Count < MaximumGlobalStackSize)
                     GlobalStack.Push(item);

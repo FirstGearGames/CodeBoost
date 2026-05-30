@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using CodeBoost.Extensions;
 
 namespace CodeBoost.Performance;
 

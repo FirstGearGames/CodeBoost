@@ -14,31 +14,39 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
     public static BoostedQueue<T0> Rent() => BoostedQueuePool<T0>.Rent();
 
     /// <summary>
-    /// Stores an instance of BoostedQueue and sets the original reference to null.
+    /// Resets the BoostedQueue, returns it to the pool, and nullifies the reference.
     /// </summary>
-    public static void ReturnAndNullifyReference(ref BoostedQueue<T0> value, PoolReturnType collectionReturnType)
+    /// <param name = "value"> Value to return. </param>
+    public static void ReturnAndNullifyReference(ref BoostedQueue<T0> value)
     {
-        Return(value, collectionReturnType);
+        Return(value);
 
         value = null;
     }
-
+    
     /// <summary>
-    /// Stores an instance of BoostedQueue in the pool.
+    /// Resets the BoostedQueue and returns it to the pool.
     /// </summary>
-    public static void Return(BoostedQueue<T0> value, PoolReturnType collectionReturnType)
+    /// <param name = "value"> Value to return. </param>
+    public static void Return(BoostedQueue<T0> value)
     {
         if (value is null)
             return;
 
-        bool isReferenceOrContainsReferences = RuntimeHelpers.IsReferenceOrContainsReferences<T0>();
+        Reset(value);
+        
+        BoostedQueuePool<T0>.Return(value);
+    }
 
-        while (value.TryDequeue(out T0 item, defaultArrayEntry: isReferenceOrContainsReferences))
-            item?.OnReturn();
+    /// <summary>
+    /// Resets the BoostedQueue without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
+    public static void Reset(BoostedQueue<T0> value)
+    {
+        bool isReferenceOrContainsReferences = ContainsReferences<T0>.Value;
 
-        value.ResetWriteState();
-
-        if (collectionReturnType is PoolReturnType.Return)
-            BoostedQueuePool<T0>.ReturnAlreadyCleared(value);
+        while (value.TryDequeue(out T0 entry, defaultArrayEntry: isReferenceOrContainsReferences))
+            entry?.OnReturn();
     }
 }

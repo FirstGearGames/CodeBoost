@@ -98,29 +98,6 @@ public static class BoostedQueuePool<T0>
     }
 
     /// <summary>
-    /// Returns a BoostedQueue to the pool without invoking <see cref="BoostedQueue{T0}.Clear"/>. Callers must have already drained items and reset write state via <see cref="BoostedQueue{T0}.ResetWriteState"/> before calling this method.
-    /// </summary>
-    /// <param name = "value"> Value to return. </param>
-    internal static void ReturnAlreadyCleared(BoostedQueue<T0> value)
-    {
-        if (value is null)
-            return;
-
-        Stack<BoostedQueue<T0>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.Count < MaximumThreadLocalStackSize)
-        {
-            localStack.Push(value);
-            return;
-        }
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.Count < MaximumGlobalStackSize)
-                GlobalStack.Push(value);
-        }
-    }
-
-    /// <summary>
     /// Flushes the ThreadLocal BoostedQueue stack into the global stack.
     /// </summary>
     private static void Flush(Stack<BoostedQueue<T0>> localStack)

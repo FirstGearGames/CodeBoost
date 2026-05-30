@@ -13,30 +13,40 @@ public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResetta
     public static Dictionary<T0, T1> Rent() => DictionaryPool<T0, T1>.Rent();
 
     /// <summary>
-    /// Stores an instance of Dictionary and sets the original reference to null.
+    /// Resets the Dictionary, returns it to the pool, and nullifies the reference.
     /// </summary>
-    public static void ReturnAndNullifyReference(ref Dictionary<T0, T1> value, PoolReturnType collectionReturnType)
+    /// <param name = "value"> Value to return. </param>
+    public static void ReturnAndNullifyReference(ref Dictionary<T0, T1> value)
     {
-        Return(value, collectionReturnType);
+        Return(value);
 
         value = null;
     }
 
     /// <summary>
-    /// Stores an instance of Dictionary in the pool.
+    /// Resets the Dictionary and returns it to the pool.
     /// </summary>
-    public static void Return(Dictionary<T0, T1> value, PoolReturnType collectionReturnType)
+    /// <param name = "value"> Value to return. </param>
+    public static void Return(Dictionary<T0, T1> value)
     {
         if (value is null)
             return;
 
+        Reset(value);
+
+        DictionaryPool<T0, T1>.Return(value);
+    }
+    
+    /// <summary>
+    /// Resets the Dictionary without returning it to the pool.
+    /// </summary>
+    /// <param name = "value"> Value to reset. </param>
+    public static void Reset(Dictionary<T0, T1> value)
+    {
         foreach (KeyValuePair<T0, T1> entry in value)
         {
             entry.Key?.OnReturn();
             entry.Value?.OnReturn();
         }
-
-        if (collectionReturnType is PoolReturnType.Return)
-            DictionaryPool<T0, T1>.Return(value);
     }
 }
