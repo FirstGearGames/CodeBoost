@@ -2,6 +2,13 @@ namespace CodeBoost.Environment;
 
 public static class ApplicationStateService
 {
+    //xml used to access debug logic via branching rather than defines.
+    #if DEBUG
+    public const bool IsDebug = true;
+    #else
+    public const bool IsDebug = false;
+    #endif
+
     /// <summary>
     /// Invoked when the ApplicationState is set.
     /// </summary>
