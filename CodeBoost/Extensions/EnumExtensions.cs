@@ -95,7 +95,8 @@ public static class EnumExtensions
 
         for (int i = 0; i < array.Length; i++)
         {
-            ulong value = (ulong)(object)array[i];
+            // Unbox to the validated underlying type (long) before converting; unboxing a long-backed enum directly to ulong throws InvalidCastException.
+            ulong value = (ulong)(long)(object)array[i];
             if (value > maximumValue)
                 maximumValue = value;
             else if (value < minimumValue)
