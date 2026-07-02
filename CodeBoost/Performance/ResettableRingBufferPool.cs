@@ -38,12 +38,14 @@ public static class ResettableRingBufferPool<T0> where T0 : IPoolResettable, new
     }
 
     /// <summary>
-    /// Resets the RingBuffer without returning it to the pool.
+    /// Resets the RingBuffer without returning it to the pool. Every populated entry receives <see cref="IPoolResettable.OnReturn"/>, then the collection is cleared so no reset entries remain reachable.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(RingBuffer<T0> value)
     {
         foreach (T0 entry in value)
             entry?.OnReturn();
+
+        value.Clear();
     }
 }
