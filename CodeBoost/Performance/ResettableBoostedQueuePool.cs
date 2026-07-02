@@ -39,7 +39,7 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
     }
 
     /// <summary>
-    /// Resets the BoostedQueue without returning it to the pool.
+    /// Resets the BoostedQueue without returning it to the pool. Every entry is drained through <see cref="IPoolResettable.OnReturn"/>, then the read and write indices are restored to their pristine state.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(BoostedQueue<T0> value)
@@ -48,5 +48,7 @@ public static class ResettableBoostedQueuePool<T0> where T0 : IPoolResettable, n
 
         while (value.TryDequeue(out T0 entry, defaultArrayEntry: isReferenceOrContainsReferences))
             entry?.OnReturn();
+
+        value.ResetWriteState();
     }
 }
