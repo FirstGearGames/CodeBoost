@@ -13,7 +13,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// <summary>
         /// Represents the current fade state or goal for this class.
         /// </summary>
-        public enum FadeGoalType
+        public enum FadeGoalType : byte
         {
             Unset = 0,
             Hidden = 1,

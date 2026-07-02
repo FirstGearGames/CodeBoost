@@ -29,7 +29,7 @@ namespace Sirenix.OdinInspector
         public object comparedValue { get; private set; }
         public DisablingType disablingType { get; private set; }
 
-        public enum DisablingType
+        public enum DisablingType : byte
         {
             ReadOnly = 2,
             DontDraw = 3

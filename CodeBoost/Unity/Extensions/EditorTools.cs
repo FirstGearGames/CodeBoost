@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace CodeBoost.Extensions
 {
-    public enum EditorLayoutEnableType
+    public enum EditorLayoutEnableType : byte
     {
         Enabled = 0,
         Disabled = 1,
