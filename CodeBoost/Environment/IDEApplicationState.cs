@@ -9,7 +9,7 @@ public class IdeApplicationState : IApplicationState
     /// <remarks>
     /// This event never invokes for this type.
     /// </remarks>
-    public event IApplicationState.FocusChangeEventHandler FocusChanged;
+    public event IApplicationState.FocusChangeEventHandler? FocusChanged;
 
     /// <inheritdoc/>
     public bool IsQuitting() => System.Environment.HasShutdownStarted;

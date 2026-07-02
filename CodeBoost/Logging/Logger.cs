@@ -1,8 +1,8 @@
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using CodeBoost.Environment;
 using CodeBoost.Extensions;
-using System;
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 #pragma warning disable CS0067 // Event is never used

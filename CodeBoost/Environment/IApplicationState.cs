@@ -5,7 +5,7 @@ public interface IApplicationState
     /// <summary>
     /// Invoked when the application focus state changes.
     /// </summary>
-    public event FocusChangeEventHandler FocusChanged;
+    public event FocusChangeEventHandler? FocusChanged;
 
     public delegate void FocusChangeEventHandler(bool isFocused);
 

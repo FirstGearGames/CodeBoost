@@ -13,7 +13,7 @@ public static class IoExtensions
     /// <summary>
     /// Specifies how to format a platform path.
     /// </summary>
-    public enum PathFormattingType
+    public enum PathFormattingType : byte
     {
         /// <summary>
         /// Do not format the path.
@@ -28,7 +28,7 @@ public static class IoExtensions
     /// <summary>
     /// Specifies how to write data to a file.
     /// </summary>
-    public enum WriteType
+    public enum WriteType : byte
     {
         /// <summary>
         /// Appends onto current data.

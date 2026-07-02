@@ -5,7 +5,7 @@ namespace CodeBoost.Mathematics;
 /// <summary>
 /// Specifies how a numeric value should be rounded.
 /// </summary>
-public enum RoundingType
+public enum RoundingType : byte
 {
     /// <summary>
     /// Rounds to the nearest even number.
