@@ -38,13 +38,15 @@ public static class ResettableRingBufferPool<T0> where T0 : IPoolResettable, new
     }
 
     /// <summary>
-    /// Resets the RingBuffer without returning it to the pool. Every populated entry receives <see cref="IPoolResettable.OnReturn"/>, then the collection is cleared so no reset entries remain reachable.
+    /// Resets the RingBuffer without returning it to the pool. Every populated entry is returned through
+    /// <see cref="ResettableObjectPool{T0}.Return"/> — so its <see cref="IPoolResettable.OnReturn"/> runs and the instance
+    /// re-enters its pool rather than becoming garbage — then the collection is cleared so no reset entries remain reachable.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(RingBuffer<T0> value)
     {
         foreach (T0 entry in value)
-            entry?.OnReturn();
+            ResettableObjectPool<T0>.Return(entry);
 
         value.Clear();
     }

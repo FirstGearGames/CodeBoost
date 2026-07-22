@@ -5,7 +5,7 @@ namespace CodeBoost.Performance;
 /// <summary>
 /// A pool for a Dictionary which is resettable.
 /// </summary>
-public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResettable where T1 : IPoolResettable, new()
+public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResettable, new() where T1 : IPoolResettable, new()
 {
     /// <summary>
     /// Retrieves an instance of Dictionary from the pool.
@@ -38,15 +38,17 @@ public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResetta
     }
     
     /// <summary>
-    /// Resets the Dictionary without returning it to the pool.
+    /// Resets the Dictionary without returning it to the pool. Every contained key and value is returned through
+    /// <see cref="ResettableObjectPool{T0}.Return"/>, so its <see cref="IPoolResettable.OnReturn"/> runs and the instance
+    /// re-enters its pool rather than becoming garbage.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(Dictionary<T0, T1> value)
     {
         foreach (KeyValuePair<T0, T1> entry in value)
         {
-            entry.Key?.OnReturn();
-            entry.Value?.OnReturn();
+            ResettableObjectPool<T0>.Return(entry.Key);
+            ResettableObjectPool<T1>.Return(entry.Value);
         }
     }
 }

@@ -31,17 +31,25 @@ public static class ResettableT0SortedListPool<T0, T1> where T0 : IPoolResettabl
     {
         if (value is null)
             return;
-        
+
+        Reset(value);
+
         SortedListPool<T0, T1>.Return(value);
     }
 
     /// <summary>
-    /// Resets the SortedList without returning it to the pool.
+    /// Resets the SortedList without returning it to the pool. Every contained key is returned through
+    /// <see cref="ResettableObjectPool{T0}.Return"/>, so its <see cref="IPoolResettable.OnReturn"/> runs and the instance
+    /// re-enters its pool rather than becoming garbage.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(SortedList<T0, T1> value)
     {
-        foreach (T0 entry in value.Keys)
-            entry?.OnReturn();
+        /* Indexed rather than enumerated: SortedList's Keys collection hands out a reference-type enumerator per foreach,
+         * while indexing the cached wrapper allocates nothing. */
+        IList<T0> keys = value.Keys;
+
+        for (int index = 0; index < keys.Count; index++)
+            ResettableObjectPool<T0>.Return(keys[index]);
     }
 }
