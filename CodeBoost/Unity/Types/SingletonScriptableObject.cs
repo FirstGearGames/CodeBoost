@@ -16,7 +16,7 @@ namespace CodeBoost.Unity.Types
         {
             get
             {
-                if (_instance is null)
+                if (_instance == null)
                 {
                     T0[] results = Resources.FindObjectsOfTypeAll<T0>();
                     if (results.Length == 0)

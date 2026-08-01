@@ -18,8 +18,8 @@ namespace CodeBoost.Unity.Types
         /// </summary>
         public static DDOL GetDDOL()
         {
-            // Not yet made.
-            if (_instance is null)
+            // Not yet made — use Unity's == so a destroyed instance carried across a domain-reload-disabled session re-creates.
+            if (_instance == null)
             {
                 GameObject obj = new();
                 obj.name = "DDOL Instance";

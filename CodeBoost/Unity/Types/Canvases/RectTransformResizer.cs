@@ -82,8 +82,8 @@ namespace CodeBoost.Unity.Types.Canvases
         /// <param name = "del"> Delegate to invoke when resizing completes. </param>
         public static void Resize(ResizeHandler del)
         {
-            // Check to make a singleton instance.
-            if (_instance is null)
+            // Check to make a singleton instance — Unity's == so a destroyed resizer from a prior session is re-created, not resolved.
+            if (_instance == null)
             {
                 GameObject go = new(typeof(RectTransformResizer).Name);
                 _instance = go.AddComponent<RectTransformResizer>();
