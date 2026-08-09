@@ -16,23 +16,23 @@ namespace CodeBoost.Unity.Types
         /// <summary>
         /// The scrollbar to fix.
         /// </summary>
-        private Scrollbar _scrollBar;
+        private Scrollbar _scrollbar;
         /// <summary>
         /// The value to set the scrollbar at.
         /// </summary>
-        private float _value;
+        private float _pendingValue;
         /// <summary>
         /// The frame when the value was updated.
         /// </summary>
-        private int _updatedFrame = -1;
+        private int _valueSetFrame = -1;
         /// <summary>
         /// The number of frames to wait before fixing.
         /// </summary>
         private readonly int _fixFrames;
 
-        public ScrollbarValueSetter(Scrollbar sb, int fixFrames = 2)
+        public ScrollbarValueSetter(Scrollbar scrollbar, int fixFrames = 2)
         {
-            _scrollBar = sb;
+            _scrollbar = scrollbar;
             _fixFrames = fixFrames;
         }
 
@@ -42,9 +42,9 @@ namespace CodeBoost.Unity.Types
         /// <param name = "value"> </param>
         public void SetValue(float value)
         {
-            _scrollBar.value = value;
-            _value = value;
-            _updatedFrame = Time.frameCount;
+            _scrollbar.value = value;
+            _pendingValue = value;
+            _valueSetFrame = Time.frameCount;
         }
 
         /// <summary>
@@ -52,13 +52,13 @@ namespace CodeBoost.Unity.Types
         /// </summary>
         public void LateUpdate()
         {
-            if (_updatedFrame == -1)
+            if (_valueSetFrame == -1)
                 return;
-            if (Time.frameCount - _updatedFrame < _fixFrames)
+            if (Time.frameCount - _valueSetFrame < _fixFrames)
                 return;
 
-            _updatedFrame = -1;
-            _scrollBar.value = _value;
+            _valueSetFrame = -1;
+            _scrollbar.value = _pendingValue;
         }
     }
 }

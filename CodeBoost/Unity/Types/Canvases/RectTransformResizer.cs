@@ -40,7 +40,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// <summary>
         /// The elements to resize.
         /// </summary>
-        private readonly List<ResizeData> _resizeDatas = new();
+        private readonly List<ResizeData> _pendingResizes = new();
         /// <summary>
         /// The singleton instance of this class.
         /// </summary>
@@ -48,7 +48,7 @@ namespace CodeBoost.Unity.Types.Canvases
 
         private void OnDestroy()
         {
-            foreach (ResizeData item in _resizeDatas)
+            foreach (ResizeData item in _pendingResizes)
                 ResettableObjectPool<ResizeData>.Return(item);
         }
 
@@ -62,15 +62,15 @@ namespace CodeBoost.Unity.Types.Canvases
         /// </summary>
         private void Resize()
         {
-            for (int i = 0; i < _resizeDatas.Count; i++)
+            for (int i = 0; i < _pendingResizes.Count; i++)
             {
-                _resizeDatas[i].Remaining--;
-                bool complete = _resizeDatas[i].Remaining == 0;
-                _resizeDatas[i].Delegate?.Invoke(complete);
+                _pendingResizes[i].Remaining--;
+                bool complete = _pendingResizes[i].Remaining == 0;
+                _pendingResizes[i].Delegate?.Invoke(complete);
                 if (complete)
                 {
-                    ResettableObjectPool<ResizeData>.Return(_resizeDatas[i]);
-                    _resizeDatas.RemoveAt(i);
+                    ResettableObjectPool<ResizeData>.Return(_pendingResizes[i]);
+                    _pendingResizes.RemoveAt(i);
                     i--;
                 }
             }
@@ -97,7 +97,7 @@ namespace CodeBoost.Unity.Types.Canvases
         {
             ResizeData rd = ResettableObjectPool<ResizeData>.Rent();
             rd.Delegate = del;
-            _instance._resizeDatas.Add(rd);
+            _instance._pendingResizes.Add(rd);
         }
     }
 }

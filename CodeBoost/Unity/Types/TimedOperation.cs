@@ -14,43 +14,43 @@ namespace CodeBoost.Unity.Types
     {
         /// <summary>
         /// </summary>
-        /// <param name = "interval"> Interval frequency to allow operations. </param>
-        /// <param name = "scaledTime"> True to compare against scaled time. </param>
-        public TimedOperation(float interval, bool scaledTime = false)
+        /// <param name = "intervalSeconds"> Interval frequency to allow operations. </param>
+        /// <param name = "isTimeScaled"> True to compare against scaled time. </param>
+        public TimedOperation(float intervalSeconds, bool isTimeScaled = false)
         {
-            _interval = interval;
-            _scaledTime = scaledTime;
+            _intervalSeconds = intervalSeconds;
+            _isTimeScaled = isTimeScaled;
         }
 
         /// <summary>
         /// The amount of time that must pass between each operation.
         /// </summary>
-        private readonly float _interval;
+        private readonly float _intervalSeconds;
         /// <summary>
         /// True to use scaled time.
         /// </summary>
-        private readonly bool _scaledTime;
+        private readonly bool _isTimeScaled;
         /// <summary>
         /// The last times specific key operations were performed.
         /// </summary>
-        private readonly Dictionary<string, float> _operationTimes = new();
+        private readonly Dictionary<string, float> _nextOperationTimesByKey = new();
         /// <summary>
         /// The last time a global operation was performed.
         /// </summary>
-        private float _lastGlobalTime;
+        private float _lastGlobalTimeSeconds;
 
         /// <summary>
-        /// Returns whether the operation can be performed at the configured interval.
+        /// Returns whether the operation can be performed at the configured intervalSeconds.
         /// </summary>
         /// <returns> True if the operation can be performed; otherwise, false. </returns>
         public bool TryUseOperation()
         {
-            float time = _scaledTime ? Time.time : Time.unscaledTime;
+            float time = _isTimeScaled ? Time.time : Time.unscaledTime;
 
             // If enough time has passed.
-            if (time - _lastGlobalTime >= _interval)
+            if (time - _lastGlobalTimeSeconds >= _intervalSeconds)
             {
-                _lastGlobalTime = time + _interval;
+                _lastGlobalTimeSeconds = time + _intervalSeconds;
                 return true;
             }
             // Not enough time passed.
@@ -59,22 +59,22 @@ namespace CodeBoost.Unity.Types
         }
 
         /// <summary>
-        /// Returns whether the operation can be performed at the configured interval for the specified key.
+        /// Returns whether the operation can be performed at the configured intervalSeconds for the specified key.
         /// </summary>
         /// <param name = "key"> </param>
         /// <returns> True if the operation can be performed for the specified key; otherwise, false. </returns>
         public bool TryUseOperation(string key)
         {
-            float time = _scaledTime ? Time.time : Time.unscaledTime;
+            float time = _isTimeScaled ? Time.time : Time.unscaledTime;
 
             float result;
             // Key already exist.
-            if (_operationTimes.TryGetValue(key, out result))
+            if (_nextOperationTimesByKey.TryGetValue(key, out result))
             {
                 // If enough time has passed.
-                if (time - result >= _interval)
+                if (time - result >= _intervalSeconds)
                 {
-                    _operationTimes[key] = time + _interval;
+                    _nextOperationTimesByKey[key] = time + _intervalSeconds;
                     return true;
                 }
                 // Not enough time passed.
@@ -83,7 +83,7 @@ namespace CodeBoost.Unity.Types
             }
             // Key not yet added.
 
-            _operationTimes[key] = time + _interval;
+            _nextOperationTimesByKey[key] = time + _intervalSeconds;
             return true;
         }
     }

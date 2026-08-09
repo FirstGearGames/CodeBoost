@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace CodeBoost.Performance;
 
-public class ThreadLocalStackWrapper<TObject>
+public class ThreadLocalStackWrapper<T0>
 {
     /// <summary>
     /// The stack for the ThreadLocal.
     /// </summary>
-    public readonly Stack<TObject> LocalStack = [];
+    public readonly Stack<T0> LocalStack = [];
     /// <summary>
     /// The action to invoke when deconstructing.
     /// </summary>
-    private readonly Action<Stack<TObject>> _onFinalize;
+    private readonly Action<Stack<T0>> _onFinalize;
 
-    public ThreadLocalStackWrapper(Action<Stack<TObject>> onFinalize)
+    public ThreadLocalStackWrapper(Action<Stack<T0>> onFinalize)
     {
         _onFinalize = onFinalize;
     }

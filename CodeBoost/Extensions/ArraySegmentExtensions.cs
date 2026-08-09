@@ -39,7 +39,7 @@ public static class ArraySegmentExtensions
         /// <summary>
         /// The end of the array according to the ArraySegment.Count and ArraySegment.Offset.
         /// </summary>
-        private readonly int _end;
+        private readonly int _endIndex;
         /// <summary>
         /// The current index being enumerated.
         /// </summary>
@@ -56,13 +56,13 @@ public static class ArraySegmentExtensions
             if (_array is null)
             {
                 _index = -1;
-                _end = -1;
+                _endIndex = -1;
 
                 return;
             }
 
             _index = segment.Offset - 1;
-            _end = segment.Offset + segment.Count;
+            _endIndex = segment.Offset + segment.Count;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ public static class ArraySegmentExtensions
         public bool MoveNext()
         {
             _index++;
-            return _index < _end;
+            return _index < _endIndex;
         }
 
         /// <summary>
