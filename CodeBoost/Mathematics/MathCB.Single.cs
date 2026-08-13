@@ -18,8 +18,10 @@ public static partial class MathCb
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint SingleToUInt32Unsafe(double value, float accuracy)
     {
-        int wholeValue = Polyfill.Clamp((int)Math.Round(value * (1d / accuracy), MidpointRounding.AwayFromZero), int.MinValue, int.MaxValue);
+        /* Rounded into a long before the clamp, not after. Casting to int first made the clamp a no-op, since an int is always
+         * within int range, and left a value outside that range to an unspecified double-to-int conversion. */
+        long wholeValue = (long)Math.Round(value * (1d / accuracy), MidpointRounding.AwayFromZero);
 
-        return wholeValue.ToUInt32();
+        return ((int)Polyfill.Clamp(wholeValue, int.MinValue, int.MaxValue)).ToUInt32();
     }
 }

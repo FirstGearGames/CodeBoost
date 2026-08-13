@@ -10,6 +10,25 @@ namespace CodeBoost.Extensions;
 public static class UInt8Extensions
 {
     /// <summary>
+    /// Clamps the supplied value into the inclusive range from <paramref name="minimum"/> to <paramref name="maximum"/>.
+    /// </summary>
+    /// <param name="value">Value to clamp.</param>
+    /// <param name="minimum">Inclusive minimum value.</param>
+    /// <param name="maximum">Inclusive maximum value.</param>
+    /// <returns>The clamped value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static byte Clamp(this byte value, byte minimum, byte maximum)
+    {
+        if (value < minimum)
+            return minimum;
+
+        if (value > maximum)
+            return maximum;
+
+        return value;
+    }
+
+    /// <summary>
     /// Converts the bytes to a UTF-8 encoded string.
     /// </summary>
     public static string ToEncodedString(this byte[] bytes, int offset, int count)

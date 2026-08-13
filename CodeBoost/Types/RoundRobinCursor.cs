@@ -22,7 +22,7 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
     /// The collection being walked. Held by reference; additions and removals are observed on the next call to Enumerate.
     /// </summary>
     [PoolResettableMember]
-    private IReadOnlyList<T0> _collection;
+    private IReadOnlyList<T0> _items;
     /// <summary>
     /// The total window, in milliseconds, over which one full pass of the collection should occur.
     /// </summary>
@@ -76,7 +76,7 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
         if (!EnsureSweepWindow(sweepWindowMilliseconds))
             return;
 
-        _collection = collection;
+        _items = collection;
         _isInitialized = true;
     }
 
@@ -136,7 +136,7 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
         if (!_isInitialized)
             return default;
 
-        int collectionCount = _collection.Count;
+        int collectionCount = _items.Count;
         if (collectionCount == 0)
             return default;
 
@@ -155,7 +155,7 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
 
     public void OnReturn()
     {
-        _collection = null;
+        _items = null;
         _sweepWindowMilliseconds = 0;
         _lastCallTicks = UnsetLastCallTicks;
         _lastIndex = 0;
@@ -217,14 +217,14 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
         /// <summary>
         /// The number of elements yielded so far by this enumerator.
         /// </summary>
-        private int _consumed;
+        private int _consumedCount;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal BatchEnumerator(RoundRobinCursor<T0> cursor, int batchSize)
         {
             _cursor = cursor;
             _batchSize = batchSize;
-            _consumed = 0;
+            _consumedCount = 0;
             Current = default;
         }
 
@@ -238,10 +238,10 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
             if (_cursor is null)
                 return false;
 
-            if (_consumed >= _batchSize)
+            if (_consumedCount >= _batchSize)
                 return false;
 
-            IReadOnlyList<T0> collection = _cursor._collection;
+            IReadOnlyList<T0> collection = _cursor._items;
             if (collection is null)
                 return false;
 
@@ -255,7 +255,7 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
 
             Current = collection[(int)lastIndex];
             _cursor._lastIndex = lastIndex + 1;
-            _consumed++;
+            _consumedCount++;
 
             return true;
         }
@@ -265,7 +265,7 @@ public sealed class RoundRobinCursor<T0> : IPoolResettable
         /// </summary>
         public void Reset()
         {
-            _consumed = 0;
+            _consumedCount = 0;
             Current = default;
         }
 

@@ -49,34 +49,34 @@ public class VectorIntTests
         Assert.Equal(expectedY, vector2Int.Y);
     }
 
-    // ── Vector3Int ───────────────────────────────────────────────────────
+    // ── Vector3Int32 ─────────────────────────────────────────────────────
 
     [Fact]
-    public void Vector3Int_Default_IsZero()
+    public void Vector3Int32_Default_IsZero()
     {
-        Vector3Int vector3Int = new();
+        Vector3Int32 vector3Int32 = new();
 
-        Assert.Equal(0, vector3Int.X);
-        Assert.Equal(0, vector3Int.Y);
-        Assert.Equal(0, vector3Int.Z);
+        Assert.Equal(0, vector3Int32.X);
+        Assert.Equal(0, vector3Int32.Y);
+        Assert.Equal(0, vector3Int32.Z);
     }
 
     [Fact]
-    public void Vector3Int_ExplicitComponents_StoresValues()
+    public void Vector3Int32_ExplicitComponents_StoresValues()
     {
-        Vector3Int vector3Int = new(1, 2, 3);
+        Vector3Int32 vector3Int32 = new(1, 2, 3);
 
-        Assert.Equal(1, vector3Int.X);
-        Assert.Equal(2, vector3Int.Y);
-        Assert.Equal(3, vector3Int.Z);
+        Assert.Equal(1, vector3Int32.X);
+        Assert.Equal(2, vector3Int32.Y);
+        Assert.Equal(3, vector3Int32.Z);
     }
 
     [Fact]
-    public void Vector3Int_CopyConstructor_CopiesComponents()
+    public void Vector3Int32_CopyConstructor_CopiesComponents()
     {
-        Vector3Int source = new(5, 6, 7);
+        Vector3Int32 source = new(5, 6, 7);
 
-        Vector3Int copy = new(source);
+        Vector3Int32 copy = new(source);
 
         Assert.Equal(source.X, copy.X);
         Assert.Equal(source.Y, copy.Y);
@@ -84,13 +84,13 @@ public class VectorIntTests
     }
 
     [Fact]
-    public void Vector3Int_Vector3Constructor_RoundsComponents()
+    public void Vector3Int32_Vector3Constructor_RoundsComponents()
     {
-        Vector3Int vector3Int = new(new Vector3(1.6f, -1.4f, 2.5f), MidpointRounding.AwayFromZero);
+        Vector3Int32 vector3Int32 = new(new Vector3(1.6f, -1.4f, 2.6f), 1f);
 
-        Assert.Equal(2, vector3Int.X);
-        Assert.Equal(-1, vector3Int.Y);
-        Assert.Equal(3, vector3Int.Z);
+        Assert.Equal(2, vector3Int32.X);
+        Assert.Equal(-1, vector3Int32.Y);
+        Assert.Equal(3, vector3Int32.Z);
     }
 
     // ── Vector4Int ───────────────────────────────────────────────────────

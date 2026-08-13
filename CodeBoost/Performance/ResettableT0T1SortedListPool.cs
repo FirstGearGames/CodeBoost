@@ -5,7 +5,7 @@ namespace CodeBoost.Performance;
 /// <summary>
 /// A pool for a Dictionary which is resettable.
 /// </summary>
-public static class ResettableT0T1SortedListPool<T0, T1> where T0 : IPoolResettable where T1 : IPoolResettable, new()
+public static class ResettableT0T1SortedListPool<T0, T1> where T0 : IPoolResettable, new() where T1 : IPoolResettable, new()
 {
     /// <summary>
     /// Retrieves an instance of SortedList from the pool.
@@ -38,12 +38,22 @@ public static class ResettableT0T1SortedListPool<T0, T1> where T0 : IPoolResetta
     }
 
     /// <summary>
-    /// Resets the SortedList without returning it to the pool.
+    /// Resets the SortedList without returning it to the pool. Every contained key and value is returned through
+    /// <see cref="ResettableObjectPool{T0}.Return"/>, so its <see cref="IPoolResettable.OnReturn"/> runs and the instance
+    /// re-enters its pool rather than becoming garbage.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(SortedList<T0, T1> value)
     {
-        foreach (T0 entry in value.Keys)
-            entry?.OnReturn();
+        /* Indexed rather than enumerated: SortedList's Keys and Values collections hand out reference-type enumerators per
+         * foreach, while indexing the cached wrappers allocates nothing. */
+        IList<T0> keys = value.Keys;
+        IList<T1> values = value.Values;
+
+        for (int index = 0; index < keys.Count; index++)
+        {
+            ResettableObjectPool<T0>.Return(keys[index]);
+            ResettableObjectPool<T1>.Return(values[index]);
+        }
     }
 }

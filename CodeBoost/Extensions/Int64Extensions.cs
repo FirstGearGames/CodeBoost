@@ -13,6 +13,25 @@ public static class Int64Extensions
     public static ulong ToUInt64(this long value) => (ulong)((value << 1) ^ (value >> 63));
 
     /// <summary>
+    /// Clamps the supplied value into the inclusive range from <paramref name="minimum"/> to <paramref name="maximum"/>.
+    /// </summary>
+    /// <param name="value">Value to clamp.</param>
+    /// <param name="minimum">Inclusive minimum value.</param>
+    /// <param name="maximum">Inclusive maximum value.</param>
+    /// <returns>The clamped value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static long Clamp(this long value, long minimum, long maximum)
+    {
+        if (value < minimum)
+            return minimum;
+
+        if (value > maximum)
+            return maximum;
+
+        return value;
+    }
+
+    /// <summary>
     /// Converts a <see cref="long"/> to a <see cref="double"/> using the requested accuracy.
     /// </summary>
     /// <param name="value">Value to convert.</param>

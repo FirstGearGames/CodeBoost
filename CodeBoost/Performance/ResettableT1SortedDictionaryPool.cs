@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
+using CodeBoost.Extensions;
 
 namespace CodeBoost.Performance;
 
@@ -27,7 +28,7 @@ public static class ResettableT1SortedDictionaryPool<T0, T1>
 
     static ResettableT1SortedDictionaryPool()
     {
-        Wrapper = new(valueFactory: () => new(Flush), trackAllValues: false);
+        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
     }
 
     /// <summary>
@@ -86,25 +87,5 @@ public static class ResettableT1SortedDictionaryPool<T0, T1>
         }
 
         //If here both stacks are at capacity.
-    }
-
-    /// <summary>
-    /// Flushes the ThreadLocal Dictionary stack into the global stack.
-    /// </summary>
-    private static void Flush(Stack<SortedDictionary<T0, T1>> localStack)
-    {
-        if (localStack.Count == 0)
-            return;
-
-        lock (GlobalStack)
-        {
-            while (localStack.TryPop(out SortedDictionary<T0, T1> item))
-            {
-                if (GlobalStack.Count < MaximumGlobalStackSize)
-                    GlobalStack.Push(item);
-                else
-                    break;
-            }
-        }
     }
 }

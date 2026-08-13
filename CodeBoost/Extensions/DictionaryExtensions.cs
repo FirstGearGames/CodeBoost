@@ -9,9 +9,9 @@ public static class DictionaryExtensions
     /// Returns the values of the dictionary as a list.
     /// </summary>
     /// <remarks>The returned list is taken from a collection pool.</remarks>
-    public static List<TValue> ValuesToList<TKey, TValue>(this IDictionary<TKey, TValue> dict)
+    public static List<T1> ValuesToList<T0, T1>(this IDictionary<T0, T1> dict)
     {
-        List<TValue> result = ListPool<TValue>.Rent();
+        List<T1> result = ListPool<T1>.Rent();
         dict.ValuesToList(ref result);
 
         return result;
@@ -20,10 +20,10 @@ public static class DictionaryExtensions
     /// <summary>
     /// Clears a list and populates it with the values of a dictionary.
     /// </summary>
-    public static void ValuesToList<TKey, TValue>(this IDictionary<TKey, TValue> dict, ref List<TValue> result)
+    public static void ValuesToList<T0, T1>(this IDictionary<T0, T1> dict, ref List<T1> result)
     {
         result.Clear();
-        foreach (TValue item in dict.Values)
+        foreach (T1 item in dict.Values)
             result.Add(item);
     }
 
@@ -31,9 +31,9 @@ public static class DictionaryExtensions
     /// Returns the keys of the dictionary as a list.
     /// </summary>
     /// <remarks>The returned list is taken from a collection pool.</remarks>
-    public static List<TKey> KeysToList<TKey, TValue>(this IDictionary<TKey, TValue> dict)
+    public static List<T0> KeysToList<T0, T1>(this IDictionary<T0, T1> dict)
     {
-        List<TKey> result = ListPool<TKey>.Rent();
+        List<T0> result = ListPool<T0>.Rent();
         dict.KeysToList(ref result);
 
         return result;
@@ -42,10 +42,10 @@ public static class DictionaryExtensions
     /// <summary>
     /// Clears a list and populates it with the keys of a dictionary.
     /// </summary>
-    public static void KeysToList<TKey, TValue>(this IDictionary<TKey, TValue> dict, ref List<TKey> result)
+    public static void KeysToList<T0, T1>(this IDictionary<T0, T1> dict, ref List<T0> result)
     {
         result.Clear();
-        foreach (TKey item in dict.Keys)
+        foreach (T0 item in dict.Keys)
             result.Add(item);
     }
 }

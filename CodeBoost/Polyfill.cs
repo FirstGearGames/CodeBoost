@@ -52,16 +52,26 @@ internal static class Polyfill
 #if NETSTANDARD2_0
     private static class ReferenceCheck<T>
     {
-        public static readonly bool Result = Compute(typeof(T));
+        public static readonly bool Result = Compute(typeof(T), []);
 
-        private static bool Compute(Type type)
+        private static bool Compute(Type type, HashSet<Type> visitedTypes)
         {
             if (!type.IsValueType)
                 return true;
 
+            /* A primitive holds a field of its own type: typeof(int) declares m_value as an int, so walking its fields without
+             * stopping here recurses on int forever and takes the stack with it. Enums are the same story through their backing
+             * field. */
+            if (type.IsPrimitive || type.IsEnum)
+                return false;
+
+            // A struct can reach itself through a field of a struct that holds it, so a type already being walked answers false.
+            if (!visitedTypes.Add(type))
+                return false;
+
             foreach (FieldInfo field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                if (Compute(field.FieldType))
+                if (Compute(field.FieldType, visitedTypes))
                     return true;
             }
 

@@ -52,18 +52,18 @@ namespace CodeBoost.Unity.Types.Canvases
         /// </summary>
         [SerializeField]
         [TabGroup("Effects")]
-        protected float FadeInDuration = 0.1f;
+        protected float FadeInSeconds = 0.1f;
         /// <summary>
         /// The duration it should take to fade out the CanvasGroup.
         /// </summary>
         [SerializeField]
         [TabGroup("Effects")]
-        protected float FadeOutDuration = 0.3f;
+        protected float FadeOutSeconds = 0.3f;
 
         /// <summary>
         /// True if a fade cycle has completed at least once.
         /// </summary>
-        private bool _completedOnce;
+        private bool _hasCompletedOnce;
 
         protected virtual void OnEnable()
         {
@@ -108,7 +108,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// </summary>
         public virtual void Show()
         {
-            if (FadeInDuration <= 0f)
+            if (FadeInSeconds <= 0f)
             {
                 ShowImmediately();
             }
@@ -129,7 +129,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// </summary>
         public virtual void Hide()
         {
-            if (FadeOutDuration <= 0f)
+            if (FadeOutSeconds <= 0f)
             {
                 HideImmediately();
             }
@@ -174,19 +174,19 @@ namespace CodeBoost.Unity.Types.Canvases
             if (fadingIn)
             {
                 targetAlpha = 1f;
-                duration = FadeInDuration;
+                duration = FadeInSeconds;
             }
             else
             {
                 targetAlpha = 0f;
-                duration = FadeOutDuration;
+                duration = FadeOutSeconds;
             }
 
             /* Already at goal and had completed an iteration at least once.
              * This is checked because even if at alpha we want to
              * complete the cycle if not done once so that all
              * local states and canvasgroup settings are proper. */
-            if (_completedOnce && ((double)CanvasGroup.alpha).IsApproximately(targetAlpha))
+            if (_hasCompletedOnce && ((double)CanvasGroup.alpha).IsApproximately(targetAlpha))
                 return;
 
             float rate = 1f / duration;
@@ -217,7 +217,7 @@ namespace CodeBoost.Unity.Types.Canvases
 
             SetCanvasGroupBlockingType(blockingType);
             CanvasGroup.alpha = alpha;
-            _completedOnce = true;
+            _hasCompletedOnce = true;
         }
 
         /// <summary>

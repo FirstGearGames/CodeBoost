@@ -25,6 +25,12 @@ public class CodeHealthReporter
     /// The diagnostics that have been collected so far.
     /// </summary>
     private readonly List<Diagnostic> _cachedDiagnostics = [];
+    /// <summary>
+    /// Guards <see cref="_typesCheckedFullName"/> and <see cref="_cachedDiagnostics"/>. The analyzer enables concurrent execution,
+    /// so syntax-node callbacks mutate this shared state from multiple threads; an unguarded HashSet/List mutation corrupts their
+    /// internals and surfaces as an intermittent NullReferenceException (AD0001) that silently disables the analyzer.
+    /// </summary>
+    private readonly object _lock = new();
     private readonly string _poolResettableFullName;
     
     private readonly string _poolResettableMemberAttributeFullName;
@@ -68,15 +74,6 @@ public class CodeHealthReporter
             _poolDisposableMemberAttributeFullName = name;
 
         _poolDisposableMemberAttributeName = nameof(PoolDisposableMemberAttribute);
-        
-        //PoolDisposableMemberAttribute.
-        name = typeof(PoolDisposableMemberAttribute).FullName;
-        if (name is null)
-            OnFullNameNull(typeof(PoolDisposableMemberAttribute));
-        else
-            _poolDisposableMemberAttributeFullName = name;
-
-        _poolDisposableMemberAttributeName = nameof(PoolDisposableMemberAttribute);
 
         //PoolResettableMethodAttribute.
         name = typeof(PoolResettableMethodAttribute).FullName;
@@ -90,7 +87,7 @@ public class CodeHealthReporter
         void OnFullNameNull(Type lType)
         {
             string message = $"The FullName could not be found for Type [{lType.Name}]. [{nameof(CodeHealthReporter)}] will not execute properly.";
-            _cachedDiagnostics.Add(Diagnostic.Create(DiagnosticRules.CodeHealthReporterError, Location.None, message));
+            CacheDiagnostic(Diagnostic.Create(DiagnosticRules.CodeHealthReporterError, Location.None, message));
         }
     }
 
@@ -101,16 +98,19 @@ public class CodeHealthReporter
     /// <returns>True when cached diagnostics were returned and purged; otherwise false.</returns>
     public bool TryPurgeCachedDiagnostics(out List<Diagnostic>? cachedDiagnostics)
     {
-        if (_cachedDiagnostics.Count == 0)
+        lock (_lock)
         {
-            cachedDiagnostics = null;
-            return false;
+            if (_cachedDiagnostics.Count == 0)
+            {
+                cachedDiagnostics = null;
+                return false;
+            }
+
+            cachedDiagnostics = _cachedDiagnostics.ToList();
+            _cachedDiagnostics.Clear();
+
+            return true;
         }
-
-        cachedDiagnostics = _cachedDiagnostics.ToList();
-        _cachedDiagnostics.Clear();
-
-        return true;
     }
 
     /// <summary>
@@ -179,11 +179,25 @@ public class CodeHealthReporter
         // Continue while namedType has value or until break.
         while (currentNamedTypeSymbol is not null)
         {
-            // Already marked as networkType.
-            if (!_typesCheckedFullName.Add(currentNamedTypeSymbol.GetTypeSymbolFullName()))
+            /* A metadata type has no syntax here to inspect (its own compilation already checked it), and inspecting it against
+             * this compilation would find no method bodies and flag every marked member as unreferenced. Stop at the source
+             * boundary. */
+            if (currentNamedTypeSymbol.DeclaringSyntaxReferences.Length == 0)
                 break;
 
-            if (!InspectForPoolResettable(semanticModel, namedTypeSymbol))
+            bool isAlreadyChecked;
+
+            lock (_lock)
+                isAlreadyChecked = !_typesCheckedFullName.Add(currentNamedTypeSymbol.GetTypeSymbolFullName());
+
+            // Already checked, along with its bases, by an earlier visit.
+            if (isAlreadyChecked)
+                break;
+
+            /* Inspect the CURRENT symbol of the walk. Inspecting the original here instead re-checked the derived type at every
+             * level while marking each base as checked, so a base type (whose own declaration visit then dedup-skipped) was never
+             * actually inspected and its unreset pool members went undetected. */
+            if (!InspectForPoolResettable(semanticModel, currentNamedTypeSymbol))
                 break;
 
             currentNamedTypeSymbol = isRecursive ? currentNamedTypeSymbol.BaseType : null;
@@ -253,13 +267,13 @@ public class CodeHealthReporter
         foreach (ISymbol poolResettableMemberSymbol in poolResettableMemberSymbols)
         {
             string message = $"Member declares [{_poolResettableMemberAttributeName}] but no references were found in the [{nameof(IPoolResettable.OnReturn)}] method nor within [{_poolResettableMethodAttributeName}] attributed methods.";
-            _cachedDiagnostics.Add(Diagnostic.Create(DiagnosticRules.CodeHealthReporterError, poolResettableMemberSymbol.GetIdentifierLocation(), message));
+            CacheDiagnostic(Diagnostic.Create(DiagnosticRules.CodeHealthReporterError, poolResettableMemberSymbol.GetIdentifierLocation(), message));
         }
 
         foreach (ISymbol poolDisposableMemberSymbol in poolDisposableMemberSymbols)
         {
             string message = $"Member declares [{_poolDisposableMemberAttributeName}] but no references were found calling Dispose in the [{nameof(IPoolResettable.OnReturn)}] method nor within [{_poolResettableMethodAttributeName}] attributed methods.";
-            _cachedDiagnostics.Add(Diagnostic.Create(DiagnosticRules.CodeHealthReporterError, poolDisposableMemberSymbol.GetIdentifierLocation(), message));
+            CacheDiagnostic(Diagnostic.Create(DiagnosticRules.CodeHealthReporterError, poolDisposableMemberSymbol.GetIdentifierLocation(), message));
         }
 
         return false;
@@ -272,7 +286,7 @@ public class CodeHealthReporter
             if (!lMethodSymbol.TryGetReferencedSymbols(semanticModel, out HashSet<ISymbol>? lReferencedSymbols))
             {
                 string message = $"Referenced symbols were not found when executing [{nameof(InspectForPoolResettable)}].";
-                _cachedDiagnostics.Add(Diagnostic.Create(DiagnosticRules.CodeHealthReporterError, namedTypeSymbol.GetIdentifierLocation(), message));
+                CacheDiagnostic(Diagnostic.Create(DiagnosticRules.CodeHealthReporterError, namedTypeSymbol.GetIdentifierLocation(), message));
 
                 return false;
             }
@@ -321,6 +335,16 @@ public class CodeHealthReporter
 
             return poolResettableMemberSymbols.Count == 0 && poolDisposableMemberSymbols.Count == 0;
         }
+    }
+
+    /// <summary>
+    /// Adds a diagnostic to the cache under the state lock; syntax-node callbacks report from multiple threads concurrently.
+    /// </summary>
+    /// <param name="diagnostic">The diagnostic to cache.</param>
+    private void CacheDiagnostic(Diagnostic diagnostic)
+    {
+        lock (_lock)
+            _cachedDiagnostics.Add(diagnostic);
     }
 
     // ReSharper disable once UnusedMember.Local

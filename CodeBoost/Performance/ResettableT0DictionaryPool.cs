@@ -38,12 +38,14 @@ public static class ResettableT0DictionaryPool<T0, T1> where T0 : IPoolResettabl
     }
 
     /// <summary>
-    /// Resets the Dictionary without returning it to the pool.
+    /// Resets the Dictionary without returning it to the pool. Every contained key is returned through
+    /// <see cref="ResettableObjectPool{T0}.Return"/>, so its <see cref="IPoolResettable.OnReturn"/> runs and the instance
+    /// re-enters its pool rather than becoming garbage.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(Dictionary<T0, T1> value)
     {
         foreach (T0 entry in value.Keys)
-            entry?.OnReturn();
+            ResettableObjectPool<T0>.Return(entry);
     }
 }

@@ -27,7 +27,7 @@ namespace CodeBoost.Unity.Types.Canvases
         /// <summary>
         /// The delegate to invoke when pressed.
         /// </summary>
-        private PressedHandler _delegate;
+        private PressedHandler _pressedHandler;
 
         /// <summary>
         /// Initializes this for use.
@@ -39,7 +39,7 @@ namespace CodeBoost.Unity.Types.Canvases
         {
             Text = text;
             Key = key;
-            _delegate = callback;
+            _pressedHandler = callback;
         }
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace CodeBoost.Unity.Types.Canvases
         /// </summary>
         public virtual void OnPressed()
         {
-            _delegate?.Invoke(Key);
+            _pressedHandler?.Invoke(Key);
         }
 
         public virtual void OnReturn()
         {
             Text = string.Empty;
-            _delegate = null;
+            _pressedHandler = null;
             Key = string.Empty;
         }
 

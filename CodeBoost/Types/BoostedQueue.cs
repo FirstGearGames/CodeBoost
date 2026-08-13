@@ -17,15 +17,15 @@ public class BoostedQueue<T0>
     /// <summary>
     /// The maximum size of the collection.
     /// </summary>
-    public int Capacity => _collection.Length;
+    public int Capacity => _items.Length;
     /// <summary>
     /// The number of elements in the queue.
     /// </summary>
-    public int Count => _written;
+    public int Count => _writtenCount;
     /// <summary>
     /// The collection containing the data.
     /// </summary>
-    private T0[] _collection = new T0[4];
+    private T0[] _items = new T0[4];
     /// <summary>
     /// The current write index of the collection.
     /// </summary>
@@ -37,11 +37,11 @@ public class BoostedQueue<T0>
     /// <summary>
     /// The read position of the next dequeue.
     /// </summary>
-    private int _read;
+    private int _readCount;
     /// <summary>
     /// The length of the queue.
     /// </summary>
-    private int _written;
+    private int _writtenCount;
 
     /// <summary>
     /// Enqueues an entry.
@@ -50,17 +50,17 @@ public class BoostedQueue<T0>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Enqueue(T0 data)
     {
-        if (_written == _collection.Length)
+        if (_writtenCount == _items.Length)
             Resize();
 
         int writeIndex = WriteIndex;
-        if (writeIndex >= _collection.Length)
+        if (writeIndex >= _items.Length)
             writeIndex = 0;
 
-        _collection[writeIndex] = data;
+        _items[writeIndex] = data;
 
         WriteIndex = writeIndex + 1;
-        _written++;
+        _writtenCount++;
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class BoostedQueue<T0>
     /// <returns> True if an entry existed to dequeue. </returns>
     public bool TryDequeue(out T0 result, bool defaultArrayEntry = true)
     {
-        if (_written == 0)
+        if (_writtenCount == 0)
         {
             result = default;
 
@@ -90,20 +90,20 @@ public class BoostedQueue<T0>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T0 Dequeue(bool defaultArrayEntry = true)
     {
-        if (_written == 0)
+        if (_writtenCount == 0)
             return default;
 
-        int read = _read;
-        T0 result = _collection[read];
+        int read = _readCount;
+        T0 result = _items[read];
         if (defaultArrayEntry)
-            _collection[read] = default;
+            _items[read] = default;
 
-        _written--;
+        _writtenCount--;
 
         read++;
-        if (read >= _collection.Length)
+        if (read >= _items.Length)
             read = 0;
-        _read = read;
+        _readCount = read;
 
         return result;
     }
@@ -115,7 +115,7 @@ public class BoostedQueue<T0>
     /// <returns> True if an entry existed to peek. </returns>
     public bool TryPeek(out T0 result)
     {
-        if (_written == 0)
+        if (_writtenCount == 0)
         {
             result = default;
 
@@ -133,10 +133,10 @@ public class BoostedQueue<T0>
     /// <returns> The next entry in the queue. </returns>
     public T0 Peek()
     {
-        if (_written == 0)
+        if (_writtenCount == 0)
             throw new($"Queue of type {typeof(T0).Name} is empty.");
 
-        return _collection[_read];
+        return _items[_readCount];
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public class BoostedQueue<T0>
         if (offset == -1)
             return default;
 
-        return _collection[offset];
+        return _items[offset];
     }
 
     /// <summary>
@@ -156,23 +156,22 @@ public class BoostedQueue<T0>
     /// </summary>
     public void Clear()
     {
-        _read = 0;
+        _readCount = 0;
         WriteIndex = 0;
-        _written = 0;
+        _writtenCount = 0;
 
-        if (_collection.Length > 0)
-            Array.Clear(_collection, 0, _collection.Length);
+        if (_items.Length > 0)
+            Array.Clear(_items, 0, _items.Length);
     }
 
     /// <summary>
     /// Resets the read and write indices without touching the underlying array. Callers that have already nulled their populated slots use this to skip the redundant <see cref="Array.Clear(System.Array, int, int)"/> in <see cref="Clear"/>.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ResetWriteState()
     {
-        _read = 0;
+        _readCount = 0;
         WriteIndex = 0;
-        _written = 0;
+        _writtenCount = 0;
     }
 
     /// <summary>
@@ -187,13 +186,13 @@ public class BoostedQueue<T0>
         {
             int offset = GetRealIndex(simulatedIndex, log: true);
 
-            return _collection[offset];
+            return _items[offset];
         }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set
         {
             int offset = GetRealIndex(simulatedIndex, log: true);
-            _collection[offset] = value;
+            _items[offset] = value;
         }
     }
 
@@ -202,9 +201,9 @@ public class BoostedQueue<T0>
     /// </summary>
     private void Resize()
     {
-        int length = _written;
+        int length = _writtenCount;
         int doubleLength = length * 2;
-        int read = _read;
+        int read = _readCount;
 
         /* Make sure copy array is the same size as current
          * and copy contents into it. */
@@ -214,16 +213,16 @@ public class BoostedQueue<T0>
             Array.Resize(ref resizeBuffer, doubleLength);
         // Copy from the read of queue first.
         int copyLength = length - read;
-        Array.Copy(_collection, read, resizeBuffer, 0, copyLength);
+        Array.Copy(_items, read, resizeBuffer, 0, copyLength);
         /* If read index was higher than 0
          * then copy remaining data as well from 0. */
         if (read > 0)
-            Array.Copy(_collection, 0, resizeBuffer, copyLength, read);
+            Array.Copy(_items, 0, resizeBuffer, copyLength, read);
 
         // Set _array to resize.
-        _collection = resizeBuffer;
+        _items = resizeBuffer;
         // Reset positions.
-        _read = 0;
+        _readCount = 0;
         WriteIndex = length;
     }
 
@@ -236,8 +235,8 @@ public class BoostedQueue<T0>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private int GetRealIndex(int simulatedIndex, bool log)
     {
-        int written = _written;
-        int capacity = _collection.Length;
+        int written = _writtenCount;
+        int capacity = _items.Length;
 
         if ((uint)simulatedIndex >= (uint)written)
         {

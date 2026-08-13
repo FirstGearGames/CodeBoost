@@ -55,11 +55,11 @@ namespace CodeBoost.Unity.Extensions
                 }
             }
 
-            // If to also include DDOL.
+            // If to also include DontDestroyOnLoadRoot.
             if (includeDDOL)
             {
-                GameObject ddolGo = DDOL.GetDDOL().gameObject;
-                results.AddRange(ddolGo.GetComponentsInChildren<T0>(includeInactive));
+                GameObject dontDestroyOnLoadObject = DontDestroyOnLoadRoot.GetDontDestroyOnLoadRoot().gameObject;
+                results.AddRange(dontDestroyOnLoadObject.GetComponentsInChildren<T0>(includeInactive));
             }
 
             return results;

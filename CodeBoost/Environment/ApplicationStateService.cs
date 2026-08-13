@@ -3,6 +3,15 @@ namespace CodeBoost.Environment;
 public static class ApplicationStateService
 {
     /// <summary>
+    /// Used to access debug logic via branching rather than preprocessor defines.
+    /// </summary>
+    #if DEBUG
+    public const bool IsDebug = true;
+    #else
+    public const bool IsDebug = false;
+    #endif
+
+    /// <summary>
     /// Invoked when the ApplicationState is set.
     /// </summary>
     internal static event ApplicationStateSetEventHandler ApplicationStateSet;

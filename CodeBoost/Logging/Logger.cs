@@ -12,9 +12,9 @@ namespace CodeBoost.Logging;
 /// <summary>
 /// A static logger that delegates to the currently registered <see cref="ILogger"/> and prefixes messages with the supplied outer and inner type names.
 /// </summary>
-/// <typeparam name="TOuter">Outer type used in the log prefix.</typeparam>
-/// <typeparam name="TInner0">Inner type used in the log prefix.</typeparam>
-public static class Logger<TOuter, TInner0>
+/// <typeparam name="T0">Outer type used in the log prefix.</typeparam>
+/// <typeparam name="T1">Inner type used in the log prefix.</typeparam>
+public static class Logger<T0, T1>
 {
     /// <summary>
     /// Returns whether information-level logging is currently enabled. Inspect this before formatting an interpolated argument so the formatting can be skipped when logging is disabled.
@@ -51,7 +51,7 @@ public static class Logger<TOuter, TInner0>
         if (!LoggingService.IsInformationEnabled)
             return;
 
-        LoggingService.LogInformationUnchecked($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+        LoggingService.LogInformationUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), typeof(T1), methodName)}{message}");
     }
     /// <summary>
     /// Logs the supplied message at the warning level prefixed with the outer and inner type names.
@@ -63,7 +63,7 @@ public static class Logger<TOuter, TInner0>
         if (!LoggingService.IsWarningEnabled)
             return;
 
-        LoggingService.LogWarningUnchecked($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+        LoggingService.LogWarningUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), typeof(T1), methodName)}{message}");
     }
     /// <summary>
     /// Logs the supplied message at the error level prefixed with the outer and inner type names.
@@ -75,7 +75,7 @@ public static class Logger<TOuter, TInner0>
         if (!LoggingService.IsErrorEnabled)
             return;
 
-        LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(TOuter), typeof(TInner0), methodName)}{message}");
+        LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), typeof(T1), methodName)}{message}");
     }
 }
 

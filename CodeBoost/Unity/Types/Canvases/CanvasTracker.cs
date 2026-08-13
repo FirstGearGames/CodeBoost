@@ -71,7 +71,9 @@ namespace CodeBoost.Unity.Types.Canvases
             {
                 for (int i = 0; i < collection.Count; i++)
                 {
-                    if (collection[i] is null)
+                    // Cast to UnityEngine.Object so a destroyed canvas (whose reference is non-null but whose object is gone) is
+                    // detected by Unity's overloaded ==, not just a genuine null reference.
+                    if (collection[i] is not UnityEngine.Object unityObject || unityObject == null)
                     {
                         collection.RemoveAt(i);
                         i--;

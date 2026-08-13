@@ -13,6 +13,25 @@ public static class Int32Extensions
     public static uint ToUInt32(this int value) => (uint)((value << 1) ^ (value >> 31));
 
     /// <summary>
+    /// Clamps the supplied value into the inclusive range from <paramref name="minimum"/> to <paramref name="maximum"/>.
+    /// </summary>
+    /// <param name="value">Value to clamp.</param>
+    /// <param name="minimum">Inclusive minimum value.</param>
+    /// <param name="maximum">Inclusive maximum value.</param>
+    /// <returns>The clamped value.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int Clamp(this int value, int minimum, int maximum)
+    {
+        if (value < minimum)
+            return minimum;
+
+        if (value > maximum)
+            return maximum;
+
+        return value;
+    }
+
+    /// <summary>
     /// Converts an <see cref="int"/> to a <see cref="float"/> using the requested accuracy.
     /// </summary>
     /// <param name="value">Value to convert.</param>
