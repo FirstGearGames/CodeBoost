@@ -35,7 +35,7 @@ public static class HashSetPool<T0>
         //     return;
         // }
         
-        Wrapper = new(valueFactory: () => new(Flush), trackAllValues: false);
+        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
     }
 
     /// <summary>
@@ -94,25 +94,5 @@ public static class HashSetPool<T0>
         }
 
         //If here both stacks are at capacity.
-    }
-
-    /// <summary>
-    /// Flushes the ThreadLocal HashSet stack into the global stack.
-    /// </summary>
-    private static void Flush(Stack<HashSet<T0>> localStack)
-    {
-        if (localStack.Count == 0)
-            return;
-
-        lock (GlobalStack)
-        {
-            while (localStack.TryPop(out HashSet<T0> item))
-            {
-                if (GlobalStack.Count < MaximumGlobalStackSize)
-                    GlobalStack.Push(item);
-                else
-                    break;
-            }
-        }
     }
 }

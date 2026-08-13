@@ -35,7 +35,7 @@ public static class QueuePool<T0>
         //     return;
         // }
             
-        Wrapper = new(valueFactory: () => new(Flush), trackAllValues: false);
+        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
     }
 
     /// <summary>
@@ -94,25 +94,5 @@ public static class QueuePool<T0>
         }
 
         //If here both stacks are at capacity.
-    }
-
-    /// <summary>
-    /// Flushes the ThreadLocal Queue stack into the global stack.
-    /// </summary>
-    private static void Flush(Stack<Queue<T0>> localStack)
-    {
-        if (localStack.Count == 0)
-            return;
-
-        lock (GlobalStack)
-        {
-            while (localStack.TryPop(out Queue<T0> item))
-            {
-                if (GlobalStack.Count < MaximumGlobalStackSize)
-                    GlobalStack.Push(item);
-                else
-                    break;
-            }
-        }
     }
 }

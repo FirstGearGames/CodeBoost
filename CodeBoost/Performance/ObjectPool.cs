@@ -35,7 +35,7 @@ public static class ObjectPool<T0> where T0 : new()
         //     return;
         // }
             
-        Wrapper = new(valueFactory: () => new(Flush), trackAllValues: false);
+        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
     }
 
     /// <summary>
@@ -95,25 +95,5 @@ public static class ObjectPool<T0> where T0 : new()
         }
 
         //If here both stacks are at capacity.
-    }
-
-    /// <summary>
-    /// Flushes the ThreadLocal object stack into the global stack.
-    /// </summary>
-    private static void Flush(Stack<T0> localStack)
-    {
-        if (localStack.Count == 0)
-            return;
-
-        lock (GlobalStack)
-        {
-            while (localStack.TryPop(out T0 item))
-            {
-                if (GlobalStack.Count < MaximumGlobalStackSize)
-                    GlobalStack.Push(item);
-                else
-                    break;
-            }
-        }
     }
 }

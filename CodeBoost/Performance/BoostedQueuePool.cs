@@ -36,7 +36,7 @@ public static class BoostedQueuePool<T0>
         //     return;
         // }
         //
-        Wrapper = new(valueFactory: () => new(Flush), trackAllValues: false);
+        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
     }
 
     /// <summary>
@@ -95,25 +95,5 @@ public static class BoostedQueuePool<T0>
         }
 
         //If here both stacks are at capacity.
-    }
-
-    /// <summary>
-    /// Flushes the ThreadLocal BoostedQueue stack into the global stack.
-    /// </summary>
-    private static void Flush(Stack<BoostedQueue<T0>> localStack)
-    {
-        if (localStack.Count == 0)
-            return;
-
-        lock (GlobalStack)
-        {
-            while (localStack.TryPop(out BoostedQueue<T0> item))
-            {
-                if (GlobalStack.Count < MaximumGlobalStackSize)
-                    GlobalStack.Push(item);
-                else
-                    break;
-            }
-        }
     }
 }

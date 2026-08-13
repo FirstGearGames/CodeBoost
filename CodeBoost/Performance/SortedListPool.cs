@@ -35,7 +35,7 @@ public static class SortedListPool<T0, T1>
         //     return;
         // }
             
-        Wrapper = new(valueFactory: () => new(Flush), trackAllValues: false);
+        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
     }
 
     /// <summary>
@@ -94,25 +94,5 @@ public static class SortedListPool<T0, T1>
         }
 
         //If here both stacks are at capacity.
-    }
-
-    /// <summary>
-    /// Flushes the ThreadLocal SortedList stack into the global stack.
-    /// </summary>
-    private static void Flush(Stack<SortedList<T0, T1>> localStack)
-    {
-        if (localStack.Count == 0)
-            return;
-
-        lock (GlobalStack)
-        {
-            while (localStack.TryPop(out SortedList<T0, T1> item))
-            {
-                if (GlobalStack.Count < MaximumGlobalStackSize)
-                    GlobalStack.Push(item);
-                else
-                    break;
-            }
-        }
     }
 }
