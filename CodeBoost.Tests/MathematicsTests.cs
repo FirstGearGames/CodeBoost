@@ -167,4 +167,29 @@ public class MathematicsTests
 
         Assert.True(converted > 0);
     }
+
+    /// <summary>
+    /// The conversion round-trips across the range it is defined over, including the extremes of <see cref="int"/> and the rounding
+    /// boundary, which is the whole of what the method promises.
+    /// </summary>
+    /// <remarks>
+    /// Nothing here asserts what an out-of-range input does. The method is named Unsafe for exactly that reason: keeping the scaled
+    /// value inside <see cref="int"/> is the caller's business, so pinning the platform's conversion of one that is not would be
+    /// inventing a contract the method never offered, and would stop it ever being made faster.
+    /// </remarks>
+    [Theory]
+    [InlineData(0d, 1f, 0)]
+    [InlineData(2.5d, 0.01f, 250)]
+    [InlineData(-2.5d, 0.01f, -250)]
+    [InlineData(0.5d, 1f, 1)]
+    [InlineData(-0.5d, 1f, -1)]
+    [InlineData(int.MaxValue, 1f, int.MaxValue)]
+    [InlineData(int.MinValue, 1f, int.MinValue)]
+    public void SingleToUInt32Unsafe_InRange_ZigZagsTheScaledValue(double value, float accuracy, int expectedWholeValue)
+    {
+        // The documented encoding, so the expectation is stated independently of the implementation rather than by calling it.
+        uint expected = (uint)((expectedWholeValue << 1) ^ (expectedWholeValue >> 31));
+
+        Assert.Equal(expected, MathCb.SingleToUInt32Unsafe(value, accuracy));
+    }
 }

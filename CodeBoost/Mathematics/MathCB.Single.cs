@@ -10,18 +10,20 @@ namespace CodeBoost.Mathematics;
 public static partial class MathCb
 {
     /// <summary>
-    /// Converts a single to a UInt32 using ZigZag encoding after clamping into the range of <see cref="int"/> with round-to-nearest semantics.
+    /// Converts a single to a UInt32 using ZigZag encoding, with round-to-nearest semantics.
     /// </summary>
     /// <param name="value">Value to convert.</param>
     /// <param name="accuracy">Accuracy to use for decimals. This value is typically less than <c>1f</c>.</param>
     /// <returns>The converted UInt32 value.</returns>
+    /// <remarks>
+    /// Unsafe in the range sense: <paramref name="value"/> scaled by <paramref name="accuracy"/> must land inside <see cref="int"/>,
+    /// and keeping it there is the caller's business. One that does not is converted however the platform converts it, which is the
+    /// trade the name is offering. There is deliberately no clamp, since a caller wanting one wants it at its own boundary rather than
+    /// on every conversion this performs.
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint SingleToUInt32Unsafe(double value, float accuracy)
     {
-        /* Rounded into a long before the clamp, not after. Casting to int first made the clamp a no-op, since an int is always
-         * within int range, and left a value outside that range to an unspecified double-to-int conversion. */
-        long wholeValue = (long)Math.Round(value * (1d / accuracy), MidpointRounding.AwayFromZero);
-
-        return ((int)Polyfill.Clamp(wholeValue, int.MinValue, int.MaxValue)).ToUInt32();
+        return ((int)Math.Round(value * (1d / accuracy), MidpointRounding.AwayFromZero)).ToUInt32();
     }
 }

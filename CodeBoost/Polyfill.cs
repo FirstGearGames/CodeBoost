@@ -49,9 +49,21 @@ internal static class Polyfill
         RuntimeHelpers.IsReferenceOrContainsReferences<T>();
 #endif
 
-#if NETSTANDARD2_0
-    private static class ReferenceCheck<T>
+    /// <summary>
+    /// Answers <see cref="IsReferenceOrContainsReferences{T}"/> by walking the type, for the targets whose runtime does not expose
+    /// <see cref="RuntimeHelpers.IsReferenceOrContainsReferences{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type to inspect.</typeparam>
+    /// <remarks>
+    /// Compiled on every target even though only <c>NETSTANDARD2_0</c> dispatches to it, so it can be exercised by tests: they run on
+    /// a target that takes the intrinsic instead, and a fallback that is only compiled where nothing can run it ships unproven. There
+    /// is no cost to a target that does not use it, since a generic type's static constructor runs only if something touches it.
+    /// </remarks>
+    internal static class ReferenceCheck<T>
     {
+        /// <summary>
+        /// True when <typeparamref name="T"/> is a reference type, or a value type holding one anywhere in its layout.
+        /// </summary>
         public static readonly bool Result = Compute(typeof(T), []);
 
         private static bool Compute(Type type, HashSet<Type> visitedTypes)
@@ -79,6 +91,7 @@ internal static class Polyfill
         }
     }
 
+#if NETSTANDARD2_0
     public static bool TryPop<T>(this Stack<T> stack, out T result)
     {
         if (stack.Count == 0)
