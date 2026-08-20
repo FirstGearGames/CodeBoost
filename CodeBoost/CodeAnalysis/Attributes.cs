@@ -5,8 +5,9 @@ namespace CodeBoost.CodeAnalysis;
 /// <summary>
 /// Indicates that this source should be included when creating signatures.
 /// </summary>
+/// <remarks>Applied by consuming assemblies to their own members, so the attribute is <see langword="public"/> rather than <see langword="internal"/>.</remarks>
 [AttributeUsage(AttributeTargets.All, Inherited = false)]
-internal sealed class CreateSignatureAttribute : Attribute { }
+public sealed class CreateSignatureAttribute : Attribute { }
 /// <summary>
 /// Indicates that this source should be ignored when creating signatures.
 /// </summary>
