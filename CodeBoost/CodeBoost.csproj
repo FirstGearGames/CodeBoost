@@ -8,10 +8,21 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\submodules\CodeBoost\CodeBoost.CodeAnalysis.Analyzers\CodeBoost.CodeAnalysis.Analyzers.csproj"
-                          OutputItemType="Analyzer"
-                          ReferenceOutputAssembly="false"/>
+        <!--
+            This project is the shared CodeBoost assembly that Nucleus, SynapseSocket and their integrations reference, and
+            all of those are engine-agnostic: no game engine's types may reach them. The Unity subtree references UnityEngine,
+            UnityEditor, TMPro and Sirenix, held out of a non-Unity build only by #if guards. Removing it here makes that the
+            compiler's rule rather than a reviewer's memory; the subtree ships its own CodeBoost.Unity.asmdef and is compiled
+            by Unity as its own assembly when a Unity project consumes it as source.
+        -->
+        <Compile Remove="Unity\**\*.cs"/>
+    </ItemGroup>
 
+    <ItemGroup>
+        <!--
+            CodeBoost.CodeAnalysis.Analyzers references this project, so this project cannot reference the analyzers back
+            without a build cycle. The analyzers run on consumers (Nucleus, SynapseSocket) through their own references.
+        -->
         <PackageReference Include="System.Buffers" Version="4.5.1" />
       <PackageReference Include="System.Numerics.Vectors" Version="4.4.0" />
       <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
