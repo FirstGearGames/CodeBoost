@@ -52,7 +52,7 @@ public static class Weighted
         uint totalPicked = 0;
         while (totalPicked < addCount)
         {
-            // All entries have reached their quantity limits — nothing left to pick.
+            // All entries have reached their quantity limits, nothing left to pick.
             if (exhaustedIndexes.Count >= sourceCount)
                 break;
 

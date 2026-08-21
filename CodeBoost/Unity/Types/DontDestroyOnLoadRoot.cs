@@ -18,7 +18,7 @@ namespace CodeBoost.Unity.Types
         /// </summary>
         public static DontDestroyOnLoadRoot GetDontDestroyOnLoadRoot()
         {
-            // Not yet made — use Unity's == so a destroyed instance carried across a domain-reload-disabled session re-creates.
+            // Not yet made. Use Unity's == so a destroyed instance carried across a domain-reload-disabled session re-creates.
             if (_instance == null)
             {
                 GameObject dontDestroyOnLoadObject = new();
