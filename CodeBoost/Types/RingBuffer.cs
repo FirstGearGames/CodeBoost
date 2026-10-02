@@ -1,9 +1,9 @@
 using System;
-using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CodeBoost.Logging;
+using CodeBoost.Performance;
 #pragma warning disable CS8603 // Possible null reference return.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
@@ -183,12 +183,12 @@ public class RingBuffer<T0> : IEnumerable<T0>
 
         if (Collection is null)
         {
-            Collection = ArrayPool<T0>.Shared.Rent(capacity);
+            Collection = TrackedArrayPool<T0>.Rent(capacity);
         }
         else if (Collection.Length < capacity)
         {
-            ArrayPool<T0>.Shared.Return(Collection, Polyfill.IsReferenceOrContainsReferences<T0>());
-            Collection = ArrayPool<T0>.Shared.Rent(capacity);
+            TrackedArrayPool<T0>.Return(Collection, Polyfill.IsReferenceOrContainsReferences<T0>());
+            Collection = TrackedArrayPool<T0>.Rent(capacity);
         }
 
         Capacity = capacity;

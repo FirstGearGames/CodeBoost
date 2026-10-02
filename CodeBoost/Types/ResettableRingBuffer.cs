@@ -86,12 +86,12 @@ public class ResettableRingBuffer<T0> : IPoolResettable, IEnumerable<T0> where T
 
         if (Collection is null)
         {
-            Collection = System.Buffers.ArrayPool<T0>.Shared.Rent(capacity);
+            Collection = TrackedArrayPool<T0>.Rent(capacity);
         }
         else if (Collection.Length < capacity)
         {
-            System.Buffers.ArrayPool<T0>.Shared.Return(Collection, Polyfill.IsReferenceOrContainsReferences<T0>());
-            Collection = System.Buffers.ArrayPool<T0>.Shared.Rent(capacity);
+            TrackedArrayPool<T0>.Return(Collection, Polyfill.IsReferenceOrContainsReferences<T0>());
+            Collection = TrackedArrayPool<T0>.Rent(capacity);
         }
 
         Capacity = capacity;
@@ -389,7 +389,7 @@ public class ResettableRingBuffer<T0> : IPoolResettable, IEnumerable<T0> where T
 
         if (Collection is not null)
         {
-            System.Buffers.ArrayPool<T0>.Shared.Return(Collection, Polyfill.IsReferenceOrContainsReferences<T0>());
+            TrackedArrayPool<T0>.Return(Collection, Polyfill.IsReferenceOrContainsReferences<T0>());
             Collection = null;
         }
 

@@ -139,7 +139,7 @@ public static partial class StringExtensions
         // Number of minimum bytes the buffer must be.
         int bytesNeeded = encoding.GetMaxByteCount(valueLength);
 
-        byte[] array = System.Buffers.ArrayPool<byte>.Shared.Rent(bytesNeeded);
+        byte[] array = TrackedArrayPool<byte>.Rent(bytesNeeded);
 
         bytesWritten = encoding.GetBytes(value, charIndex: 0, valueLength, array, byteIndex: 0);
 
