@@ -1,7 +1,5 @@
-using System.Collections.Generic;
-using System.Threading;
-using CodeBoost.Extensions;
-using CodeBoost.Logging;
+using System;
+using System.Collections;
 
 namespace CodeBoost.Performance;
 
@@ -10,52 +8,24 @@ namespace CodeBoost.Performance;
 /// </summary>
 public static class ObjectPool<T0> where T0 : new()
 {
-    /// <summary>
-    /// The stack for the ThreadLocal object.
-    /// </summary>
-    private static readonly ThreadLocal<ThreadLocalStackWrapper<T0>> Wrapper;
-    /// <summary>
-    /// The stack for the global object.
-    /// </summary>
-    private static readonly Stack<T0> GlobalStack = [];
-    /// <summary>
-    /// Maximum number of entries allowed in the global stack.
-    /// </summary>
-    private const int MaximumGlobalStackSize = 200;
-    /// <summary>
-    /// Maximum number of entries allowed in the ThreadLocal stack.
-    /// </summary>
-    private const int MaximumThreadLocalStackSize = 100;
-
     static ObjectPool()
     {
+        //A collection pooled here would come back without being cleared; its own pool clears it on return.
+        if (typeof(IEnumerable).IsAssignableFrom(typeof(T0)))
+            throw new InvalidOperationException($"[{typeof(T0).Name}] is a collection; use its collection pool, which clears it on return.");
+
         // if (typeof(IPoolResettable).IsAssignableFrom(typeof(T0)))
         // {
         //     Logger.LogError(typeof(ObjectPool<>), $"[{typeof(T0).Name}] implements IPoolResettable; use the Resettable pool instead.");
         //     return;
         // }
-            
-        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
     }
 
     /// <summary>
     /// Rents a generic object from the pool.
     /// </summary>
     /// <returns>A new or pooled instance of T0.</returns>
-    public static T0 Rent()
-    {
-        Stack<T0> localStack = Wrapper.Value.LocalStack;
-        if (localStack.TryPop(out T0 result))
-            return result;
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.TryPop(out result))
-                return result;
-        }
-
-        return new();
-    }
+    public static T0 Rent() => PoolStacks<T0>.Rent();
 
     /// <summary>
     /// Returns a generic object to the pool and sets the provided reference to null.
@@ -73,27 +43,5 @@ public static class ObjectPool<T0> where T0 : new()
     /// Returns a generic object to the pool.
     /// </summary>
     /// <param name = "value"> Value to return. </param>
-    public static void Return(T0 value)
-    {
-        if (value is null)
-            return;
-
-        // Note: If T0 implements an interface like IResettable,
-        // you would call value.Clear() or value.Reset() here.
-
-        Stack<T0> localStack = Wrapper.Value.LocalStack;
-        if (localStack.Count < MaximumThreadLocalStackSize)
-        {
-            localStack.Push(value);
-            return;
-        }
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.Count < MaximumGlobalStackSize)
-                GlobalStack.Push(value);
-        }
-
-        //If here both stacks are at capacity.
-    }
+    public static void Return(T0 value) => PoolStacks<T0>.Return(value);
 }

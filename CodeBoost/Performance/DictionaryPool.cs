@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
-using CodeBoost.Extensions;
-using CodeBoost.Logging;
 
 namespace CodeBoost.Performance;
 
@@ -11,51 +8,10 @@ namespace CodeBoost.Performance;
 public static class DictionaryPool<T0, T1>
 {
     /// <summary>
-    /// The stack for the ThreadLocal Dictionary.
-    /// </summary>
-    private static readonly ThreadLocal<ThreadLocalStackWrapper<Dictionary<T0, T1>>> Wrapper;
-    /// <summary>
-    /// The stack for the global Dictionary.
-    /// </summary>
-    private static readonly Stack<Dictionary<T0, T1>> GlobalStack = [];
-    /// <summary>
-    /// Maximum number of entries allowed in the global stack.
-    /// </summary>
-    private const int MaximumGlobalStackSize = 200;
-    /// <summary>
-    /// Maximum number of entries allowed in the ThreadLocal stack.
-    /// </summary>
-    private const int MaximumThreadLocalStackSize = 100;
-
-    static DictionaryPool()
-    {
-        // if (typeof(IPoolResettable).IsAssignableFrom(typeof(T0)) || typeof(IPoolResettable).IsAssignableFrom(typeof(T1)))
-        // {
-        //     Logger.LogError(typeof(DictionaryPool<,>), $"[{typeof(T0).Name}] or [{typeof(T1).Name}] implements IPoolResettable; use the Resettable pool instead.");
-        //     return;
-        // }
-
-        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
-    }
-
-    /// <summary>
     /// Rents a Dictionary from the pool.
     /// </summary>
     /// <returns>A cleared Dictionary collection.</returns>
-    public static Dictionary<T0, T1> Rent()
-    {
-        Stack<Dictionary<T0, T1>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.TryPop(out Dictionary<T0, T1> result))
-            return result;
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.TryPop(out result))
-                return result;
-        }
-
-        return new();
-    }
+    public static Dictionary<T0, T1> Rent() => PoolStacks<Dictionary<T0, T1>>.Rent();
 
     /// <summary>
     /// Returns a Dictionary to the pool and sets the provided reference to null.
@@ -80,19 +36,6 @@ public static class DictionaryPool<T0, T1>
 
         value.Clear();
 
-        Stack<Dictionary<T0, T1>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.Count < MaximumThreadLocalStackSize)
-        {
-            localStack.Push(value);
-            return;
-        }
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.Count < MaximumGlobalStackSize)
-                GlobalStack.Push(value);
-        }
-
-        //If here both stacks are at capacity.
+        PoolStacks<Dictionary<T0, T1>>.Return(value);
     }
 }

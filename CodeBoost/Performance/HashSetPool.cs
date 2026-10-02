@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
-using CodeBoost.Extensions;
-using CodeBoost.Logging;
 
 namespace CodeBoost.Performance;
 
@@ -11,51 +8,10 @@ namespace CodeBoost.Performance;
 public static class HashSetPool<T0>
 {
     /// <summary>
-    /// The stack for the ThreadLocal HashSet.
-    /// </summary>
-    private static readonly ThreadLocal<ThreadLocalStackWrapper<HashSet<T0>>> Wrapper;
-    /// <summary>
-    /// The stack for the global HashSet.
-    /// </summary>
-    private static readonly Stack<HashSet<T0>> GlobalStack = [];
-    /// <summary>
-    /// Maximum number of entries allowed in the global stack.
-    /// </summary>
-    private const int MaximumGlobalStackSize = 200;
-    /// <summary>
-    /// Maximum number of entries allowed in the ThreadLocal stack.
-    /// </summary>
-    private const int MaximumThreadLocalStackSize = 100;
-
-    static HashSetPool()
-    {
-        // if (typeof(IPoolResettable).IsAssignableFrom(typeof(T0)))
-        // {
-        //     Logger.LogError(typeof(HashSetPool<>), $"[{typeof(T0).Name}] implements IPoolResettable; use the Resettable pool instead.");
-        //     return;
-        // }
-        
-        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
-    }
-
-    /// <summary>
     /// Rents a HashSet from the pool.
     /// </summary>
     /// <returns>A cleared HashSet collection.</returns>
-    public static HashSet<T0> Rent()
-    {
-        Stack<HashSet<T0>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.TryPop(out HashSet<T0> result))
-            return result;
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.TryPop(out result))
-                return result;
-        }
-
-        return new();
-    }
+    public static HashSet<T0> Rent() => PoolStacks<HashSet<T0>>.Rent();
 
     /// <summary>
     /// Returns a HashSet to the pool and sets the provided reference to null.
@@ -80,19 +36,6 @@ public static class HashSetPool<T0>
 
         value.Clear();
 
-        Stack<HashSet<T0>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.Count < MaximumThreadLocalStackSize)
-        {
-            localStack.Push(value);
-            return;
-        }
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.Count < MaximumGlobalStackSize)
-                GlobalStack.Push(value);
-        }
-
-        //If here both stacks are at capacity.
+        PoolStacks<HashSet<T0>>.Return(value);
     }
 }

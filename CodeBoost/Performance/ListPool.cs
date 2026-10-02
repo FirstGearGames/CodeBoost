@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
-using CodeBoost.Extensions;
-using CodeBoost.Logging;
 
 namespace CodeBoost.Performance;
 
@@ -11,51 +8,10 @@ namespace CodeBoost.Performance;
 public static class ListPool<T0>
 {
     /// <summary>
-    /// The stack for the ThreadLocal List.
-    /// </summary>
-    private static readonly ThreadLocal<ThreadLocalStackWrapper<List<T0>>> Wrapper;
-    /// <summary>
-    /// The stack for the global List.
-    /// </summary>
-    private static readonly Stack<List<T0>> GlobalStack = [];
-    /// <summary>
-    /// Maximum number of entries allowed in the global stack.
-    /// </summary>
-    private const int MaximumGlobalStackSize = 200;
-    /// <summary>
-    /// Maximum number of entries allowed in the ThreadLocal stack.
-    /// </summary>
-    private const int MaximumThreadLocalStackSize = 100;
-
-    static ListPool()
-    {
-        // if (typeof(IPoolResettable).IsAssignableFrom(typeof(T0)))
-        // {
-        //     Logger.LogError(typeof(List<>), $"[{typeof(T0).Name}] implements IPoolResettable; use the Resettable pool instead.");
-        //     return;
-        // }
-            
-        Wrapper = new(valueFactory: () => new(), trackAllValues: false);
-    }
-
-    /// <summary>
     /// Rents a List from the pool.
     /// </summary>
     /// <returns>A cleared List collection.</returns>
-    public static List<T0> Rent()
-    {
-        Stack<List<T0>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.TryPop(out List<T0> result))
-            return result;
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.TryPop(out result))
-                return result;
-        }
-
-        return new();
-    }
+    public static List<T0> Rent() => PoolStacks<List<T0>>.Rent();
 
     /// <summary>
     /// Returns a List to the pool and sets the provided reference to null.
@@ -80,19 +36,6 @@ public static class ListPool<T0>
 
         value.Clear();
 
-        Stack<List<T0>> localStack = Wrapper.Value.LocalStack;
-        if (localStack.Count < MaximumThreadLocalStackSize)
-        {
-            localStack.Push(value);
-            return;
-        }
-
-        lock (GlobalStack)
-        {
-            if (GlobalStack.Count < MaximumGlobalStackSize)
-                GlobalStack.Push(value);
-        }
-
-        //If here both stacks are at capacity.
+        PoolStacks<List<T0>>.Return(value);
     }
 }

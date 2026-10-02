@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -149,6 +150,14 @@ public class PoolTests
         Assert.Same(first, second);
 
         ObjectPool<PooledThing>.Return(second);
+    }
+
+    [Fact]
+    public void ObjectPool_ValueType_Throws()
+    {
+        TypeInitializationException exception = Assert.Throws<TypeInitializationException>(() => ObjectPool<int>.Rent());
+
+        Assert.IsType<InvalidOperationException>(exception.InnerException);
     }
 
     // ── Utf8EncodingPool — concurrency safety ────────────────────────────

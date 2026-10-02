@@ -4,6 +4,7 @@ namespace CodeBoost.Performance;
 /// <summary>
 /// A pool for generic objects which are resettable.
 /// </summary>
+/// <remarks>This rents from the shared stacks directly rather than through <see cref="ObjectPool{T0}"/>, so a resettable collection, which clears itself in <see cref="IPoolResettable.OnReturn"/>, is not refused as an uncleared collection.</remarks>
 public static class ResettableObjectPool<T0> where T0 : IPoolResettable, new()
 {
     /// <summary>
@@ -11,7 +12,7 @@ public static class ResettableObjectPool<T0> where T0 : IPoolResettable, new()
     /// </summary>
     public static T0 Rent()
     {
-        T0 result = ObjectPool<T0>.Rent();
+        T0 result = PoolStacks<T0>.Rent();
             
         result.OnRent();
             
@@ -41,6 +42,6 @@ public static class ResettableObjectPool<T0> where T0 : IPoolResettable, new()
 
         value.OnReturn();
             
-        ObjectPool<T0>.Return(value);
+        PoolStacks<T0>.Return(value);
     }
 }
