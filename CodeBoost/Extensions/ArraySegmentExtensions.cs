@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Buffers;
+using CodeBoost.Performance;
 
 namespace CodeBoost.Extensions;
 
@@ -9,13 +9,13 @@ namespace CodeBoost.Extensions;
 public static class ArraySegmentExtensions
 {
     /// <summary>
-    /// Returns the underlying array of the supplied segment to <see cref="ArrayPool{T}.Shared"/> when it is not null.
+    /// Returns the underlying array of the supplied segment to <see cref="TrackedArrayPool{T0}"/> when it is not null.
     /// </summary>
     /// <param name="arraySegment">Segment whose underlying array should be returned to the shared pool.</param>
     public static void PoolArrayIntoShared(this ArraySegment<byte> arraySegment)
     {
         if (arraySegment.Array is not null)
-            ArrayPool<byte>.Shared.Return(arraySegment.Array);
+            TrackedArrayPool<byte>.Return(arraySegment.Array);
     }
     
     /// <summary>
