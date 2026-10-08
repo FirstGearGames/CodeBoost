@@ -22,11 +22,13 @@ internal static class PoolStacks<T0> where T0 : new()
     /// <summary>
     /// Maximum number of entries allowed in the global stack.
     /// </summary>
-    private const int MaximumGlobalStackSize = 200;
+    /// <remarks>Sized for churn rather than for an average: a return past the cap drops the instance, so a workload that returns more per frame than the stacks hold rebuilds the excess on its next rents. Spawning and despawning hundreds of networked objects a tick returns several hundred of a type at once.</remarks>
+    private const int MaximumGlobalStackSize = 4096;
     /// <summary>
     /// Maximum number of entries allowed in the ThreadLocal stack.
     /// </summary>
-    private const int MaximumThreadLocalStackSize = 100;
+    /// <remarks>Sized for the same churn as <see cref="MaximumGlobalStackSize"/>; the thread that returns is usually the thread that rents next, so most reuse happens here.</remarks>
+    private const int MaximumThreadLocalStackSize = 1024;
 
     static PoolStacks()
     {
