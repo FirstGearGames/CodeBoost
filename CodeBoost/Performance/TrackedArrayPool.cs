@@ -4,14 +4,28 @@ using System.Buffers;
 namespace CodeBoost.Performance;
 
 /// <summary>
-/// Rents arrays from <see cref="ArrayPool{T}.Shared"/> and, while <see cref="PoolTracker"/> is tracking, catches an array returned while already in the pool or one never returned.
+/// Rents arrays from a pool sized for churn and, while <see cref="PoolTracker"/> is tracking, catches an array returned while already in the pool or one never returned.
 /// </summary>
 /// <remarks>
 /// <see cref="ArrayPool{T}"/> does not detect a second return of the same array. It stores the array twice, so two later renters share one buffer and corrupt each other far from the faulty return.
-/// The check only holds when every rent and return of an array goes through this type; one returned straight to <see cref="ArrayPool{T}.Shared"/> is never recorded.
+/// The check only holds when every rent and return of an array goes through this type; one returned straight to another pool is never recorded.
 /// </remarks>
 public static class TrackedArrayPool<T0>
 {
+    /// <summary>
+    /// The pool every rent and return goes through, sized for churn rather than taken from <see cref="ArrayPool{T}.Shared"/>.
+    /// </summary>
+    /// <remarks>The shared pool keeps only a few arrays of each size, per core on some runtimes and per process on Unity's, and drops every return past that, so a frame that returns a few hundred buffers of one size rebuilt most of them on its next rents. A configured pool holds up to <see cref="MaximumArraysPerSize"/> of each size and never more than its callers have had out at once.</remarks>
+    private static readonly ArrayPool<T0> Pool = ArrayPool<T0>.Create(MaximumArrayLength, MaximumArraysPerSize);
+    /// <summary>
+    /// The largest array the pool keeps; a longer one is allocated on rent and left to the collector on return.
+    /// </summary>
+    private const int MaximumArrayLength = 1 << 24;
+    /// <summary>
+    /// How many arrays of each size the pool keeps.
+    /// </summary>
+    private const int MaximumArraysPerSize = 1024;
+
     /// <summary>
     /// Rents an array of at least the specified length.
     /// </summary>
@@ -19,7 +33,7 @@ public static class TrackedArrayPool<T0>
     /// <returns>An array whose length is at least <paramref name="minimumLength"/>.</returns>
     public static T0[] Rent(int minimumLength)
     {
-        T0[] array = ArrayPool<T0>.Shared.Rent(minimumLength);
+        T0[] array = Pool.Rent(minimumLength);
 
         if (PoolTracker.TrackingEnabled && array.Length > 0)
             PoolTracker.RecordRented(array);
@@ -74,6 +88,6 @@ public static class TrackedArrayPool<T0>
         if (PoolTracker.TrackingEnabled && array.Length > 0)
             PoolTracker.RecordPooled(array);
 
-        ArrayPool<T0>.Shared.Return(array, clearArray);
+        Pool.Return(array, clearArray);
     }
 }
