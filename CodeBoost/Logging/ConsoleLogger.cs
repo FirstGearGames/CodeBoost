@@ -12,7 +12,8 @@ public class ConsoleLogger : ILogger
     public LoggerSetting GetLoggerSetting() => LoggerSetting.LoggerServiceSetting;
 
     /// <inheritdoc/>
-    public bool DisableUnconditionalDevelopmentStacktrace() => true;
+    /// <remarks>False, because nothing else adds a stacktrace to what this logger writes, so a development build traces every message here.</remarks>
+    public bool DisableUnconditionalDevelopmentStacktrace() => false;
 
     /// <inheritdoc/>
     public void LogInformation(string message) => Console.WriteLine($"Information :: {Logger.AddStackTraceIfDevelopment(message)}");
