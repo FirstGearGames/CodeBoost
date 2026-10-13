@@ -1,5 +1,6 @@
 using System;
 using CodeBoost.Environment;
+using CodeBoost.Logging;
 using Xunit;
 
 namespace CodeBoost.Tests;
@@ -40,6 +41,35 @@ public class EnvironmentTests
         finally
         {
             ApplicationStateService.UseApplicationState(new IdeApplicationState());
+        }
+    }
+
+    // ── LoggingService follows the application state ────────────────────
+
+    /// <summary>
+    /// A logger registered before the application state takes its level from the state set afterwards, so a host may register the
+    /// two in either order. A release build logs errors only, and the editor logs information again once it is back.
+    /// </summary>
+    [Fact]
+    public void LoggingService_LoggerSetBeforeTheApplicationState_TakesTheLevelOfTheStateSetAfterIt()
+    {
+        ILogger? previousLogger = LoggingService.Logger;
+        LoggingService.UseLogger(new ConsoleLogger());
+
+        try
+        {
+            RunWithMock(new() { IsEditorValue = false, IsDevelopmentValue = false }, () =>
+            {
+                Assert.False(LoggingService.IsInformationEnabled, "a release build kept the information level of the state before it");
+                Assert.True(LoggingService.IsErrorEnabled, "a release build stopped logging errors");
+            });
+
+            Assert.True(LoggingService.IsInformationEnabled, "the editor state did not bring the information level back");
+        }
+        finally
+        {
+            if (previousLogger is not null)
+                LoggingService.UseLogger(previousLogger);
         }
     }
 

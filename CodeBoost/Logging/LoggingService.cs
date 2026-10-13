@@ -40,6 +40,10 @@ public static class LoggingService
 
     static LoggingService()
     {
+        /* The level depends on the application state as well as the logger, and a host may register either one first. Worked out
+         * only when a logger was set, a host that set its application state afterwards kept the level of the state before it: a Unity
+         * build took the default IDE state's editor level, logging every Information message in a release build. */
+        ApplicationStateService.ApplicationStateSet += ApplicationStateService_OnApplicationStateSet;
         UseLogger(new ConsoleLogger());
     }
 
@@ -201,6 +205,13 @@ public static class LoggingService
     /// </summary>
     /// <returns>The logger level cast to the underlying byte type.</returns>
     private static byte GetLoggerLevelAsUnderlyingType() => (byte)GetLoggerLevel();
+
+    /// <summary>
+    /// Works the logger level out again for the application state just set.
+    /// </summary>
+    /// <param name="previousApplicationState">The application state that was replaced.</param>
+    /// <param name="nextApplicationState">The application state now in use.</param>
+    private static void ApplicationStateService_OnApplicationStateSet(IApplicationState previousApplicationState, IApplicationState nextApplicationState) => CacheLoggerLevelAsUnderlyingType();
 
     /// <summary>
     /// Caches the logger level to use.
