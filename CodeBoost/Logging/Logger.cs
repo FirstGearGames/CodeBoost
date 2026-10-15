@@ -248,6 +248,18 @@ public static class Logger
     /// </remarks>
     /// <returns>True when unconditional development stacktraces are suppressed.</returns>
     public static bool DisableUnconditionalDevelopmentStacktrace() => LoggingService.DisableUnconditionalDevelopmentStacktrace();
+    /// <summary>
+    /// Returns whether logging at <paramref name="loggerLevel"/> is currently enabled. Inspect this before formatting an interpolated argument for <see cref="Log(Type, LoggerLevel, string, string)"/> so the formatting can be skipped when logging is disabled.
+    /// </summary>
+    /// <param name="loggerLevel">The level to check.</param>
+    /// <returns>True when a message at <paramref name="loggerLevel"/> would be written; always false for <see cref="LoggerLevel.Disabled"/>.</returns>
+    public static bool IsEnabled(LoggerLevel loggerLevel) => loggerLevel switch
+    {
+        LoggerLevel.Information => LoggingService.IsInformationEnabled,
+        LoggerLevel.Warning => LoggingService.IsWarningEnabled,
+        LoggerLevel.Error => LoggingService.IsErrorEnabled,
+        _ => false
+    };
 
     /// <summary>
     /// Logs the supplied message at the information level.
