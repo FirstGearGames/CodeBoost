@@ -77,6 +77,37 @@ public static class Logger<T0, T1>
 
         LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), typeof(T1), methodName)}{message}");
     }
+    /// <summary>
+    /// Logs the supplied message at <paramref name="loggerLevel"/> prefixed with the outer and inner type names. Logs nothing when <paramref name="loggerLevel"/> is <see cref="LoggerLevel.Disabled"/>.
+    /// </summary>
+    /// <param name="loggerLevel">Level to log the message at.</param>
+    /// <param name="message">Message to log.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void Log(LoggerLevel loggerLevel, string message, [CallerMemberName] string methodName = "")
+    {
+        switch (loggerLevel)
+        {
+            case LoggerLevel.Information:
+                LogInformation(message, methodName);
+                break;
+            case LoggerLevel.Warning:
+                LogWarning(message, methodName);
+                break;
+            case LoggerLevel.Error:
+                LogError(message, methodName);
+                break;
+        }
+    }
+    /// <summary>
+    /// Logs <paramref name="logEntry"/> prefixed with the outer and inner type names. Logs nothing when the entry is not set.
+    /// </summary>
+    /// <param name="logEntry">Level and message to log.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void Log(LogEntry logEntry, [CallerMemberName] string methodName = "")
+    {
+        if (logEntry.IsSet)
+            Log(logEntry.Level, logEntry.Message, methodName);
+    }
 }
 
 /// <summary>
@@ -145,6 +176,37 @@ public static class Logger<T0>
             return;
 
         LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message}");
+    }
+    /// <summary>
+    /// Logs the supplied message at <paramref name="loggerLevel"/> prefixed with the type name. Logs nothing when <paramref name="loggerLevel"/> is <see cref="LoggerLevel.Disabled"/>.
+    /// </summary>
+    /// <param name="loggerLevel">Level to log the message at.</param>
+    /// <param name="message">Message to log.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void Log(LoggerLevel loggerLevel, string message, [CallerMemberName] string methodName = "")
+    {
+        switch (loggerLevel)
+        {
+            case LoggerLevel.Information:
+                LogInformation(message, methodName);
+                break;
+            case LoggerLevel.Warning:
+                LogWarning(message, methodName);
+                break;
+            case LoggerLevel.Error:
+                LogError(message, methodName);
+                break;
+        }
+    }
+    /// <summary>
+    /// Logs <paramref name="logEntry"/> prefixed with the type name. Logs nothing when the entry is not set.
+    /// </summary>
+    /// <param name="logEntry">Level and message to log.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void Log(LogEntry logEntry, [CallerMemberName] string methodName = "")
+    {
+        if (logEntry.IsSet)
+            Log(logEntry.Level, logEntry.Message, methodName);
     }
 }
 
@@ -224,6 +286,37 @@ public static class Logger
         LoggingService.LogErrorUnchecked($"{GetLogMessagePrefix(methodName)}{message}");
     }
     /// <summary>
+    /// Logs the supplied message at <paramref name="loggerLevel"/>. Logs nothing when <paramref name="loggerLevel"/> is <see cref="LoggerLevel.Disabled"/>.
+    /// </summary>
+    /// <param name="loggerLevel">Level to log the message at.</param>
+    /// <param name="message">Message to log.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void Log(LoggerLevel loggerLevel, string message, [CallerMemberName] string methodName = "")
+    {
+        switch (loggerLevel)
+        {
+            case LoggerLevel.Information:
+                LogInformation(message, methodName);
+                break;
+            case LoggerLevel.Warning:
+                LogWarning(message, methodName);
+                break;
+            case LoggerLevel.Error:
+                LogError(message, methodName);
+                break;
+        }
+    }
+    /// <summary>
+    /// Logs <paramref name="logEntry"/>. Logs nothing when the entry is not set.
+    /// </summary>
+    /// <param name="logEntry">Level and message to log.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void Log(LogEntry logEntry, [CallerMemberName] string methodName = "")
+    {
+        if (logEntry.IsSet)
+            Log(logEntry.Level, logEntry.Message, methodName);
+    }
+    /// <summary>
     /// Logs the supplied message at the information level prefixed with the supplied type name.
     /// </summary>
     /// <param name="type">Type used in the log prefix.</param>
@@ -261,6 +354,39 @@ public static class Logger
             return;
 
         LoggingService.LogErrorUnchecked($"{GetLogMessagePrefix(type, methodName)}{message}");
+    }
+    /// <summary>
+    /// Logs the supplied message at <paramref name="loggerLevel"/> prefixed with the supplied type name. Logs nothing when <paramref name="loggerLevel"/> is <see cref="LoggerLevel.Disabled"/>.
+    /// </summary>
+    /// <param name="type">Type used in the log prefix.</param>
+    /// <param name="loggerLevel">Level to log the message at.</param>
+    /// <param name="message">Message to log.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void Log(Type type, LoggerLevel loggerLevel, string message, [CallerMemberName] string methodName = "")
+    {
+        switch (loggerLevel)
+        {
+            case LoggerLevel.Information:
+                LogInformation(type, message, methodName);
+                break;
+            case LoggerLevel.Warning:
+                LogWarning(type, message, methodName);
+                break;
+            case LoggerLevel.Error:
+                LogError(type, message, methodName);
+                break;
+        }
+    }
+    /// <summary>
+    /// Logs <paramref name="logEntry"/> prefixed with the supplied type name. Logs nothing when the entry is not set.
+    /// </summary>
+    /// <param name="type">Type used in the log prefix.</param>
+    /// <param name="logEntry">Level and message to log.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void Log(Type type, LogEntry logEntry, [CallerMemberName] string methodName = "")
+    {
+        if (logEntry.IsSet)
+            Log(type, logEntry.Level, logEntry.Message, methodName);
     }
 
     /// <summary>
