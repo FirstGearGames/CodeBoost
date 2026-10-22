@@ -204,6 +204,27 @@ public class PoolTrackerTests : IDisposable
     }
 
     /// <summary>
+    /// An instance returned while both of its pool's stacks are full is discarded, and that still ends its rental.
+    /// </summary>
+    [Fact]
+    public void ObjectPool_ReturnedPastCapacity_IsNotCountedAsRented()
+    {
+        //More than both stacks hold together, so the last returns are discarded.
+        const int RentalCount = 10_000;
+
+        CapacityThing[] rented = new CapacityThing[RentalCount];
+
+        for (int index = 0; index < RentalCount; index++)
+            rented[index] = ObjectPool<CapacityThing>.Rent();
+
+        foreach (CapacityThing thing in rented)
+            ObjectPool<CapacityThing>.Return(thing);
+
+        Assert.Equal(0, PoolTracker.GetRentedCount());
+        PoolTracker.ThrowIfAnyRented();
+    }
+
+    /// <summary>
     /// Instances a thread cached in its own stack are collected once the thread exits, as they are without tracking; the tracker must not be what keeps them alive.
     /// </summary>
     [Fact]
@@ -303,6 +324,13 @@ public class PoolTrackerTests : IDisposable
     }
 
     private sealed class TrackedThing
+    {
+    }
+
+    /// <summary>
+    /// Used only by <see cref="ObjectPool_ReturnedPastCapacity_IsNotCountedAsRented"/>, so its stacks start empty.
+    /// </summary>
+    private sealed class CapacityThing
     {
     }
 

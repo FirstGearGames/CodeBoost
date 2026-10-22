@@ -71,25 +71,23 @@ internal static class PoolStacks<T0> where T0 : new()
         if (value is null)
             return;
 
+        //Recorded whether it is kept or discarded: either way its rental has ended, and the tracker holds pooled instances weakly.
+        if (PoolTracker.TrackingEnabled)
+            PoolTracker.RecordPooled(value);
+
         Stack<T0> localStack = Wrapper.Value.LocalStack;
+
         if (localStack.Count < MaximumThreadLocalStackSize)
         {
-            if (PoolTracker.TrackingEnabled)
-                PoolTracker.RecordPooled(value);
-
             localStack.Push(value);
+
             return;
         }
 
         lock (GlobalStack)
         {
             if (GlobalStack.Count < MaximumGlobalStackSize)
-            {
-                if (PoolTracker.TrackingEnabled)
-                    PoolTracker.RecordPooled(value);
-
                 GlobalStack.Push(value);
-            }
         }
 
         //If here both stacks are at capacity.

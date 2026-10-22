@@ -138,8 +138,8 @@ public static class PoolTracker
     }
 
     /// <summary>
-    /// Records an instance as placed in its pool, throwing when it is already there.
-    /// Call this only when the pool is about to keep the instance, never when it will discard it.
+    /// Records an instance as returned to its pool, throwing when it is already there.
+    /// Call this whether the pool keeps the instance or discards it, since either way the rental has ended.
     /// </summary>
     /// <param name="instance">The instance being pooled.</param>
     internal static void RecordPooled(object instance)
