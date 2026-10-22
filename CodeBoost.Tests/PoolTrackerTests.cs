@@ -188,6 +188,19 @@ public class PoolTrackerTests : IDisposable
         Assert.Equal(0, PoolTracker.GetRentedCount());
     }
 
+    /// <summary>
+    /// The leak report counts and names only the instances the caller leaked, not the list it builds the report in.
+    /// </summary>
+    [Fact]
+    public void ThrowIfAnyRented_WithOneLeak_ReportsOnlyThatLeak()
+    {
+        ObjectPool<TrackedThing>.Rent();
+
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(PoolTracker.ThrowIfAnyRented);
+
+        Assert.Equal($"1 pooled instances were never returned: {nameof(TrackedThing)}.", exception.Message);
+    }
+
     private sealed class TrackedThing
     {
     }

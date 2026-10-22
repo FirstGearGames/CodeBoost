@@ -105,14 +105,14 @@ public static class PoolTracker
             if (RentedInstances.Count == 0)
                 return;
 
-            List<string> descriptions = ListPool<string>.Rent();
+            /* Allocated rather than rented: a rented list would be recorded in the very set it describes, and is reported as a leak
+             * of its own. This runs once, at teardown, just before throwing. */
+            List<string> descriptions = new(RentedInstances.Count);
+
             foreach (object instance in RentedInstances)
                 descriptions.Add(Describe(instance));
 
-            string message = $"{RentedInstances.Count} pooled instances were never returned: {string.Join(", ", descriptions)}.";
-            ListPool<string>.ReturnAndNullifyReference(ref descriptions);
-
-            throw new InvalidOperationException(message);
+            throw new InvalidOperationException($"{RentedInstances.Count} pooled instances were never returned: {string.Join(", ", descriptions)}.");
         }
     }
 
