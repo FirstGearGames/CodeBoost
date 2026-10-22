@@ -37,6 +37,10 @@ public static class LoggingService
     /// The message used when trying to access the logger when there is no instance created.
     /// </summary>
     private static readonly string LoggerIsNullMessage = $"[{nameof(LoggingService)}] is null. Use [{nameof(LoggingService)}] to set a service.";
+    /// <summary>
+    /// The cached level for <see cref="LoggerLevel.Disabled"/>, below every level so that no message passes a level check.
+    /// </summary>
+    private const byte DisabledLoggerLevelAsUnderlyingType = 0;
 
     static LoggingService()
     {
@@ -203,8 +207,16 @@ public static class LoggingService
     /// <summary>
     /// Gets the logger level as the underlying type.
     /// </summary>
-    /// <returns>The logger level cast to the underlying byte type.</returns>
-    private static byte GetLoggerLevelAsUnderlyingType() => (byte)GetLoggerLevel();
+    /// <returns>The logger level cast to the underlying byte type, or <see cref="DisabledLoggerLevelAsUnderlyingType"/> when it is <see cref="LoggerLevel.Disabled"/>.</returns>
+    /// <remarks>
+    /// <see cref="LoggerLevel.Disabled"/> is the highest value of the enum, so the at-or-above level checks would read it as the most verbose level and log everything.
+    /// </remarks>
+    private static byte GetLoggerLevelAsUnderlyingType()
+    {
+        LoggerLevel loggerLevel = GetLoggerLevel();
+
+        return loggerLevel is LoggerLevel.Disabled ? DisabledLoggerLevelAsUnderlyingType : (byte)loggerLevel;
+    }
 
     /// <summary>
     /// Works the logger level out again for the application state just set.
