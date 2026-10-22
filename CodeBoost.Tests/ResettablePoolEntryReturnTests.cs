@@ -159,6 +159,72 @@ public class ResettablePoolEntryReturnTests
     }
 
     /// <summary>
+    /// The entry held in a returned List re-enters its object pool. Reset ran each entry's OnRent instead of OnReturn and then
+    /// dropped it, so the entry was never reset and its pool never refilled.
+    /// </summary>
+    [Fact]
+    public void ListPool_Return_ReturnsEntriesToTheirPool()
+    {
+        ListEntry entry = ResettableObjectPool<ListEntry>.Rent();
+        List<ListEntry> list = ResettableListPool<ListEntry>.Rent();
+        list.Add(entry);
+
+        ResettableListPool<ListEntry>.Return(list);
+
+        Assert.Equal(1, entry.OnReturnCalls);
+        Assert.Same(entry, ResettableObjectPool<ListEntry>.Rent());
+    }
+
+    /// <summary>
+    /// The entry held in a returned HashSet re-enters its object pool.
+    /// </summary>
+    [Fact]
+    public void HashSetPool_Return_ReturnsEntriesToTheirPool()
+    {
+        HashSetEntry entry = ResettableObjectPool<HashSetEntry>.Rent();
+        HashSet<HashSetEntry> hashSet = ResettableHashSetPool<HashSetEntry>.Rent();
+        hashSet.Add(entry);
+
+        ResettableHashSetPool<HashSetEntry>.Return(hashSet);
+
+        Assert.Equal(1, entry.OnReturnCalls);
+        Assert.Same(entry, ResettableObjectPool<HashSetEntry>.Rent());
+    }
+
+    /// <summary>
+    /// The entry held in a returned Queue re-enters its object pool.
+    /// </summary>
+    [Fact]
+    public void QueuePool_Return_ReturnsEntriesToTheirPool()
+    {
+        StandardQueueEntry entry = ResettableObjectPool<StandardQueueEntry>.Rent();
+        Queue<StandardQueueEntry> queue = ResettableQueuePool<StandardQueueEntry>.Rent();
+        queue.Enqueue(entry);
+
+        ResettableQueuePool<StandardQueueEntry>.Return(queue);
+
+        Assert.Equal(1, entry.OnReturnCalls);
+        Assert.Same(entry, ResettableObjectPool<StandardQueueEntry>.Rent());
+    }
+
+    /// <summary>
+    /// The value held in a returned SortedDictionary re-enters its object pool. Return only cleared the dictionary, so its values
+    /// were neither reset nor pooled.
+    /// </summary>
+    [Fact]
+    public void T1SortedDictionaryPool_Return_ReturnsValuesToTheirPool()
+    {
+        SortedDictionaryValue value = ResettableObjectPool<SortedDictionaryValue>.Rent();
+        SortedDictionary<uint, SortedDictionaryValue> dictionary = ResettableT1SortedDictionaryPool<uint, SortedDictionaryValue>.Rent();
+        dictionary.Add(1, value);
+
+        ResettableT1SortedDictionaryPool<uint, SortedDictionaryValue>.Return(dictionary);
+
+        Assert.Equal(1, value.OnReturnCalls);
+        Assert.Same(value, ResettableObjectPool<SortedDictionaryValue>.Rent());
+    }
+
+    /// <summary>
     /// Entry type for <see cref="T1SortedListPool_Return_ReturnsValuesToTheirPool"/>.
     /// </summary>
     private sealed class SortedListValue : IPoolResettable
@@ -329,6 +395,74 @@ public class ResettablePoolEntryReturnTests
     /// Entry type for <see cref="RingBufferPool_Reset_ReturnsEntriesToTheirPool"/>.
     /// </summary>
     private sealed class RingEntry : IPoolResettable
+    {
+        /// <summary>
+        /// Number of times <see cref="OnReturn"/> ran.
+        /// </summary>
+        public int OnReturnCalls;
+
+        /// <inheritdoc/>
+        public void OnReturn() => OnReturnCalls++;
+
+        /// <inheritdoc/>
+        public void OnRent() { }
+    }
+
+    /// <summary>
+    /// Entry type for <see cref="ListPool_Return_ReturnsEntriesToTheirPool"/>.
+    /// </summary>
+    private sealed class ListEntry : IPoolResettable
+    {
+        /// <summary>
+        /// Number of times <see cref="OnReturn"/> ran.
+        /// </summary>
+        public int OnReturnCalls;
+
+        /// <inheritdoc/>
+        public void OnReturn() => OnReturnCalls++;
+
+        /// <inheritdoc/>
+        public void OnRent() { }
+    }
+
+    /// <summary>
+    /// Entry type for <see cref="HashSetPool_Return_ReturnsEntriesToTheirPool"/>.
+    /// </summary>
+    private sealed class HashSetEntry : IPoolResettable
+    {
+        /// <summary>
+        /// Number of times <see cref="OnReturn"/> ran.
+        /// </summary>
+        public int OnReturnCalls;
+
+        /// <inheritdoc/>
+        public void OnReturn() => OnReturnCalls++;
+
+        /// <inheritdoc/>
+        public void OnRent() { }
+    }
+
+    /// <summary>
+    /// Entry type for <see cref="QueuePool_Return_ReturnsEntriesToTheirPool"/>.
+    /// </summary>
+    private sealed class StandardQueueEntry : IPoolResettable
+    {
+        /// <summary>
+        /// Number of times <see cref="OnReturn"/> ran.
+        /// </summary>
+        public int OnReturnCalls;
+
+        /// <inheritdoc/>
+        public void OnReturn() => OnReturnCalls++;
+
+        /// <inheritdoc/>
+        public void OnRent() { }
+    }
+
+    /// <summary>
+    /// Value type for <see cref="T1SortedDictionaryPool_Return_ReturnsValuesToTheirPool"/>.
+    /// </summary>
+    private sealed class SortedDictionaryValue : IPoolResettable
     {
         /// <summary>
         /// Number of times <see cref="OnReturn"/> ran.

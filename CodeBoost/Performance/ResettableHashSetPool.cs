@@ -40,12 +40,14 @@ public static class ResettableHashSetPool<T0> where T0 : IPoolResettable, new()
     }
 
     /// <summary>
-    /// Resets the HashSet without returning it to the pool.
+    /// Resets the HashSet without returning it to the pool. Every contained entry is returned through
+    /// <see cref="ResettableObjectPool{T0}.Return"/>, so its <see cref="IPoolResettable.OnReturn"/> runs and the instance
+    /// re-enters its pool rather than becoming garbage.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(HashSet<T0> value)
     {
         foreach (T0 entry in value)
-            entry?.OnRent();
+            ResettableObjectPool<T0>.Return(entry);
     }
 }
