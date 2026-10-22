@@ -292,6 +292,9 @@ public class ExtensionsTests
     [InlineData(7UL, 1u)]
     [InlineData(8UL, 1u)]
     [InlineData(9UL, 2u)]
+    [InlineData(4294967289UL, 536870912u)]
+    [InlineData(4294967296UL, 536870912u)]
+    [InlineData(34359738360UL, 4294967295u)]
     public void ToPackedByteCount_ReturnsBytesNeeded(ulong bitCount, uint expected)
     {
         Assert.Equal(expected, bitCount.ToPackedByteCount());

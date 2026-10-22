@@ -18,7 +18,7 @@ public static class UInt64Extensions
     /// <returns>The number of bytes required to pack bitCount.</returns>
     /// <remarks>When a 0 <see cref="bitCount"/> is provided the returned value will also be 0.</remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static uint ToPackedByteCount(this ulong bitCount) => (uint)(bitCount + 7) / 8;
+    public static uint ToPackedByteCount(this ulong bitCount) => (uint)((bitCount + 7) / 8);
 
     /// <summary>
     /// Converts a UInt64 to an Int64 using ZigZag encoding.
