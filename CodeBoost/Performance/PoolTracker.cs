@@ -29,18 +29,26 @@ public static class PoolTracker
     public static bool TrackingEnabled { get; private set; } = TrackingEnabledByDefault;
 
     /// <summary>
+    /// The instances currently sitting in a pool.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Held weakly, so the tracking never keeps alive an instance its pool has let go of: one cached on a thread that has since exited, or an array its array pool dropped without saying so.
+    /// An instance still in a pool is held by that pool, so it stays in this table for as long as a second return of it could reach the pool.
+    /// </para>
+    /// <para>
+    /// Replaced rather than cleared, because netstandard2.0 has no <c>ConditionalWeakTable.Clear</c>.
+    /// </para>
+    /// </remarks>
+    private static ConditionalWeakTable<object, object> _pooledInstances = new();
+    /// <summary>
     /// Guards both tracking sets.
     /// </summary>
     private static readonly object TrackedInstancesLock = new();
     /// <summary>
-    /// The instances currently sitting in a pool.
+    /// The value stored against each instance in <see cref="_pooledInstances"/>; only the instance's presence matters.
     /// </summary>
-    /// <remarks>
-    /// An instance a pool discards because it is full is never added, so the tracking never keeps one alive by mistake.
-    /// The one exception is an array returned to <see cref="System.Buffers.ArrayPool{T}.Shared"/>, which can discard it without saying so.
-    /// </remarks>
-    // ponytail: arrays the shared ArrayPool silently drops stay in this set; use weak references if a long tracked run shows the growth.
-    private static readonly HashSet<object> PooledInstances = new(ReferenceComparer.Instance);
+    private static readonly object PooledMarker = new();
     /// <summary>
     /// The instances rented while tracking was enabled and not yet returned.
     /// </summary>
@@ -65,7 +73,7 @@ public static class PoolTracker
     {
         lock (TrackedInstancesLock)
         {
-            PooledInstances.Clear();
+            _pooledInstances = new();
             RentedInstances.Clear();
             TrackingEnabled = true;
         }
@@ -79,7 +87,7 @@ public static class PoolTracker
         lock (TrackedInstancesLock)
         {
             TrackingEnabled = false;
-            PooledInstances.Clear();
+            _pooledInstances = new();
             RentedInstances.Clear();
         }
     }
@@ -124,7 +132,7 @@ public static class PoolTracker
     {
         lock (TrackedInstancesLock)
         {
-            PooledInstances.Remove(instance);
+            _pooledInstances.Remove(instance);
             RentedInstances.Add(instance);
         }
     }
@@ -138,9 +146,10 @@ public static class PoolTracker
     {
         lock (TrackedInstancesLock)
         {
-            if (!PooledInstances.Add(instance))
+            if (_pooledInstances.TryGetValue(instance, out _))
                 throw new InvalidOperationException($"{Describe(instance)} was returned to its pool while already in it.");
 
+            _pooledInstances.Add(instance, PooledMarker);
             RentedInstances.Remove(instance);
         }
     }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using CodeBoost.Performance;
 using Xunit;
 
@@ -201,7 +203,113 @@ public class PoolTrackerTests : IDisposable
         Assert.Equal($"1 pooled instances were never returned: {nameof(TrackedThing)}.", exception.Message);
     }
 
+    /// <summary>
+    /// Instances a thread cached in its own stack are collected once the thread exits, as they are without tracking; the tracker must not be what keeps them alive.
+    /// </summary>
+    [Fact]
+    public void ObjectPool_InstancesCachedByAnExitedThread_AreCollected()
+    {
+        WeakReference[] cached = RentAndReturnOnRetiringThread();
+
+        CollectEverything();
+
+        Assert.Equal(0, CountAlive(cached));
+    }
+
+    /// <summary>
+    /// An array longer than the pool keeps is left to the collector on return; the tracker must not be what keeps it alive.
+    /// </summary>
+    [Fact]
+    public void TrackedArrayPool_ArrayLongerThanThePoolKeeps_IsCollectedAfterReturn()
+    {
+        WeakReference[] returned = RentAndReturnArrayLongerThanThePoolKeeps();
+
+        CollectEverything();
+
+        Assert.Equal(0, CountAlive(returned));
+    }
+
+    /// <summary>
+    /// Rents and returns instances on a thread that then exits.
+    /// </summary>
+    /// <returns>A weak reference to each instance the thread cached.</returns>
+    /// <remarks>Not inlined, so no reference to an instance survives in the caller's frame.</remarks>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference[] RentAndReturnOnRetiringThread()
+    {
+        WeakReference[] cached = new WeakReference[64];
+
+        Thread retiringThread = new(() =>
+        {
+            ThreadCachedThing[] rented = new ThreadCachedThing[cached.Length];
+
+            for (int index = 0; index < rented.Length; index++)
+            {
+                rented[index] = ObjectPool<ThreadCachedThing>.Rent();
+                cached[index] = new(rented[index]);
+            }
+
+            foreach (ThreadCachedThing thing in rented)
+                ObjectPool<ThreadCachedThing>.Return(thing);
+        });
+
+        retiringThread.Start();
+        Assert.True(retiringThread.Join(millisecondsTimeout: 10_000));
+
+        return cached;
+    }
+
+    /// <summary>
+    /// Rents and returns one array longer than the pool keeps.
+    /// </summary>
+    /// <returns>A weak reference to the returned array.</returns>
+    /// <remarks>Not inlined, so no reference to the array survives in the caller's frame.</remarks>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference[] RentAndReturnArrayLongerThanThePoolKeeps()
+    {
+        //One element past the longest array the pool keeps, 1 << 24.
+        byte[] array = TrackedArrayPool<byte>.Rent((1 << 24) + 1);
+        WeakReference[] returned = [new(array)];
+
+        TrackedArrayPool<byte>.Return(array);
+
+        return returned;
+    }
+
+    /// <summary>
+    /// Runs a full collection, finalizers included, and then collects what the finalizers released.
+    /// </summary>
+    private static void CollectEverything()
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+    }
+
+    /// <summary>
+    /// Counts the weak references whose target is still alive.
+    /// </summary>
+    /// <param name="references">The references to check.</param>
+    /// <returns>The number still alive.</returns>
+    private static int CountAlive(WeakReference[] references)
+    {
+        int alive = 0;
+
+        foreach (WeakReference reference in references)
+            if (reference.IsAlive)
+                alive++;
+
+        return alive;
+    }
+
     private sealed class TrackedThing
+    {
+    }
+
+    /// <summary>
+    /// Used only by <see cref="ObjectPool_InstancesCachedByAnExitedThread_AreCollected"/>, so its stacks start empty.
+    /// </summary>
+    private sealed class ThreadCachedThing
     {
     }
 
