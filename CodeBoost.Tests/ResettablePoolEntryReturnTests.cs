@@ -225,6 +225,64 @@ public class ResettablePoolEntryReturnTests
     }
 
     /// <summary>
+    /// Resetting a collection without returning it sends its entries back to their pools, so the collection must let go of them
+    /// too; otherwise its owner still holds instances the pool hands to the next renter, and two owners share one entry.
+    /// </summary>
+    [Fact]
+    public void Reset_EveryCollectionPool_EmptiesTheCollection()
+    {
+        List<ResetEntry> list = ResettableListPool<ResetEntry>.Rent();
+        list.Add(new());
+        ResettableListPool<ResetEntry>.Reset(list);
+        Assert.Empty(list);
+
+        HashSet<ResetEntry> hashSet = ResettableHashSetPool<ResetEntry>.Rent();
+        hashSet.Add(new());
+        ResettableHashSetPool<ResetEntry>.Reset(hashSet);
+        Assert.Empty(hashSet);
+
+        Queue<ResetEntry> queue = ResettableQueuePool<ResetEntry>.Rent();
+        queue.Enqueue(new());
+        ResettableQueuePool<ResetEntry>.Reset(queue);
+        Assert.Empty(queue);
+
+        Dictionary<ResetEntry, uint> keyDictionary = ResettableT0DictionaryPool<ResetEntry, uint>.Rent();
+        keyDictionary.Add(new(), 1);
+        ResettableT0DictionaryPool<ResetEntry, uint>.Reset(keyDictionary);
+        Assert.Empty(keyDictionary);
+
+        Dictionary<uint, ResetEntry> valueDictionary = ResettableT1DictionaryPool<uint, ResetEntry>.Rent();
+        valueDictionary.Add(1, new());
+        ResettableT1DictionaryPool<uint, ResetEntry>.Reset(valueDictionary);
+        Assert.Empty(valueDictionary);
+
+        Dictionary<ResetEntry, ResetEntry> pairedDictionary = ResettableT0T1DictionaryPool<ResetEntry, ResetEntry>.Rent();
+        pairedDictionary.Add(new(), new());
+        ResettableT0T1DictionaryPool<ResetEntry, ResetEntry>.Reset(pairedDictionary);
+        Assert.Empty(pairedDictionary);
+
+        SortedList<ResetKey, uint> keySortedList = ResettableT0SortedListPool<ResetKey, uint>.Rent();
+        keySortedList.Add(new(), 1);
+        ResettableT0SortedListPool<ResetKey, uint>.Reset(keySortedList);
+        Assert.Empty(keySortedList);
+
+        SortedList<uint, ResetEntry> valueSortedList = ResettableT1SortedListPool<uint, ResetEntry>.Rent();
+        valueSortedList.Add(1, new());
+        ResettableT1SortedListPool<uint, ResetEntry>.Reset(valueSortedList);
+        Assert.Empty(valueSortedList);
+
+        SortedList<ResetKey, ResetEntry> pairedSortedList = ResettableT0T1SortedListPool<ResetKey, ResetEntry>.Rent();
+        pairedSortedList.Add(new(), new());
+        ResettableT0T1SortedListPool<ResetKey, ResetEntry>.Reset(pairedSortedList);
+        Assert.Empty(pairedSortedList);
+
+        SortedDictionary<uint, ResetEntry> valueSortedDictionary = ResettableT1SortedDictionaryPool<uint, ResetEntry>.Rent();
+        valueSortedDictionary.Add(1, new());
+        ResettableT1SortedDictionaryPool<uint, ResetEntry>.Reset(valueSortedDictionary);
+        Assert.Empty(valueSortedDictionary);
+    }
+
+    /// <summary>
     /// Entry type for <see cref="T1SortedListPool_Return_ReturnsValuesToTheirPool"/>.
     /// </summary>
     private sealed class SortedListValue : IPoolResettable
@@ -471,6 +529,33 @@ public class ResettablePoolEntryReturnTests
 
         /// <inheritdoc/>
         public void OnReturn() => OnReturnCalls++;
+
+        /// <inheritdoc/>
+        public void OnRent() { }
+    }
+
+    /// <summary>
+    /// Entry type for <see cref="Reset_EveryCollectionPool_EmptiesTheCollection"/>.
+    /// </summary>
+    private sealed class ResetEntry : IPoolResettable
+    {
+        /// <inheritdoc/>
+        public void OnReturn() { }
+
+        /// <inheritdoc/>
+        public void OnRent() { }
+    }
+
+    /// <summary>
+    /// Sorted-list key type for <see cref="Reset_EveryCollectionPool_EmptiesTheCollection"/>; each test collection holds one key, so every key compares equal.
+    /// </summary>
+    private sealed class ResetKey : IPoolResettable, IComparable<ResetKey>
+    {
+        /// <inheritdoc/>
+        public int CompareTo(ResetKey? other) => 0;
+
+        /// <inheritdoc/>
+        public void OnReturn() { }
 
         /// <inheritdoc/>
         public void OnRent() { }

@@ -41,6 +41,7 @@ public static class ResettableT1SortedListPool<T0, T1> where T1 : IPoolResettabl
     /// Resets the SortedList without returning it to the pool. Every contained value is returned through
     /// <see cref="ResettableObjectPool{T0}.Return"/>, so its <see cref="IPoolResettable.OnReturn"/> runs and the instance
     /// re-enters its pool rather than becoming garbage.
+    /// The collection is then cleared, so it holds no entry its pool can hand to another renter.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(SortedList<T0, T1> value)
@@ -51,5 +52,7 @@ public static class ResettableT1SortedListPool<T0, T1> where T1 : IPoolResettabl
 
         for (int index = 0; index < values.Count; index++)
             ResettableObjectPool<T1>.Return(values[index]);
+
+        value.Clear();
     }
 }

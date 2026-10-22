@@ -41,6 +41,7 @@ public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResetta
     /// Resets the Dictionary without returning it to the pool. Every contained key and value is returned through
     /// <see cref="ResettableObjectPool{T0}.Return"/>, so its <see cref="IPoolResettable.OnReturn"/> runs and the instance
     /// re-enters its pool rather than becoming garbage.
+    /// The collection is then cleared, so it holds no entry its pool can hand to another renter.
     /// </summary>
     /// <param name = "value"> Value to reset. </param>
     public static void Reset(Dictionary<T0, T1> value)
@@ -50,5 +51,7 @@ public static class ResettableT0T1DictionaryPool<T0, T1> where T0 : IPoolResetta
             ResettableObjectPool<T0>.Return(entry.Key);
             ResettableObjectPool<T1>.Return(entry.Value);
         }
+
+        value.Clear();
     }
 }
