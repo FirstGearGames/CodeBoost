@@ -63,7 +63,8 @@ public static class EnumExtensions
             long value = (long)(object)array[i];
             if (value > maximumValue)
                 maximumValue = value;
-            else if (value < minimumValue)
+
+            if (value < minimumValue)
                 minimumValue = value;
         }
 
@@ -106,7 +107,8 @@ public static class EnumExtensions
             ulong value = (ulong)(long)(object)array[i];
             if (value > maximumValue)
                 maximumValue = value;
-            else if (value < minimumValue)
+
+            if (value < minimumValue)
                 minimumValue = value;
         }
 
