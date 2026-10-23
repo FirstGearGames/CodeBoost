@@ -31,15 +31,21 @@ public static class UInt8Extensions
     /// <summary>
     /// Converts the bytes to a UTF-8 encoded string.
     /// </summary>
+    /// <remarks>
+    /// Bytes that are not valid UTF-8 throw with the encoding already back in its pool.
+    /// </remarks>
     public static string ToEncodedString(this byte[] bytes, int offset, int count)
     {
         UTF8Encoding encoding = Utf8EncodingPool.Rent();
 
-        string result = encoding.GetString(bytes, offset, count);
-
-        Utf8EncodingPool.Return(encoding);
-
-        return result;
+        try
+        {
+            return encoding.GetString(bytes, offset, count);
+        }
+        finally
+        {
+            Utf8EncodingPool.Return(encoding);
+        }
     }
 
     /// <summary>

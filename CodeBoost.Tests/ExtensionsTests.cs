@@ -292,6 +292,9 @@ public class ExtensionsTests
     [InlineData(7UL, 1u)]
     [InlineData(8UL, 1u)]
     [InlineData(9UL, 2u)]
+    [InlineData(4294967289UL, 536870912u)]
+    [InlineData(4294967296UL, 536870912u)]
+    [InlineData(34359738360UL, 4294967295u)]
     public void ToPackedByteCount_ReturnsBytesNeeded(ulong bitCount, uint expected)
     {
         Assert.Equal(expected, bitCount.ToPackedByteCount());
@@ -484,6 +487,44 @@ public class ExtensionsTests
         Assert.Equal(SampleEnum.C, sorted[0]);
         Assert.Equal(SampleEnum.B, sorted[1]);
         Assert.Equal(SampleEnum.A, sorted[2]);
+    }
+
+    /// <summary>
+    /// An enum whose lowest value is above zero, so the lowest value is also the first one visited.
+    /// </summary>
+    private enum NonZeroLowestEnum : long
+    {
+        Two = 2,
+        Four = 4,
+        Eight = 8,
+    }
+
+    /// <summary>
+    /// The minimum is the lowest value even when it is the first one visited. It was only taken in an else of the maximum check, so
+    /// the first value, which always raises the maximum, never lowered the minimum, and an enum walked lowest first kept the starting
+    /// sentinel.
+    /// </summary>
+    [Fact]
+    public void TryGetMinimumAndMaximumSignedValues_LowestValueFirst_ReturnsTheLowestAsTheMinimum()
+    {
+        bool isRetrieved = EnumExtensions.TryGetMinimumAndMaximumSignedValues<NonZeroLowestEnum>(out long minimumValue, out long maximumValue);
+
+        Assert.True(isRetrieved);
+        Assert.Equal(2L, minimumValue);
+        Assert.Equal(8L, maximumValue);
+    }
+
+    /// <summary>
+    /// The unsigned form had the same fault as the signed one for an enum whose lowest value is above zero.
+    /// </summary>
+    [Fact]
+    public void TryGetMinimumAndMaximumUnsignedValues_LowestValueFirst_ReturnsTheLowestAsTheMinimum()
+    {
+        bool isRetrieved = EnumExtensions.TryGetMinimumAndMaximumUnsignedValues<NonZeroLowestEnum>(out ulong minimumValue, out ulong maximumValue);
+
+        Assert.True(isRetrieved);
+        Assert.Equal(2UL, minimumValue);
+        Assert.Equal(8UL, maximumValue);
     }
 
     [Fact]

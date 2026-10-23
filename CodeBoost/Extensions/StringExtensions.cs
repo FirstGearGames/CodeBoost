@@ -126,7 +126,8 @@ public static partial class StringExtensions
     /// Converts the supplied string into a byte array rented from the shared pool.
     /// </summary>
     /// <remarks>
-    /// The buffer is rented from <see cref="System.Buffers.ArrayPool{T}.Shared"/> and may be larger than the bytes written.
+    /// The buffer is rented from <see cref="TrackedArrayPool{T0}"/>, so it is returned there, and may be larger than the bytes written.
+    /// A string UTF-8 cannot encode, such as one holding a lone surrogate, throws with the buffer already back in its pool.
     /// </remarks>
     /// <param name="value">String to convert.</param>
     /// <param name="bytesWritten">Receives the number of bytes written to the buffer.</param>
@@ -136,16 +137,29 @@ public static partial class StringExtensions
         int valueLength = value.Length;
         UTF8Encoding encoding = Utf8EncodingPool.Rent();
 
-        // Number of minimum bytes the buffer must be.
-        int bytesNeeded = encoding.GetMaxByteCount(valueLength);
+        try
+        {
+            // Number of minimum bytes the buffer must be.
+            int bytesNeeded = encoding.GetMaxByteCount(valueLength);
+            byte[] array = TrackedArrayPool<byte>.Rent(bytesNeeded);
 
-        byte[] array = TrackedArrayPool<byte>.Rent(bytesNeeded);
+            try
+            {
+                bytesWritten = encoding.GetBytes(value, charIndex: 0, valueLength, array, byteIndex: 0);
+            }
+            catch
+            {
+                TrackedArrayPool<byte>.Return(array);
 
-        bytesWritten = encoding.GetBytes(value, charIndex: 0, valueLength, array, byteIndex: 0);
+                throw;
+            }
 
-        Utf8EncodingPool.Return(encoding);
-
-        return array;
+            return array;
+        }
+        finally
+        {
+            Utf8EncodingPool.Return(encoding);
+        }
     }
         
     /// <summary>

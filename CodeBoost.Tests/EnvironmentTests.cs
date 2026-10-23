@@ -31,6 +31,43 @@ public class EnvironmentTests
         public void RaiseFocusChanged(bool isFocused) => FocusChanged?.Invoke(isFocused);
     }
 
+    /// <summary>
+    /// A logger that counts what reaches it, under a setting the test chooses.
+    /// </summary>
+    private sealed class CountingLogger : ILogger
+    {
+        /// <summary>
+        /// How many messages reached this logger at any level.
+        /// </summary>
+        public int LoggedCount;
+
+        /// <summary>
+        /// The setting this logger reports.
+        /// </summary>
+        private readonly LoggerSetting _loggerSetting;
+
+        /// <summary>
+        /// Creates a logger that reports <paramref name="loggerSetting"/>.
+        /// </summary>
+        /// <param name="loggerSetting">The setting to report.</param>
+        public CountingLogger(LoggerSetting loggerSetting) => _loggerSetting = loggerSetting;
+
+        /// <inheritdoc/>
+        public LoggerSetting GetLoggerSetting() => _loggerSetting;
+
+        /// <inheritdoc/>
+        public bool DisableUnconditionalDevelopmentStacktrace() => true;
+
+        /// <inheritdoc/>
+        public void LogInformation(string message) => LoggedCount++;
+
+        /// <inheritdoc/>
+        public void LogWarning(string message) => LoggedCount++;
+
+        /// <inheritdoc/>
+        public void LogError(string message) => LoggedCount++;
+    }
+
     private static void RunWithMock(MockApplicationState mock, Action body)
     {
         ApplicationStateService.UseApplicationState(mock);
@@ -65,6 +102,34 @@ public class EnvironmentTests
             });
 
             Assert.True(LoggingService.IsInformationEnabled, "the editor state did not bring the information level back");
+        }
+        finally
+        {
+            if (previousLogger is not null)
+                LoggingService.UseLogger(previousLogger);
+        }
+    }
+
+    /// <summary>
+    /// A logger set to <see cref="LoggerLevel.Disabled"/> logs nothing, as the level documents. Disabled is the highest value of the
+    /// enum and every level check is at-or-above, so it read as the most verbose level and logged information, warnings and errors.
+    /// </summary>
+    [Fact]
+    public void LoggingService_DisabledLevel_LogsNothing()
+    {
+        ILogger? previousLogger = LoggingService.Logger;
+        CountingLogger countingLogger = new(new() { Editor = LoggerLevel.Disabled, DevelopmentBuilds = LoggerLevel.Disabled, ReleaseBuilds = LoggerLevel.Disabled });
+        LoggingService.UseLogger(countingLogger);
+
+        try
+        {
+            Logger.LogInformation("information");
+            Logger.LogWarning("warning");
+            Logger.LogError("error");
+            LoggingService.LogError("error");
+
+            Assert.False(Logger.IsEnabled(LoggerLevel.Error), "a disabled logger reported errors as enabled");
+            Assert.Equal(0, countingLogger.LoggedCount);
         }
         finally
         {

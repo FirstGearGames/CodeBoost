@@ -13,10 +13,14 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
         <PackageReference Include="xunit" Version="2.9.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+        <!-- The Roslyn the analyzers build against, so the analyzer tests can compile a source snippet and run MainAnalyzer over it. -->
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\CodeBoost\CodeBoost.csproj" />
+        <!-- Aliased, because the analyzers compile their own copies of the CodeBoost type signatures, which would clash with the real ones. -->
+        <ProjectReference Include="..\CodeBoost.CodeAnalysis.Analyzers\CodeBoost.CodeAnalysis.Analyzers.csproj" Aliases="Analyzers" />
     </ItemGroup>
 
 </Project>

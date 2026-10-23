@@ -200,7 +200,9 @@ public class CodeHealthReporter
             if (!InspectForPoolResettable(semanticModel, currentNamedTypeSymbol))
                 break;
 
-            currentNamedTypeSymbol = isRecursive ? currentNamedTypeSymbol.BaseType : null;
+            /* A generic base is walked as its own declaration: as the closed type a derived type names, its members are substituted
+             * copies that none of the references in its own method bodies match, so every marked member read as never reset. */
+            currentNamedTypeSymbol = isRecursive ? currentNamedTypeSymbol.BaseType?.OriginalDefinition : null;
         }
     }
 
@@ -210,11 +212,16 @@ public class CodeHealthReporter
     /// <returns>True if the inspection completed without errors; otherwise false.</returns>
     private bool InspectForPoolResettable(SemanticModel semanticModel, INamedTypeSymbol namedTypeSymbol)
     {
-        // The Type does not utilize IPoolResettable; no further checks are needed.
-        if (!namedTypeSymbol.TypeSymbolImplementsInterface(_poolResettableFullName))
+        // The Type does not utilize IPoolResettable, itself or through a base; no further checks are needed.
+        if (!namedTypeSymbol.AllInterfaces.Any(interfaceSymbol => interfaceSymbol.GetTypeSymbolFullName() == _poolResettableFullName))
             return true;
 
-        IMethodSymbol? onReturnMethodSymbol = namedTypeSymbol.GetMethod(nameof(IPoolResettable.OnReturn));
+        // A derived type that does not override OnReturn is reset by the nearest base that declares it.
+        IMethodSymbol? onReturnMethodSymbol = null;
+
+        for (INamedTypeSymbol? auditedTypeSymbol = namedTypeSymbol; auditedTypeSymbol is not null && onReturnMethodSymbol is null; auditedTypeSymbol = auditedTypeSymbol.BaseType)
+            onReturnMethodSymbol = auditedTypeSymbol.GetMethod(nameof(IPoolResettable.OnReturn));
+
         /* The OnReturn is not implemented. The user would already be
          * seeing an error from their IDE; we do not need to proceed until
          * after the user implements this method. */

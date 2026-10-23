@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
+using CodeBoost.Extensions;
 using CodeBoost.Performance;
 using Xunit;
 
@@ -321,6 +323,40 @@ public class PoolTrackerTests : IDisposable
                 alive++;
 
         return alive;
+    }
+
+    /// <summary>
+    /// A string UTF-8 cannot encode, such as a lone surrogate, throws from the conversion with its buffer and its encoding back in their
+    /// pools. Both were rented before the encoder threw and nothing returned them, so every such string leaked a tracked buffer.
+    /// </summary>
+    [Fact]
+    public void ToBytesNonAllocated_EncodingThrows_ReturnsTheBufferAndTheEncoding()
+    {
+        UTF8Encoding probeEncoding = Utf8EncodingPool.Rent();
+        Utf8EncodingPool.Return(probeEncoding);
+
+        Assert.Throws<EncoderFallbackException>(() => "\uD800".ToBytesNonAllocated(out _));
+
+        Assert.Equal(0, PoolTracker.GetRentedCount());
+        UTF8Encoding nextEncoding = Utf8EncodingPool.Rent();
+        Utf8EncodingPool.Return(nextEncoding);
+        Assert.True(ReferenceEquals(probeEncoding, nextEncoding), "the encoding rented by the failed conversion was not returned");
+    }
+
+    /// <summary>
+    /// Bytes that are not UTF-8 throw from the conversion with its encoding back in the pool.
+    /// </summary>
+    [Fact]
+    public void ToEncodedString_DecodingThrows_ReturnsTheEncoding()
+    {
+        UTF8Encoding probeEncoding = Utf8EncodingPool.Rent();
+        Utf8EncodingPool.Return(probeEncoding);
+
+        Assert.Throws<DecoderFallbackException>(() => new byte[] { 0xFF }.ToEncodedString(offset: 0, count: 1));
+
+        UTF8Encoding nextEncoding = Utf8EncodingPool.Rent();
+        Utf8EncodingPool.Return(nextEncoding);
+        Assert.True(ReferenceEquals(probeEncoding, nextEncoding), "the encoding rented by the failed conversion was not returned");
     }
 
     private sealed class TrackedThing
