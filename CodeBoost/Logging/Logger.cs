@@ -78,6 +78,36 @@ public static class Logger<T0, T1>
         LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), typeof(T1), methodName)}{message}");
     }
     /// <summary>
+    /// Logs an interpolated message at the information level prefixed with the outer and inner type names, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogInformation(ref LogInformationInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogInformationUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), typeof(T1), methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the warning level prefixed with the outer and inner type names, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogWarning(ref LogWarningInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogWarningUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), typeof(T1), methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the error level prefixed with the outer and inner type names, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogError(ref LogErrorInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), typeof(T1), methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
     /// Logs the supplied message at <paramref name="loggerLevel"/> prefixed with the outer and inner type names. Logs nothing when <paramref name="loggerLevel"/> is <see cref="LoggerLevel.Disabled"/>.
     /// </summary>
     /// <param name="loggerLevel">Level to log the message at.</param>
@@ -176,6 +206,36 @@ public static class Logger<T0>
             return;
 
         LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the information level prefixed with the type name, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogInformation(ref LogInformationInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogInformationUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the warning level prefixed with the type name, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogWarning(ref LogWarningInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogWarningUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the error level prefixed with the type name, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogError(ref LogErrorInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogErrorUnchecked($"{Logger.GetLogMessagePrefix(typeof(T0), methodName)}{message.ToStringAndClear()}");
     }
     /// <summary>
     /// Logs the supplied message at <paramref name="loggerLevel"/> prefixed with the type name. Logs nothing when <paramref name="loggerLevel"/> is <see cref="LoggerLevel.Disabled"/>.
@@ -298,6 +358,36 @@ public static class Logger
         LoggingService.LogErrorUnchecked($"{GetLogMessagePrefix(methodName)}{message}");
     }
     /// <summary>
+    /// Logs an interpolated message at the information level, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogInformation(ref LogInformationInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogInformationUnchecked($"{GetLogMessagePrefix(methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the warning level, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogWarning(ref LogWarningInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogWarningUnchecked($"{GetLogMessagePrefix(methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the error level, building it only when that level is written.
+    /// </summary>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogError(ref LogErrorInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogErrorUnchecked($"{GetLogMessagePrefix(methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
     /// Logs the supplied message at <paramref name="loggerLevel"/>. Logs nothing when <paramref name="loggerLevel"/> is <see cref="LoggerLevel.Disabled"/>.
     /// </summary>
     /// <param name="loggerLevel">Level to log the message at.</param>
@@ -366,6 +456,39 @@ public static class Logger
             return;
 
         LoggingService.LogErrorUnchecked($"{GetLogMessagePrefix(type, methodName)}{message}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the information level prefixed with the supplied type name, building it only when that level is written.
+    /// </summary>
+    /// <param name="type">Type used in the log prefix.</param>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogInformation(Type type, ref LogInformationInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogInformationUnchecked($"{GetLogMessagePrefix(type, methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the warning level prefixed with the supplied type name, building it only when that level is written.
+    /// </summary>
+    /// <param name="type">Type used in the log prefix.</param>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogWarning(Type type, ref LogWarningInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogWarningUnchecked($"{GetLogMessagePrefix(type, methodName)}{message.ToStringAndClear()}");
+    }
+    /// <summary>
+    /// Logs an interpolated message at the error level prefixed with the supplied type name, building it only when that level is written.
+    /// </summary>
+    /// <param name="type">Type used in the log prefix.</param>
+    /// <param name="message">Message to log, which the compiler builds through the handler.</param>
+    /// <param name="methodName">Name of the calling method, supplied automatically by the compiler.</param>
+    public static void LogError(Type type, ref LogErrorInterpolatedStringHandler message, [CallerMemberName] string methodName = "")
+    {
+        if (message.IsEnabled)
+            LoggingService.LogErrorUnchecked($"{GetLogMessagePrefix(type, methodName)}{message.ToStringAndClear()}");
     }
     /// <summary>
     /// Logs the supplied message at <paramref name="loggerLevel"/> prefixed with the supplied type name. Logs nothing when <paramref name="loggerLevel"/> is <see cref="LoggerLevel.Disabled"/>.

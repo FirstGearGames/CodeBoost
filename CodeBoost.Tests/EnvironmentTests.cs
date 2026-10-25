@@ -40,6 +40,10 @@ public class EnvironmentTests
         /// How many messages reached this logger at any level.
         /// </summary>
         public int LoggedCount;
+        /// <summary>
+        /// The last message that reached this logger, or null when none has.
+        /// </summary>
+        public string? LastMessage;
 
         /// <summary>
         /// The setting this logger reports.
@@ -59,13 +63,23 @@ public class EnvironmentTests
         public bool DisableUnconditionalDevelopmentStacktrace() => true;
 
         /// <inheritdoc/>
-        public void LogInformation(string message) => LoggedCount++;
+        public void LogInformation(string message) => Count(message);
 
         /// <inheritdoc/>
-        public void LogWarning(string message) => LoggedCount++;
+        public void LogWarning(string message) => Count(message);
 
         /// <inheritdoc/>
-        public void LogError(string message) => LoggedCount++;
+        public void LogError(string message) => Count(message);
+
+        /// <summary>
+        /// Counts a message that reached this logger and keeps it as the last one.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void Count(string message)
+        {
+            LoggedCount++;
+            LastMessage = message;
+        }
     }
 
     private static void RunWithMock(MockApplicationState mock, Action body)
@@ -130,6 +144,62 @@ public class EnvironmentTests
 
             Assert.False(Logger.IsEnabled(LoggerLevel.Error), "a disabled logger reported errors as enabled");
             Assert.Equal(0, countingLogger.LoggedCount);
+        }
+        finally
+        {
+            if (previousLogger is not null)
+                LoggingService.UseLogger(previousLogger);
+        }
+    }
+
+    /// <summary>
+    /// An interpolated message at a level that is not written is never built: none of its holes are evaluated, at any of the logger
+    /// forms, so a disabled level costs a call and nothing else.
+    /// </summary>
+    [Fact]
+    public void Logger_InterpolatedMessageAtALevelNotWritten_IsNeverFormatted()
+    {
+        ILogger? previousLogger = LoggingService.Logger;
+        CountingLogger countingLogger = new(new() { Editor = LoggerLevel.Error, DevelopmentBuilds = LoggerLevel.Error, ReleaseBuilds = LoggerLevel.Error });
+        LoggingService.UseLogger(countingLogger);
+
+        int formattedCount = 0;
+
+        try
+        {
+            Logger.LogInformation($"information [{++formattedCount}]");
+            Logger.LogWarning($"warning [{++formattedCount}]");
+            Logger.LogWarning(typeof(EnvironmentTests), $"warning [{++formattedCount}]");
+            Logger<EnvironmentTests>.LogInformation($"information [{++formattedCount}]");
+            Logger<EnvironmentTests, ConsoleLogger>.LogWarning($"warning [{++formattedCount}]");
+
+            Assert.Equal(0, formattedCount);
+            Assert.Equal(0, countingLogger.LoggedCount);
+        }
+        finally
+        {
+            if (previousLogger is not null)
+                LoggingService.UseLogger(previousLogger);
+        }
+    }
+
+    /// <summary>
+    /// An interpolated message at a level that is written arrives whole, behind the same prefix a plain message carries.
+    /// </summary>
+    [Fact]
+    public void Logger_InterpolatedMessageAtALevelWritten_ArrivesWithItsPrefix()
+    {
+        ILogger? previousLogger = LoggingService.Logger;
+        CountingLogger countingLogger = new(new() { Editor = LoggerLevel.Information, DevelopmentBuilds = LoggerLevel.Information, ReleaseBuilds = LoggerLevel.Information });
+        LoggingService.UseLogger(countingLogger);
+
+        int value = 42;
+
+        try
+        {
+            Logger<EnvironmentTests>.LogError($"value [{value}] as [{value:X}]");
+
+            Assert.Equal($"[{nameof(EnvironmentTests)}::{nameof(Logger_InterpolatedMessageAtALevelWritten_ArrivesWithItsPrefix)}]: value [42] as [2A]", countingLogger.LastMessage);
         }
         finally
         {
