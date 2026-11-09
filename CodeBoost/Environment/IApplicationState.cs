@@ -50,4 +50,11 @@ public interface IApplicationState
     /// </summary>
     /// <returns>True if the application is a headless build; otherwise false.</returns>
     public bool IsHeadlessBuild();
+
+    /// <summary>
+    /// Returns whether the application is a build running inside a web browser.
+    /// </summary>
+    /// <remarks>This should be false in an editor, even one targeting a browser.</remarks>
+    /// <returns>True if the application is a build running inside a web browser; otherwise false.</returns>
+    public bool IsBrowserBuild();
 }

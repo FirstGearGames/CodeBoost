@@ -16,6 +16,7 @@ public class EnvironmentTests
         public bool IsDevelopmentValue;
         public bool IsGuiBuildValue;
         public bool IsHeadlessBuildValue;
+        public bool IsBrowserBuildValue;
         public int QuitCallCount;
 
         public event IApplicationState.FocusChangeEventHandler? FocusChanged;
@@ -27,6 +28,7 @@ public class EnvironmentTests
         public bool IsDevelopment() => IsDevelopmentValue;
         public bool IsGuiBuild() => IsGuiBuildValue;
         public bool IsHeadlessBuild() => IsHeadlessBuildValue;
+        public bool IsBrowserBuild() => IsBrowserBuildValue;
 
         public void RaiseFocusChanged(bool isFocused) => FocusChanged?.Invoke(isFocused);
     }
@@ -235,6 +237,14 @@ public class EnvironmentTests
     }
 
     [Fact]
+    public void IdeApplicationState_IsBrowserBuild_ReturnsFalse()
+    {
+        IdeApplicationState state = new();
+
+        Assert.False(state.IsBrowserBuild());
+    }
+
+    [Fact]
     public void IdeApplicationState_IsQuitting_FalseDuringNormalRun()
     {
         IdeApplicationState state = new();
@@ -323,6 +333,17 @@ public class EnvironmentTests
         RunWithMock(mock, () =>
         {
             Assert.True(ApplicationState.IsHeadlessBuild());
+        });
+    }
+
+    [Fact]
+    public void ApplicationState_DelegatesIsBrowserBuild()
+    {
+        MockApplicationState mock = new() { IsBrowserBuildValue = true };
+
+        RunWithMock(mock, () =>
+        {
+            Assert.True(ApplicationState.IsBrowserBuild());
         });
     }
 

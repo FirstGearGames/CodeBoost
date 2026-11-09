@@ -127,4 +127,16 @@ public static class ApplicationStateService
         throw new(ApplicationStateIsNullMessage);
     }
 
+    /// <summary>
+    /// Returns whether the application is a build running inside a web browser.
+    /// </summary>
+    /// <returns>True if the application is a build running inside a web browser; otherwise false.</returns>
+    public static bool IsBrowserBuild()
+    {
+        if (ApplicationState is not null)
+            return ApplicationState.IsBrowserBuild();
+
+        throw new(ApplicationStateIsNullMessage);
+    }
+
 }

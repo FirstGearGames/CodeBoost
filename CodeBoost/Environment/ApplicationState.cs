@@ -74,4 +74,10 @@ public static class ApplicationState
     /// </summary>
     /// <returns>True if the application is a headless build; otherwise false.</returns>
     public static bool IsHeadlessBuild() => ApplicationStateService.IsHeadlessBuild();
+
+    /// <summary>
+    /// Returns whether the application is a build running inside a web browser.
+    /// </summary>
+    /// <returns>True if the application is a build running inside a web browser; otherwise false.</returns>
+    public static bool IsBrowserBuild() => ApplicationStateService.IsBrowserBuild();
 }

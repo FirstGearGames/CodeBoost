@@ -41,4 +41,7 @@ public class IdeApplicationState : IApplicationState
 
     /// <inheritdoc/>
     public bool IsHeadlessBuild() => false;
+
+    /// <inheritdoc/>
+    public bool IsBrowserBuild() => false;
 }
