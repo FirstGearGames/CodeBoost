@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeAnalysis.Extensions;
 using CodeAnalysis.Finding;
-using CodeAnalysis.Logging;
 using CodeBoost.CodeAnalysis.Analyzers.Receivers.Diagnostics;
 using CodeBoost.Performance;
 using Microsoft.CodeAnalysis;
@@ -353,7 +352,4 @@ public class CodeHealthReporter
         lock (_lock)
             _cachedDiagnostics.Add(diagnostic);
     }
-
-    // ReSharper disable once UnusedMember.Local
-    private void LogInformation(string message) => CodeAnalysisLogger.LogInformation($"[{nameof(CodeHealthReporter)}] {message}");
 }
